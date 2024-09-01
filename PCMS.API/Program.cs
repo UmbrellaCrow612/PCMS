@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PCMS.API.Auth;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseInMemoryDatabase("AppDb"));
 
 builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllers();
@@ -24,6 +26,14 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+    await SeedRolesAndAdminUser(roleManager, userManager);
+}
 
 app.MapIdentityApi<IdentityUser>();
 
@@ -59,4 +69,25 @@ catch (Exception ex)
 finally
 {
     await Log.CloseAndFlushAsync();
+}
+
+async Task SeedRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
+{
+    // Seed Roles
+    await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+    await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+
+    // Seed Admin User
+    var adminUser = new IdentityUser
+    {
+        UserName = "admin@example.com",
+        Email = "admin@example.com",
+        EmailConfirmed = true
+    };
+
+    if (await userManager.FindByEmailAsync(adminUser.Email) == null)
+    {
+        await userManager.CreateAsync(adminUser, "AdminPassword123!");
+        await userManager.AddToRoleAsync(adminUser, UserRoles.Admin);
+    }
 }
