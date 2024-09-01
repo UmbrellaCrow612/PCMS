@@ -1,11 +1,33 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.Auth;
+using PCMS.API.OpenApi;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+
+builder.Services.AddApiVersioning(option =>
+{
+    option.DefaultApiVersion = new ApiVersion(1);
+    option.AssumeDefaultVersionWhenUnspecified = true;
+    option.ReportApiVersions = true;
+    option.ApiVersionReader = ApiVersionReader.Combine(
+        new UrlSegmentApiVersionReader(),
+        new QueryStringApiVersionReader());
+})
+.AddMvc()
+.AddApiExplorer(option =>
+{
+    option.GroupNameFormat = "'v'V";
+    option.SubstituteApiVersionInUrl = true;
+});
+
+builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseInMemoryDatabase("AppDb"));
@@ -42,7 +64,18 @@ app.MapIdentityApi<IdentityUser>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(option =>
+    {
+        var descriptions = app.DescribeApiVersions();
+
+        foreach (var description in descriptions)
+        {
+            var url = $"/swagger/{description.GroupName}/swagger.json";
+            var name = description.GroupName.ToUpperInvariant();
+
+            option.SwaggerEndpoint(url,name);
+        }
+    });
 }
 
 
