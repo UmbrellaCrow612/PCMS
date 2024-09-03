@@ -2,6 +2,7 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.Auth;
+using PCMS.API.Models;
 using PCMS.API.OpenApi;
 using Serilog;
 
@@ -32,7 +33,7 @@ builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseInMemoryDatabase("AppDb"));
 
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+builder.Services.AddIdentityApiEndpoints<Officer>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -52,12 +53,12 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Officer>>();
 
     await SeedRolesAndAdminUser(roleManager, userManager);
 }
 
-app.MapIdentityApi<IdentityUser>();
+app.MapIdentityApi<Officer>();
 
 
 // Configure the HTTP request pipeline.
@@ -104,14 +105,14 @@ finally
     await Log.CloseAndFlushAsync();
 }
 
-async Task SeedRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
+async System.Threading.Tasks.Task SeedRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserManager<Officer> userManager)
 {
     // Seed Roles
     await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
     await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
 
     // Seed Admin User
-    var adminUser = new IdentityUser
+    var adminUser = new Officer
     {
         UserName = "admin@example.com",
         Email = "admin@example.com",

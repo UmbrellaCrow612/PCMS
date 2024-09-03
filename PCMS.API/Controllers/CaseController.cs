@@ -31,7 +31,7 @@ namespace PCMS.API.Controllers
                 var newCaseId = await Task.FromResult("newCaseId");
 
                 _logger.LogInformation("Case created successfully with ID: {CaseId}", newCaseId);
-                return CreatedAtAction(nameof(GetCase), new { id = newCaseId }, new { id = newCaseId, pet });
+                return CreatedAtAction(nameof(GetACase), new { id = newCaseId }, new { id = newCaseId, pet });
             }
             catch (Exception ex)
             {
@@ -48,7 +48,7 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<string>> GetCase(string id)
+        public async Task<ActionResult<string>> GetACase(string id)
         {
             // TODO: Implement logic to retrieve a case by id
             var caseData = await Task.FromResult($"Case with id {id}");
