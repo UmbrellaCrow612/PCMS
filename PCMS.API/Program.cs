@@ -33,7 +33,7 @@ builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseInMemoryDatabase("AppDb"));
 
-builder.Services.AddIdentityApiEndpoints<Officer>()
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -53,12 +53,12 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Officer>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
     await SeedRolesAndAdminUser(roleManager, userManager);
 }
 
-app.MapIdentityApi<Officer>();
+app.MapIdentityApi<ApplicationUser>();
 
 
 // Configure the HTTP request pipeline.
@@ -105,14 +105,14 @@ finally
     await Log.CloseAndFlushAsync();
 }
 
-async System.Threading.Tasks.Task SeedRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserManager<Officer> userManager)
+async System.Threading.Tasks.Task SeedRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
 {
     // Seed Roles
     await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
     await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
 
     // Seed Admin User
-    var adminUser = new Officer
+    var adminUser = new ApplicationUser
     {
         UserName = "admin@example.com",
         Email = "admin@example.com",
