@@ -2,5 +2,6 @@
 {
     public class Incident
     {
+        public string Id = Guid.NewGuid().ToString();
     }
 }

@@ -2,5 +2,6 @@
 {
     public class Arrest
     {
+        public string Id = Guid.NewGuid().ToString();
     }
 }

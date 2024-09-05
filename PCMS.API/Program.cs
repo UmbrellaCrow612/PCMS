@@ -30,8 +30,8 @@ builder.Services.AddApiVersioning(option =>
 builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 
 
-builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseInMemoryDatabase("AppDb"));
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddRoles<IdentityRole>()
@@ -49,14 +49,6 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-    await SeedRolesAndAdminUser(roleManager, userManager);
-}
 
 app.MapIdentityApi<ApplicationUser>();
 
@@ -105,23 +97,3 @@ finally
     await Log.CloseAndFlushAsync();
 }
 
-async System.Threading.Tasks.Task SeedRolesAndAdminUser(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
-{
-    // Seed Roles
-    await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-    await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
-
-    // Seed Admin User
-    var adminUser = new ApplicationUser
-    {
-        UserName = "admin@example.com",
-        Email = "admin@example.com",
-        EmailConfirmed = true
-    };
-
-    if (await userManager.FindByEmailAsync(adminUser.Email) == null)
-    {
-        await userManager.CreateAsync(adminUser, "AdminPassword123!");
-        await userManager.AddToRoleAsync(adminUser, UserRoles.Admin);
-    }
-}

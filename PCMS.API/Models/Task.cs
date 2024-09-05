@@ -2,5 +2,6 @@
 {
     public class Task
     {
+        public string Id = Guid.NewGuid().ToString();
     }
 }

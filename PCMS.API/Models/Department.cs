@@ -2,5 +2,6 @@
 {
     public class Department
     {
+        public string Id = Guid.NewGuid().ToString();
     }
 }

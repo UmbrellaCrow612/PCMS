@@ -6,5 +6,7 @@ namespace PCMS.API.Models
     {
         [PersonalData]
         public DateTime DOB { get; set; }
+
+        public List<Case> AssignedCases { get; set; } = [];
     }
 }

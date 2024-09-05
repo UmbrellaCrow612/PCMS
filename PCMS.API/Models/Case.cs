@@ -18,6 +18,8 @@
 
         public string Type { get; set; } = string.Empty;
 
+        public List<ApplicationUser> AssignedUsers { get; set; } = [];
+
     }
 
     public enum CaseStatus

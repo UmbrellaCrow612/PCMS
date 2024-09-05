@@ -11,6 +11,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Case>();
+        base.OnModelCreating(modelBuilder);
     }
 }
