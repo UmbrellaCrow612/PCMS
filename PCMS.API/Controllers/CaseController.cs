@@ -4,9 +4,11 @@ namespace PCMS.API.Controllers
 {
     [ApiController]
     [Route("cases")]
-    public class CaseController(ILogger<CaseController> logger) : ControllerBase
+    public class CaseController(ILogger<CaseController> logger, ApplicationDbContext context) : ControllerBase
     {
         private readonly ILogger<CaseController> _logger = logger;
+
+        private readonly ApplicationDbContext _context = context;
 
         /// <summary>
         /// Creates a new case with the provided pet information.
