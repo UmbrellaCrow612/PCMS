@@ -5,7 +5,6 @@ using PCMS.API.DTOS;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Diagnostics;
-using Asp.Versioning;
 
 
 namespace PCMS.API.Controllers
@@ -40,22 +39,6 @@ namespace PCMS.API.Controllers
                 }
 
                 _logger.LogInformation("Register request received for {Email}", request.Email);
-
-                if (!ModelState.IsValid)
-                {
-                    _logger.LogWarning("Invalid model state for {Email}", request.Email);
-
-                    var errors = ModelState.Values
-                                           .SelectMany(v => v.Errors)
-                                           .Select(e => new IdentityError
-                                           {
-                                               Code = "InvalidModelState",
-                                               Description = e.ErrorMessage
-                                           })
-                                            .ToArray();
-
-                    return CreateValidationProblem(IdentityResult.Failed(errors));
-                }
 
                 var user = new ApplicationUser
                 {
