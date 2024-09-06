@@ -50,7 +50,7 @@ builder.Host.UseSerilog((context, configuration) =>
 
 var app = builder.Build();
 
-app.MapIdentityApi<ApplicationUser>();
+// app.MapIdentityApi<ApplicationUser>();
 
 
 // Configure the HTTP request pipeline.
