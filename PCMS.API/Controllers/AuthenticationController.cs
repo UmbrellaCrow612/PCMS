@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using PCMS.API.Models;
 using PCMS.API.DTOS;
-using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.Controllers
 {

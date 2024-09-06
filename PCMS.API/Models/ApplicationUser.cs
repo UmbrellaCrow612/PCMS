@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace PCMS.API.Models
 {
@@ -13,39 +12,30 @@ namespace PCMS.API.Models
         /// Gets or sets the user's first name.
         /// </summary>
         [PersonalData]
-        [Required]
-        [MaxLength(50)]
         public string FirstName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the user's last name.
         /// </summary>
         [PersonalData]
-        [Required]
-        [MaxLength(50)]
         public string LastName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the user's rank.
         /// </summary>
         [PersonalData]
-        [Required]
-        [MaxLength(50)]
         public string Rank { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the user's badge number.
         /// </summary>
-        [PersonalData]
-        [Required]
-        [MaxLength(20)]
+        [ProtectedPersonalData]
         public string BadgeNumber { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the user's date of birth.
         /// </summary>
-        [PersonalData]
-        [Required]
+        [ProtectedPersonalData]
         public DateTime DOB { get; set; }
 
         /// <summary>
