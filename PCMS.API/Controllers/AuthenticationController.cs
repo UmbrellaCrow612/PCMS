@@ -18,14 +18,14 @@ namespace PCMS.API.Controllers
         private static readonly EmailAddressAttribute _emailAddressAttribute = new();
 
         /// <summary>
-        /// Registers a new user in the system.
+        /// Registers a new user.
         /// </summary>
-        /// <param name="request">The registration request containing user information.</param>
-        /// <returns>Returns a success message or error response if registration fails.</returns>
+        /// <param name="request">The DTO containing user registration information.</param>
+        /// <returns>A response indicating success or failure.</returns>
         [HttpPost("register")]
-        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(SuccessResponse), 200)]
         [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-        [ProducesResponseType(typeof(string), 500)]
+        [ProducesResponseType(typeof(ErrorResponse), 500)]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             try
@@ -36,19 +36,6 @@ namespace PCMS.API.Controllers
                 }
 
                 _logger.LogInformation("Register request received for {Email}", request.Email);
-
-                var email = request.Email;
-
-                if (string.IsNullOrEmpty(email) || !_emailAddressAttribute.IsValid(email))
-                {
-                    _logger.LogWarning("Invalid model state for {Email}", request.Email);
-                    var problemDetails = new ValidationProblemDetails(ModelState)
-                    {
-                        Detail = "Invalid email address or empty email.",
-                        Instance = HttpContext.Request.Path
-                    };
-                    return BadRequest(problemDetails);
-                }
 
                 if (!ModelState.IsValid)
                 {
@@ -81,21 +68,42 @@ namespace PCMS.API.Controllers
                         request.Email, string.Join(", ", result.Errors.Select(e => e.Description)));
 
                     // Convert IdentityResult errors to a custom error response model
-                    var errorResponse = new
+                    var errorResponse = new ErrorResponse
                     {
-                        Errors = result.Errors.Select(e => e.Description)
+                        Errors = result.Errors.Select(e => e.Description).ToArray()
                     };
                     return BadRequest(errorResponse);
                 }
 
                 _logger.LogInformation("User {Email} registered successfully", request.Email);
-                return Ok(new { message = "User registered successfully" });
+
+                // Success response
+                var successResponse = new SuccessResponse
+                {
+                    Message = "User registered successfully"
+                };
+                return Ok(successResponse);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while registering the user {Email}", request.Email);
-                return StatusCode(500, "Internal server error");
+
+                var errorResponse = new ErrorResponse
+                {
+                    Errors = ["Internal server error. Please try again later."]
+                };
+                return StatusCode(500, errorResponse);
             }
+        }
+
+        private class SuccessResponse
+        {
+            public string Message { get; set; } = string.Empty;
+        }
+
+        private class ErrorResponse
+        {
+            public string[] Errors { get; set; } = [];
         }
 
 
