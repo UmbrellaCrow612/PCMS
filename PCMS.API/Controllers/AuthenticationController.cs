@@ -15,7 +15,6 @@ namespace PCMS.API.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly ILogger<AuthenticationController> _logger = logger;
-        private static readonly EmailAddressAttribute _emailAddressAttribute = new();
 
         /// <summary>
         /// Registers a new user.
@@ -23,16 +22,17 @@ namespace PCMS.API.Controllers
         /// <param name="request">The DTO containing user registration information.</param>
         /// <returns>A response indicating success or failure.</returns>
         [HttpPost("register")]
-        [ProducesResponseType(typeof(SuccessResponse), 200)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-        [ProducesResponseType(typeof(ErrorResponse), 500)]
+        [ProducesResponseType(typeof(SuccessResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             try
             {
                 if (!_userManager.SupportsUserEmail)
                 {
-                    throw new NotSupportedException($"{nameof(AuthenticationController)} requires a user store with email support.");
+                    _logger.LogError("UserManager does not support email");
+                    return StatusCode(StatusCodes.Status501NotImplemented, new ErrorResponse { Errors = ["Email support is not implemented."] });
                 }
 
                 _logger.LogInformation("Register request received for {Email}", request.Email);
@@ -40,23 +40,24 @@ namespace PCMS.API.Controllers
                 if (!ModelState.IsValid)
                 {
                     _logger.LogWarning("Invalid model state for {Email}", request.Email);
-                    var problemDetails = new ValidationProblemDetails(ModelState)
+                    return BadRequest(new ValidationProblemDetails(ModelState)
                     {
-                        Detail = "Model state is invalid.",
+                        Status = StatusCodes.Status400BadRequest,
+                        Title = "One or more validation errors occurred.",
+                        Detail = "Please refer to the errors property for additional details.",
                         Instance = HttpContext.Request.Path
-                    };
-                    return BadRequest(problemDetails);
+                    });
                 }
 
                 var user = new ApplicationUser
                 {
                     Email = request.Email,
+                    UserName = request.Username ?? request.Email, // Fallback to email if username is not provided
                     FirstName = request.FirstName,
                     LastName = request.LastName,
                     Rank = request.Rank,
                     BadgeNumber = request.BadgeNumber,
                     DOB = request.DOB,
-                    UserName = request.Username,
                     PhoneNumber = request.PhoneNumber,
                 };
 
@@ -67,32 +68,26 @@ namespace PCMS.API.Controllers
                     _logger.LogWarning("Failed to register user {Email}. Errors: {Errors}",
                         request.Email, string.Join(", ", result.Errors.Select(e => e.Description)));
 
-                    // Convert IdentityResult errors to a custom error response model
-                    var errorResponse = new ErrorResponse
+                    return BadRequest(new ErrorResponse
                     {
                         Errors = result.Errors.Select(e => e.Description).ToArray()
-                    };
-                    return BadRequest(errorResponse);
+                    });
                 }
 
                 _logger.LogInformation("User {Email} registered successfully", request.Email);
 
-                // Success response
-                var successResponse = new SuccessResponse
+                return Ok(new SuccessResponse
                 {
                     Message = "User registered successfully"
-                };
-                return Ok(successResponse);
+                });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while registering the user {Email}", request.Email);
-
-                var errorResponse = new ErrorResponse
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorResponse
                 {
-                    Errors = ["Internal server error. Please try again later."]
-                };
-                return StatusCode(500, errorResponse);
+                    Errors = ["An unexpected error occurred. Please try again later."]
+                });
             }
         }
 
