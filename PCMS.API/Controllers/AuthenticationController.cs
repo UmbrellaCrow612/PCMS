@@ -27,6 +27,9 @@ namespace PCMS.API.Controllers
         /// <param name="request">The DTO containing user registration information.</param>
         /// <returns>A response indicating success or failure.</returns>
         [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<Results<Ok, ValidationProblem>> Register([FromBody] RegisterRequest request)
         {
             try
