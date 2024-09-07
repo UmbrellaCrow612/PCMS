@@ -81,14 +81,15 @@ namespace PCMS.API.Controllers
         /// <summary>
         /// Login a user.
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="useCookies"></param>
-        /// <param name="useSessionCookies"></param>
-        /// <returns></returns>
+        /// <param name="request">DTO for login request body</param>
+        /// <param name="useCookies">Query string if a client wants to use cookie based auth</param>
+        /// <param name="useSessionCookies">Query string if a client wants to use session cookies based auth</param>
+        /// <returns>Success or Failure</returns>
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>> Login([FromBody] LoginRequest request, [FromQuery] bool? useCookies, [FromQuery] bool? useSessionCookies) 
         {
             try
@@ -104,30 +105,39 @@ namespace PCMS.API.Controllers
 
                 if (result.RequiresTwoFactor)
                 {
+                    _logger.LogInformation("Login request for username: {UserName} has TFA enabled", request.UserName);
+
                     if (!string.IsNullOrEmpty(request.TwoFactorCode))
                     {
+                        _logger.LogInformation("Login request for username: {UserName} TFA sign in attempt", request.UserName);
+
                         result = await _signInManager.TwoFactorAuthenticatorSignInAsync(request.TwoFactorCode, isPersistent, rememberClient: isPersistent);
                     }
                     else if (!string.IsNullOrEmpty(request.TwoFactorRecoveryCode))
                     {
+                        _logger.LogInformation("Login request for username: {UserName} TFRC sign in attempt", request.UserName);
+
                         result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(request.TwoFactorRecoveryCode);
                     }
                 }
 
                 if (!result.Succeeded)
                 {
-                    _logger.LogInformation("Login request faild for {UserName}", request.UserName);
+                    _logger.LogInformation("Login request attempt failed for {UserName}", request.UserName);
 
                     return TypedResults.Problem(result.ToString(), statusCode: StatusCodes.Status401Unauthorized);
                 }
 
+                _logger.LogInformation("Login request for {UserName} successful", request.UserName);
+
                 return TypedResults.Empty;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while Logging in the user {UserName}", request.UserName);
 
-                throw;
+                return TypedResults.Problem(statusCode: StatusCodes.Status500InternalServerError);
             }
             
 
