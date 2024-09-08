@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240906140938_InitialCreate")]
+    [Migration("20240908191412_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -19,7 +19,7 @@ namespace PCMS.API.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
 
-            modelBuilder.Entity("ApplicationUserCase", b =>
+            modelBuilder.Entity("AssignedCasesAssignedUsers", b =>
                 {
                     b.Property<string>("AssignedCasesId")
                         .HasColumnType("TEXT");
@@ -31,7 +31,7 @@ namespace PCMS.API.Migrations
 
                     b.HasIndex("AssignedUsersId");
 
-                    b.ToTable("ApplicationUserCase");
+                    b.ToTable("AssignedCasesAssignedUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -250,6 +250,14 @@ namespace PCMS.API.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("CaseNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("DateClosed")
                         .HasColumnType("TEXT");
 
@@ -258,6 +266,13 @@ namespace PCMS.API.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedById")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastModifiedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Priority")
@@ -276,10 +291,65 @@ namespace PCMS.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("LastModifiedById");
+
                     b.ToTable("Cases");
                 });
 
-            modelBuilder.Entity("ApplicationUserCase", b =>
+            modelBuilder.Entity("PCMS.API.Models.CaseAction", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CaseId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CaseId");
+
+                    b.ToTable("CaseActions");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Report", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CaseId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CaseId");
+
+                    b.ToTable("Reports");
+                });
+
+            modelBuilder.Entity("AssignedCasesAssignedUsers", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", null)
                         .WithMany()
@@ -343,6 +413,61 @@ namespace PCMS.API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Case", b =>
+                {
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "CreatedBy")
+                        .WithMany("CreatedCases")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "LastModifiedBy")
+                        .WithMany("ModifiedCases")
+                        .HasForeignKey("LastModifiedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("LastModifiedBy");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.CaseAction", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Case", "Case")
+                        .WithMany("CaseActions")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Report", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Case", "Case")
+                        .WithMany("Reports")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("CreatedCases");
+
+                    b.Navigation("ModifiedCases");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Case", b =>
+                {
+                    b.Navigation("CaseActions");
+
+                    b.Navigation("Reports");
                 });
 #pragma warning restore 612, 618
         }

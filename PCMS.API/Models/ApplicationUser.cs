@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Text.Json.Serialization;
 
 namespace PCMS.API.Models
 {
@@ -41,7 +42,17 @@ namespace PCMS.API.Models
         /// <summary>
         /// Gets or sets the list of cases assigned to the user.
         /// </summary>
-        public List<Case> AssignedCases { get; set; } = new List<Case>();
+        public List<Case> AssignedCases { get; set; } = [];
+
+        /// <summary>
+        /// Gets or sets the list of cases created by the user.
+        /// </summary>
+        public List<Case> CreatedCases { get; set; } = [];
+
+        /// <summary>
+        /// Gets or sets the list of cases modified by the user.
+        /// </summary>
+        public List<Case> ModifiedCases { get; set; } = [];
 
         /// <summary>
         /// Gets the full name of the user.

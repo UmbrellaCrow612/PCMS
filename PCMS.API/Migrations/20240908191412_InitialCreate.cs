@@ -56,24 +56,6 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cases",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    DateOpened = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    DateClosed = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Priority = table.Column<int>(type: "INTEGER", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cases", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -180,7 +162,41 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ApplicationUserCase",
+                name: "Cases",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    CaseNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    DateOpened = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateClosed = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Priority = table.Column<int>(type: "INTEGER", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    LastModifiedById = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cases_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Cases_AspNetUsers_LastModifiedById",
+                        column: x => x.LastModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AssignedCasesAssignedUsers",
                 columns: table => new
                 {
                     AssignedCasesId = table.Column<string>(type: "TEXT", nullable: false),
@@ -188,25 +204,61 @@ namespace PCMS.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApplicationUserCase", x => new { x.AssignedCasesId, x.AssignedUsersId });
+                    table.PrimaryKey("PK_AssignedCasesAssignedUsers", x => new { x.AssignedCasesId, x.AssignedUsersId });
                     table.ForeignKey(
-                        name: "FK_ApplicationUserCase_AspNetUsers_AssignedUsersId",
+                        name: "FK_AssignedCasesAssignedUsers_AspNetUsers_AssignedUsersId",
                         column: x => x.AssignedUsersId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ApplicationUserCase_Cases_AssignedCasesId",
+                        name: "FK_AssignedCasesAssignedUsers_Cases_AssignedCasesId",
                         column: x => x.AssignedCasesId,
                         principalTable: "Cases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ApplicationUserCase_AssignedUsersId",
-                table: "ApplicationUserCase",
-                column: "AssignedUsersId");
+            migrationBuilder.CreateTable(
+                name: "CaseActions",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CaseActions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CaseActions_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reports",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reports_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -244,14 +296,36 @@ namespace PCMS.API.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssignedCasesAssignedUsers_AssignedUsersId",
+                table: "AssignedCasesAssignedUsers",
+                column: "AssignedUsersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CaseActions_CaseId",
+                table: "CaseActions",
+                column: "CaseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cases_CreatedById",
+                table: "Cases",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cases_LastModifiedById",
+                table: "Cases",
+                column: "LastModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reports_CaseId",
+                table: "Reports",
+                column: "CaseId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ApplicationUserCase");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -268,10 +342,19 @@ namespace PCMS.API.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Cases");
+                name: "AssignedCasesAssignedUsers");
+
+            migrationBuilder.DropTable(
+                name: "CaseActions");
+
+            migrationBuilder.DropTable(
+                name: "Reports");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Cases");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

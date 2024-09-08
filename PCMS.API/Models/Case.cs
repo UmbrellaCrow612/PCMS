@@ -1,7 +1,10 @@
-﻿namespace PCMS.API.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace PCMS.API.Models
 {
     /// <summary>
-    /// Represents an case in the system.
+    /// Represents a case in the system.
     /// </summary>
     public class Case
     {
@@ -56,9 +59,19 @@
         public string Type { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the user Id Who created the case.
+        /// </summary>
+        public required string CreatedById { get; set; }
+
+        /// <summary>
         /// Gets or sets the user who created the case.
         /// </summary>
         public required ApplicationUser CreatedBy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user Id who last modified the case.
+        /// </summary>
+        public required string LastModifiedById { get; set; }
 
         /// <summary>
         /// Gets or sets the user who last modified the case.
@@ -66,21 +79,21 @@
         public required ApplicationUser LastModifiedBy { get; set; }
 
         /// <summary>
-        /// Gets or sets the case actions, list of <see cref="CaseAction"/>.
+        /// Gets or sets the case actions, list of CaseAction.
         /// </summary>
         public List<CaseAction> CaseActions { get; set; } = [];
 
         /// <summary>
-        /// Gets or sets the case assigned users, list of <see cref="ApplicationUser"/>.
+        /// Gets or sets the case assigned users, list of ApplicationUser.
         /// </summary>
         public List<ApplicationUser> AssignedUsers { get; set; } = [];
 
         /// <summary>
-        /// Gets or sets the case reports, list of <see cref="Report"/>.
+        /// Gets or sets the case reports, list of Report.
         /// </summary>
         public List<Report> Reports { get; set; } = [];
-
     }
+
 
     /// <summary>
     /// Represents statuses a case can be in at a given time.
