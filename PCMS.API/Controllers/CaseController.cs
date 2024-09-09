@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using PCMS.API.DTOS;
 using PCMS.API.Models;
+using System.Net;
 
 namespace PCMS.API.Controllers
 {
@@ -25,7 +27,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Create([FromBody] POSTCase request)
+        public async Task<ActionResult<Case>> CreateCase([FromBody] POSTCase request)
         {
             try
             {
@@ -63,13 +65,47 @@ namespace PCMS.API.Controllers
 
                 _logger.LogInformation("Saved a case into the Database");
 
-                return Created();
+                return CreatedAtAction(nameof(CreateCase), new { id = _case.Id });
             }
             catch (Exception ex)
             {
                 _logger.LogError("Failed to create a new case: {ex}", ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
+        }
+
+        /// <summary>
+        /// Get a case by Id
+        /// </summary>
+        /// <param name="id">The Id of the case</param>
+        /// <returns>A response indicating success or failure.</returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Case), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<Case>> GetCase(string id)
+        {
+            _logger.LogInformation("Get case request received for id: {id}", id);
+
+            if (string.IsNullOrEmpty(id))
+            {
+                _logger.LogInformation("Get case request received for id: {id} is null or empty", id);
+
+                return BadRequest("Case ID cannot be null or empty.");
+            }
+
+            var _case = await _context.Cases.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (_case is null)
+            {
+                _logger.LogInformation("Get case request received for id: {id} not found", id);
+
+                return NotFound($"Case with ID '{id}' was not found.");
+            }
+
+            _logger.LogInformation("Get case request received for id: {id} successful", id);
+
+            return Ok(_case);
         }
 
 
