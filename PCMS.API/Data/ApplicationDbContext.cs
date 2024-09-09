@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 
 // Use fluent API

@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace PCMS.API.Models
+﻿namespace PCMS.API.Models
 {
     /// <summary>
     /// Represents a case in the system.

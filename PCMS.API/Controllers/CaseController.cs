@@ -1,68 +1,77 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PCMS.API.DTOS;
+using PCMS.API.Models;
 
 namespace PCMS.API.Controllers
 {
+    /// <summary>
+    /// Controller for handling case related actions.
+    /// </summary>
     [ApiController]
     [Route("cases")]
     public class CaseController(ILogger<CaseController> logger, ApplicationDbContext context) : ControllerBase
     {
         private readonly ILogger<CaseController> _logger = logger;
-
         private readonly ApplicationDbContext _context = context;
 
         /// <summary>
-        /// Creates a new case with the provided pet information.
+        /// Create a new case
         /// </summary>
-        /// <param name="pet">The information about the pet.</param>
-        /// <returns>The newly created case.</returns>
+        /// <param name="request">The DTO containing POST case information.</param>
+        /// <returns>A response indicating success or failure.</returns>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<string>> CreateACase([FromBody] string pet)
+        public async Task<ActionResult> Create([FromBody] POSTCase request)
         {
-            if (string.IsNullOrWhiteSpace(pet))
-            {
-                _logger.LogWarning("Attempt to create a case with empty pet information.");
-                return BadRequest("Pet information cannot be empty.");
-            }
-
             try
             {
-                // TODO: Replace this with actual case creation logic.
-                var newCaseId = await Task.FromResult("newCaseId");
+                _logger.LogInformation("POST case request received");
 
-                _logger.LogInformation("Case created successfully with ID: {CaseId}", newCaseId);
-                return CreatedAtAction(nameof(GetACase), new { id = newCaseId }, new { id = newCaseId, pet });
+                var _user = await _context.Users.FirstOrDefaultAsync(e => e.Id == request.CreatedById);
+
+                if (_user is null)
+                {
+                    _logger.LogInformation("POST case user not found");
+
+                    return BadRequest("User dose not exist");
+                }
+
+                var _case = new Case
+                {
+                    CaseNumber = "1234567",
+                    Title = request.Title,
+                    Description = request.Description,
+                    Priority = request.Priority,
+                    Type = request.Type,
+                    CreatedBy = _user,
+                    CreatedById = request.CreatedById,
+                    LastModifiedBy = _user,
+                    LastModifiedById = request.CreatedById
+                };
+
+                _logger.LogInformation("POST case object {Case} created, attempting to save", _case);
+
+                await _context.Cases.AddAsync(_case);
+
+                _logger.LogInformation("Added a case into the Database");
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Saved a case into the Database");
+
+                return Created();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while creating a case.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the case.");
+                _logger.LogError("Failed to create a new case: {ex}", ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
 
-        /// <summary>
-        /// Retrieves a case by its ID.
-        /// </summary>
-        /// <param name="id">The ID of the case.</param>
-        /// <returns>The requested case.</returns>
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<string>> GetACase(string id)
-        {
-            // TODO: Implement logic to retrieve a case by id
-            var caseData = await Task.FromResult($"Case with id {id}");
 
-            if (caseData == null)
-            {
-                _logger.LogWarning("Case with ID {CaseId} not found.", id);
-                return NotFound($"Case with id {id} not found.");
-            }
-
-            _logger.LogInformation("Case with ID {CaseId} retrieved successfully.", id);
-            return Ok(caseData);
-        }
     }
 }
