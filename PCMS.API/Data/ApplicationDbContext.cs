@@ -26,17 +26,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                     .WithMany(e => e.AssignedUsers)
                     .UsingEntity("AssignedCasesAssignedUsers");
 
-
-        modelBuilder.Entity<ApplicationUser>()
-                    .HasMany(u => u.CreatedCases)
-                    .WithOne(c => c.CreatedBy)
-                    .HasForeignKey(c => c.CreatedById);
-
-        modelBuilder.Entity<ApplicationUser>()
-            .HasMany(u => u.ModifiedCases)
-            .WithOne(c => c.LastModifiedBy)
-            .HasForeignKey(c => c.LastModifiedById);
-
         // Case Actions
 
         modelBuilder.Entity<CaseAction>().HasKey(x => x.Id);

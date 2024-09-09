@@ -288,10 +288,6 @@ namespace PCMS.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("LastModifiedById");
-
                     b.ToTable("Cases");
                 });
 
@@ -412,25 +408,6 @@ namespace PCMS.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Case", b =>
-                {
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "CreatedBy")
-                        .WithMany("CreatedCases")
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "LastModifiedBy")
-                        .WithMany("ModifiedCases")
-                        .HasForeignKey("LastModifiedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("LastModifiedBy");
-                });
-
             modelBuilder.Entity("PCMS.API.Models.CaseAction", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
@@ -451,13 +428,6 @@ namespace PCMS.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Case");
-                });
-
-            modelBuilder.Entity("PCMS.API.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("CreatedCases");
-
-                    b.Navigation("ModifiedCases");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Case", b =>

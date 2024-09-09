@@ -61,19 +61,9 @@
         public required string CreatedById { get; set; }
 
         /// <summary>
-        /// Gets or sets the user who created the case.
-        /// </summary>
-        public required ApplicationUser CreatedBy { get; set; }
-
-        /// <summary>
         /// Gets or sets the user Id who last modified the case.
         /// </summary>
         public required string LastModifiedById { get; set; }
-
-        /// <summary>
-        /// Gets or sets the user who last modified the case.
-        /// </summary>
-        public required ApplicationUser LastModifiedBy { get; set; }
 
         /// <summary>
         /// Gets or sets the case actions, list of CaseAction.

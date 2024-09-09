@@ -45,16 +45,6 @@ namespace PCMS.API.Models
         public List<Case> AssignedCases { get; set; } = [];
 
         /// <summary>
-        /// Gets or sets the list of cases created by the user.
-        /// </summary>
-        public List<Case> CreatedCases { get; set; } = [];
-
-        /// <summary>
-        /// Gets or sets the list of cases modified by the user.
-        /// </summary>
-        public List<Case> ModifiedCases { get; set; } = [];
-
-        /// <summary>
         /// Gets the full name of the user.
         /// </summary>
         public string FullName => $"{FirstName} {LastName}";

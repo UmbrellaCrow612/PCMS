@@ -47,9 +47,7 @@ namespace PCMS.API.Controllers
                     Description = request.Description,
                     Priority = request.Priority,
                     Type = request.Type,
-                    CreatedBy = _user,
                     CreatedById = request.CreatedById,
-                    LastModifiedBy = _user,
                     LastModifiedById = request.CreatedById
                 };
 
