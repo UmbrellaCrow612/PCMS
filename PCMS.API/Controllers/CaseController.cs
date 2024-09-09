@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using PCMS.API.DTOS;
 using PCMS.API.Models;
 using System.Net;
@@ -83,29 +81,38 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(Case), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Case>> GetCase(string id)
         {
-            _logger.LogInformation("Get case request received for id: {id}", id);
-
-            if (string.IsNullOrEmpty(id))
+            try
             {
-                _logger.LogInformation("Get case request received for id: {id} is null or empty", id);
+                _logger.LogInformation("Get case request received for id: {id}", id);
 
-                return BadRequest("Case ID cannot be null or empty.");
+                if (string.IsNullOrEmpty(id))
+                {
+                    _logger.LogInformation("Get case request received for id: {id} is null or empty", id);
+
+                    return BadRequest("Case ID cannot be null or empty.");
+                }
+
+                var _case = await _context.Cases.FirstOrDefaultAsync(c => c.Id == id);
+
+                if (_case is null)
+                {
+                    _logger.LogInformation("Get case request received for id: {id} not found", id);
+
+                    return NotFound($"Case with ID '{id}' was not found.");
+                }
+
+                _logger.LogInformation("Get case request received for id: {id} successful", id);
+
+                return Ok(_case);
             }
-
-            var _case = await _context.Cases.FirstOrDefaultAsync(c => c.Id == id);
-
-            if (_case is null)
+            catch (Exception ex)
             {
-                _logger.LogInformation("Get case request received for id: {id} not found", id);
-
-                return NotFound($"Case with ID '{id}' was not found.");
+                _logger.LogError("Failed to get a case: {ex}", ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
-
-            _logger.LogInformation("Get case request received for id: {id} successful", id);
-
-            return Ok(_case);
         }
 
 
