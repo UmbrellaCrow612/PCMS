@@ -25,7 +25,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Case>> CreateCase([FromBody] POSTCase request)
+        public async Task<ActionResult> CreateCase([FromBody] POSTCase request)
         {
             try
             {
@@ -113,6 +113,31 @@ namespace PCMS.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all cases
+        /// </summary>
+        /// <returns>A response indicating success or failure.</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(Case), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<Case>>> GetCases() 
+        {
+            try
+            {
+                _logger.LogInformation("Get request received for all cases.");
+
+                var _cases = await _context.Cases.ToListAsync();
+
+                _logger.LogInformation("Get request received for all cases successful.");
+
+                return Ok(_cases);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to get a cases: {ex}", ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
+        } 
 
     }
 }
