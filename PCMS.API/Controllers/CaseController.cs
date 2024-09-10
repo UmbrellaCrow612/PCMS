@@ -287,7 +287,7 @@ namespace PCMS.API.Controllers
 
                 _context.Remove(_case);
 
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
                 _logger.LogInformation("DELETE request received for case {id} successful.", id);
 
