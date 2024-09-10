@@ -8,19 +8,17 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>(option =>
-    {
-        option.User.RequireUniqueEmail = true;
-    })
+{
+    option.User.RequireUniqueEmail = true;
+})
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -41,7 +39,6 @@ builder.Services.AddApiVersioning(option =>
 });
 
 builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
-
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
@@ -50,9 +47,6 @@ builder.Host.UseSerilog((context, configuration) =>
 
 var app = builder.Build();
 
-// app.MapIdentityApi<ApplicationUser>();
-
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -60,33 +54,62 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(option =>
     {
         var descriptions = app.DescribeApiVersions();
-
         foreach (var description in descriptions)
         {
             var url = $"/swagger/{description.GroupName}/swagger.json";
             var name = description.GroupName.ToUpperInvariant();
-
-            option.SwaggerEndpoint(url,name);
+            option.SwaggerEndpoint(url, name);
         }
     });
 }
 
-
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.UseSerilogRequestLogging();
 
+// Add this method to create default roles and admin user
+async Task CreateDefaultRolesAndAdminUser(IServiceProvider serviceProvider)
+{
+    using var scope = serviceProvider.CreateScope();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+    string[] roleNames = { "Admin", "User" };
+    foreach (var roleName in roleNames)
+    {
+        var roleExist = await roleManager.RoleExistsAsync(roleName);
+        if (!roleExist)
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+
+    var adminUser = await userManager.FindByEmailAsync("admin@example.com");
+    if (adminUser == null)
+    {
+        adminUser = new ApplicationUser
+        {
+            UserName = "admin@example.com",
+            Email = "admin@example.com",
+            EmailConfirmed = true
+        };
+        var createAdminResult = await userManager.CreateAsync(adminUser, "Admin@123456");
+        if (createAdminResult.Succeeded)
+        {
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
+    }
+}
 
 try
 {
     Log.Information("Starting App");
-    app.Run();
 
+    await CreateDefaultRolesAndAdminUser(app.Services);
+
+    app.Run();
 }
 catch (Exception ex)
 {
@@ -96,4 +119,3 @@ finally
 {
     await Log.CloseAndFlushAsync();
 }
-
