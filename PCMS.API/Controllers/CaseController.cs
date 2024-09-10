@@ -147,7 +147,7 @@ namespace PCMS.API.Controllers
         /// </summary>
         /// <returns>A response indicating success or failure.</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(Case), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<GETCase>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<GETCase>>> GetCases()
         {
@@ -155,7 +155,36 @@ namespace PCMS.API.Controllers
             {
                 _logger.LogInformation("Get request received for all cases.");
 
-                var _cases = await _context.Cases.ToListAsync();
+                var _cases = await _context.Cases
+                        .Select(c => new GETCase
+                        {
+                            Id = c.Id,
+                            CaseNumber = c.CaseNumber,
+                            Title = c.Title,
+                            Description = c.Description,
+                            Status = c.Status,
+                            DateOpened = c.DateOpened,
+                            DateClosed = c.DateClosed,
+                            LastModifiedDate = c.LastModifiedDate,
+                            Priority = c.Priority,
+                            Type = c.Type,
+                            CreatedById = c.CreatedById,
+                            LastModifiedById = c.LastModifiedById,
+                            CaseActions = c.CaseActions,
+                            Reports = c.Reports,
+                            AssignedUsers = c.AssignedUsers.Select(u => new GETApplicationUser
+                            {
+                                Id = u.Id,
+                                FirstName = u.FirstName,
+                                LastName = u.LastName,
+                                Rank = u.Rank,
+                                BadgeNumber = u.BadgeNumber,
+                                DOB = u.DOB,
+                                UserName = u.UserName!,
+                                Email = u.Email!
+                            }).ToList()
+                        })
+                        .ToListAsync();
 
                 _logger.LogInformation("Get request received for all cases successful.");
 
