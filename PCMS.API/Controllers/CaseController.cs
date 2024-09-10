@@ -35,8 +35,6 @@ namespace PCMS.API.Controllers
 
                 if (_user is null)
                 {
-                    _logger.LogInformation("POST case user not found");
-
                     return BadRequest("User dose not exist");
                 }
 
@@ -51,11 +49,7 @@ namespace PCMS.API.Controllers
                     LastModifiedById = request.CreatedById
                 };
 
-                _logger.LogInformation("POST case object {Case} created, attempting to save", _case);
-
                 await _context.Cases.AddAsync(_case);
-
-                _logger.LogInformation("Added a case into the Database");
 
                 await _context.SaveChangesAsync();
 
@@ -65,7 +59,7 @@ namespace PCMS.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to create a new case: {ex}", ex);
+                _logger.LogError("Failed to create a new case, details: request: {request} ex: {ex}", request, ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
@@ -88,8 +82,6 @@ namespace PCMS.API.Controllers
 
                 if (string.IsNullOrEmpty(id))
                 {
-                    _logger.LogInformation("Get case request received for id: {id} is null or empty", id);
-
                     return BadRequest("Case ID cannot be null or empty.");
                 }
 
@@ -126,8 +118,6 @@ namespace PCMS.API.Controllers
 
                 if (_case is null)
                 {
-                    _logger.LogInformation("Get case request received for id: {id} not found", id);
-
                     return NotFound($"Case with ID '{id}' was not found.");
                 }
 
@@ -137,7 +127,7 @@ namespace PCMS.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to get a case: {ex}", ex);
+                _logger.LogError("Failed to get a case for Id {id} ex: {ex}", id, ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
@@ -186,13 +176,11 @@ namespace PCMS.API.Controllers
                         })
                         .ToListAsync();
 
-                _logger.LogInformation("Get request received for all cases successful.");
-
                 return Ok(_cases);
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to get cases: {ex}", ex);
+                _logger.LogError("Failed to get cases ex: {ex}", ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
@@ -216,7 +204,6 @@ namespace PCMS.API.Controllers
 
                 if (string.IsNullOrEmpty(id))
                 {
-
                     return BadRequest("Case id can not be null or empty");
                 }
 
@@ -252,7 +239,7 @@ namespace PCMS.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to patch a case: {ex}", ex);
+                _logger.LogError("Failed to patch a case of id: {id} ex: {ex}", id, ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
@@ -271,7 +258,7 @@ namespace PCMS.API.Controllers
         {
             try
             {
-                _logger.LogInformation("DELETE request received for case {id}.", id);
+                _logger.LogInformation("Delete request received for case {id}.", id);
 
                 if (string.IsNullOrEmpty(id))
                 {
@@ -289,13 +276,13 @@ namespace PCMS.API.Controllers
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("DELETE request received for case {id} successful.", id);
+                _logger.LogInformation("Delete request received for case {id} successful.", id);
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to delete a case: {ex}", ex);
+                _logger.LogError("Failed to delete a case of Id {id} ex: {ex}", id, ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
