@@ -40,7 +40,6 @@ namespace PCMS.API.Controllers
 
                 var _case = new Case
                 {
-                    CaseNumber = CaseNumberGenerator.GenerateCaseNumber(),
                     Title = request.Title,
                     Description = request.Description,
                     Priority = request.Priority,

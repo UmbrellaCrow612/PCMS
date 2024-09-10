@@ -13,9 +13,9 @@ namespace PCMS.API.Models
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
-        /// Gets or sets the Case Number.
+        /// Gets or sets the Case Number. Defaults to the call to <see cref="CaseNumberGenerator.GenerateCaseNumber()"/>
         /// </summary>
-        public string CaseNumber { get; set; } = string.Empty;
+        public string CaseNumber { get; set; } = CaseNumberGenerator.GenerateCaseNumber();
 
         /// <summary>
         /// Gets or sets the Case title.
