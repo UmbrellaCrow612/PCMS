@@ -1,4 +1,6 @@
-﻿namespace PCMS.API.Models
+﻿using System.Security.Cryptography;
+
+namespace PCMS.API.Models
 {
     /// <summary>
     /// Represents a case in the system.
@@ -104,6 +106,50 @@
         High,
         Critical
     }
+
+    /// <summary>
+    /// PMCS implementation standard of generating unique case numbers
+    /// </summary>
+    public static class CaseNumberGenerator
+    {
+        private static readonly RandomNumberGenerator rng = RandomNumberGenerator.Create();
+
+
+        /// <summary>
+        /// Method to invoke to generate a unique case numbers
+        /// <returns>String case number</returns>
+        /// </summary>
+        public static string GenerateCaseNumber()
+        {
+            // Get the current timestamp
+            var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+
+            // Generate a random alphanumeric string
+            var randomString = GenerateRandomString(4);
+
+            // Use a single prefix "PM"
+            var prefix = "PM";
+
+            // Format the case number
+            var caseNumber = $"{prefix}-{timestamp}-{randomString}";
+
+            return caseNumber;
+        }
+
+        private static string GenerateRandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var randomChars = new char[length];
+            var randomBytes = new byte[length];
+            rng.GetBytes(randomBytes);
+            for (int i = 0; i < length; i++)
+            {
+                randomChars[i] = chars[randomBytes[i] % chars.Length];
+            }
+            return new string(randomChars);
+        }
+    }
+
 
 
 }

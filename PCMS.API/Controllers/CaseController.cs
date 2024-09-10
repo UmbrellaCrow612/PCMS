@@ -35,12 +35,12 @@ namespace PCMS.API.Controllers
 
                 if (_user is null)
                 {
-                    return BadRequest("User dose not exist");
+                    return BadRequest("User does not exist");
                 }
 
                 var _case = new Case
                 {
-                    CaseNumber = "1234567",
+                    CaseNumber = CaseNumberGenerator.GenerateCaseNumber(),
                     Title = request.Title,
                     Description = request.Description,
                     Priority = request.Priority,
