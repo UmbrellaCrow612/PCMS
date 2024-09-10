@@ -192,7 +192,7 @@ namespace PCMS.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to get a cases: {ex}", ex);
+                _logger.LogError("Failed to get cases: {ex}", ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
@@ -252,11 +252,53 @@ namespace PCMS.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to get a cases: {ex}", ex);
+                _logger.LogError("Failed to patch a case: {ex}", ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
 
+        /// <summary>
+        /// Delete a case by Id
+        /// </summary>
+        /// <param name="id">The Id of the case</param>
+        /// <returns>A response indicating success or failure.</returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteCase(string id)
+        {
+            try
+            {
+                _logger.LogInformation("DELETE request received for case {id}.", id);
+
+                if (string.IsNullOrEmpty(id))
+                {
+                    return BadRequest();
+                }
+
+                var _case = await _context.Cases.FirstOrDefaultAsync(c => c.Id == id);
+
+                if (_case is null)
+                {
+                    return NotFound("Case not found");
+                }
+
+                _context.Remove(_case);
+
+                await context.SaveChangesAsync();
+
+                _logger.LogInformation("DELETE request received for case {id} successful.", id);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to delete a case: {ex}", ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
+        }
 
     }
 }
