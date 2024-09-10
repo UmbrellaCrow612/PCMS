@@ -197,7 +197,12 @@ namespace PCMS.API.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Patch a case by Id
+        /// </summary>
+        /// <param name="request">The DTO for a patch case</param>
+        /// <param name="id">The Id of the case</param>
+        /// <returns>A response indicating success or failure.</returns>
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -207,8 +212,11 @@ namespace PCMS.API.Controllers
         {
             try
             {
+                _logger.LogInformation("Patch request received for case {id}.", id);
+
                 if (string.IsNullOrEmpty(id))
                 {
+
                     return BadRequest("Case id can not be null or empty");
                 }
 
@@ -236,6 +244,8 @@ namespace PCMS.API.Controllers
 
                 await _context.SaveChangesAsync();
 
+                _logger.LogInformation("Patch request received for case {id} is successful.", id);
+
                 return Ok();
 
 
@@ -247,8 +257,6 @@ namespace PCMS.API.Controllers
             }
         }
 
-
-        // Delete
 
     }
 }
