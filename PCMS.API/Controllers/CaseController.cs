@@ -198,7 +198,54 @@ namespace PCMS.API.Controllers
         }
 
 
-        // Update a case
+        [HttpPatch("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> PatchCase(string id, [FromBody] PATCHCase request)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id))
+                {
+                    return BadRequest("Case id can not be null or empty");
+                }
+
+                var _case = await _context.Cases.FirstOrDefaultAsync(c => c.Id == id);
+
+                if (_case is null)
+                {
+                    return NotFound("Case not found");
+                }
+
+                var _user = await _context.Users.FirstOrDefaultAsync(u => u.Id == request.LastModifiedById);
+
+                if (_user is null)
+                {
+                    return NotFound("User not found");
+                }
+
+                _case.Title = request.Title;
+                _case.Description = request.Description;
+                _case.Status = request.Status;
+                _case.Priority = request.Priority;
+                _case.Type = request.Type;
+                _case.LastModifiedById = request.LastModifiedById;
+                _case.LastModifiedDate = DateTime.UtcNow;
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to get a cases: {ex}", ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
+        }
 
 
         // Delete
