@@ -76,11 +76,11 @@ namespace PCMS.API.Controllers
         /// <param name="id">The Id of the case</param>
         /// <returns>A response indicating success or failure.</returns>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Case), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(GETCase), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Case>> GetCase(string id)
+        public async Task<ActionResult<GETCase>> GetCase(string id)
         {
             try
             {
@@ -93,7 +93,36 @@ namespace PCMS.API.Controllers
                     return BadRequest("Case ID cannot be null or empty.");
                 }
 
-                var _case = await _context.Cases.FirstOrDefaultAsync(c => c.Id == id);
+                var _case = await _context.Cases
+                    .Select(c => new GETCase
+                    {
+                        Id = c.Id,
+                        CaseNumber = c.CaseNumber,
+                        Title = c.Title,
+                        Description = c.Description,
+                        Status = c.Status,
+                        DateOpened = c.DateOpened,
+                        DateClosed = c.DateClosed,
+                        LastModifiedDate = c.LastModifiedDate,
+                        Priority = c.Priority,
+                        Type = c.Type,
+                        CreatedById = c.CreatedById,
+                        LastModifiedById = c.LastModifiedById,
+                        CaseActions = c.CaseActions,
+                        Reports = c.Reports,
+                        AssignedUsers = c.AssignedUsers.Select(u => new GETApplicationUser
+                        {
+                            Id = u.Id,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            Rank = u.Rank,
+                            BadgeNumber = u.BadgeNumber,
+                            DOB = u.DOB,
+                            UserName = u.UserName!,
+                            Email = u.Email!
+                        }).ToList()
+                    })
+                    .FirstOrDefaultAsync(c => c.Id == id);
 
                 if (_case is null)
                 {
@@ -120,7 +149,7 @@ namespace PCMS.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(Case), (int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<Case>>> GetCases() 
+        public async Task<ActionResult<List<GETCase>>> GetCases()
         {
             try
             {
@@ -137,7 +166,13 @@ namespace PCMS.API.Controllers
                 _logger.LogError("Failed to get a cases: {ex}", ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
-        } 
+        }
+
+
+        // Update a case
+
+
+        // Delete
 
     }
 }
