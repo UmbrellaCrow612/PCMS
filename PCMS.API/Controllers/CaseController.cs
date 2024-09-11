@@ -31,9 +31,9 @@ namespace PCMS.API.Controllers
             {
                 _logger.LogInformation("POST case request received");
 
-                var _user = await _context.Users.FirstOrDefaultAsync(e => e.Id == request.CreatedById);
+                var _user = await _context.Users.AnyAsync(u => u.Id == request.CreatedById);
 
-                if (_user is null)
+                if (_user is false)
                 {
                     return BadRequest("User does not exist");
                 }
@@ -229,9 +229,9 @@ namespace PCMS.API.Controllers
                     return NotFound("Case not found");
                 }
 
-                var _user = await _context.Users.FirstOrDefaultAsync(u => u.Id == request.LastModifiedById);
+                var _user = await _context.Users.AnyAsync(u => u.Id == request.LastModifiedById);
 
-                if (_user is null)
+                if (_user is false)
                 {
                     return NotFound("User not found");
                 }

@@ -1,7 +1,7 @@
 ﻿namespace PCMS.API.DTOS
 {
     /// <summary>
-    /// DTO for Get a case action
+    /// DTO for GET a case action
     /// </summary>
     public class GETCaseAction
     {
@@ -28,7 +28,7 @@
         /// <summary>
         /// Gets or sets the case action created at time, defaults to now.
         /// </summary>
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; }
 
     }
 }
