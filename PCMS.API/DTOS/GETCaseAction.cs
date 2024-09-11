@@ -33,8 +33,19 @@ namespace PCMS.API.DTOS
         public DateTime CreatedAt { get; set; }
 
         /// <summary>
+        /// Gets or sets the case action last modified at.
+        /// </summary>
+        public DateTime LastModifiedAt { get; set; }
+
+        /// <summary>
         /// Gets or sets the case action created by Id.
         /// </summary>
         public string CreatedById { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the case action last edited by Id.
+        /// </summary>
+        public string LastEditedById { get; set; } = string.Empty;
+
     }
 }

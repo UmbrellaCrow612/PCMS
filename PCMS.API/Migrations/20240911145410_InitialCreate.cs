@@ -216,7 +216,9 @@ namespace PCMS.API.Migrations
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Type = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    LastEditedById = table.Column<string>(type: "TEXT", nullable: false),
                     CaseId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

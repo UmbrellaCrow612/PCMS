@@ -6,7 +6,7 @@
     public class CaseAction
     {
         /// <summary>
-        /// Gets or sets the case action Id.
+        /// Gets or sets the case action Id. Defaults to <see cref="Guid.NewGuid()"/>
         /// </summary>
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
@@ -26,14 +26,24 @@
         public string Type { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the case action created at time, defaults to now.
+        /// Gets or sets the case action created at time, defaults to <see cref="DateTime.UtcNow"/>.
         /// </summary>
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// Gets or sets the case action last modified at, defaults to <see cref="DateTime.UtcNow"/>.
+        /// </summary>
+        public DateTime LastModifiedAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
         /// Gets or sets the case action created by Id.
         /// </summary>
         public string CreatedById { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the case action last edited by Id.
+        /// </summary>
+        public string LastEditedById { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the specific case Id this case action is linked to, required.

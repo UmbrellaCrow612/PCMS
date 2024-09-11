@@ -8,7 +8,7 @@ namespace PCMS.API.Models
     public class Case
     {
         /// <summary>
-        /// Gets or sets the Case Id.
+        /// Gets or sets the Case Id. Defaults to <see cref="Guid.NewGuid()"
         /// </summary>
         public string Id { get; set; } = Guid.NewGuid().ToString();
 

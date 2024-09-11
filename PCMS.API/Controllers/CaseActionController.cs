@@ -60,6 +60,7 @@ namespace PCMS.API.Controllers
                     Case = _case,
                     CaseId = caseId,
                     CreatedById = request.CreatedById,
+                    LastEditedById = request.CreatedById,
                 };
 
                 await _context.AddAsync(_case_action);
@@ -112,7 +113,9 @@ namespace PCMS.API.Controllers
                                 Description = ca.Description,
                                 Type = ca.Type,
                                 CreatedAt = ca.CreatedAt,
+                                LastModifiedAt = ca.LastModifiedAt,
                                 CreatedById = ca.CreatedById,
+                                LastEditedById = ca.LastEditedById,
                             })
                             .ToListAsync();
 
@@ -171,6 +174,8 @@ namespace PCMS.API.Controllers
                 _case_action.Name = request.Name;
                 _case_action.Description = request.Description;
                 _case_action.Type = request.Type;
+                _case_action.LastEditedById = request.LastEditedById;
+                _case_action.LastModifiedAt = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
 
