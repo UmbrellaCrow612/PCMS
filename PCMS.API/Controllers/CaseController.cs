@@ -106,6 +106,7 @@ namespace PCMS.API.Controllers
                             Description = ca.Description,
                             Type = ca.Type,
                             CreatedAt = ca.CreatedAt,
+                            CreatedById = ca.CreatedById,
                            
                         }).ToList(),
                         Reports = c.Reports,
@@ -174,6 +175,7 @@ namespace PCMS.API.Controllers
                                 Description = ca.Description,
                                 Type = ca.Type,
                                 CreatedAt = ca.CreatedAt,
+                                CreatedById = ca.CreatedById,
 
                             }).ToList(),
                             Reports = c.Reports,
