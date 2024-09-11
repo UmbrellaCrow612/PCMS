@@ -114,39 +114,29 @@ namespace PCMS.API.Models
     {
         private static readonly RandomNumberGenerator rng = RandomNumberGenerator.Create();
 
-
         /// <summary>
-        /// Method to invoke to generate a unique case numbers
-        /// <returns>String case number</returns>
+        /// Method to invoke to generate a unique case number
         /// </summary>
+        /// <returns>String case number</returns>
         public static string GenerateCaseNumber()
         {
-            // Get the current timestamp
-            var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            // Get the current year
+            var year = DateTime.UtcNow.Year;
 
-            // Generate a random alphanumeric string
-            var randomString = GenerateRandomString(4);
-
-            // Use a single prefix "PM"
-            var prefix = "PM";
+            // Generate a random 8-digit number
+            var randomNumber = GenerateRandomNumber(8);
 
             // Format the case number
-            var caseNumber = $"{prefix}-{timestamp}-{randomString}";
-
+            var caseNumber = $"CA-{year}-{randomNumber:D8}";
             return caseNumber;
         }
 
-        private static string GenerateRandomString(int length)
+        private static int GenerateRandomNumber(int digits)
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var randomChars = new char[length];
-            var randomBytes = new byte[length];
+            byte[] randomBytes = new byte[4];
             rng.GetBytes(randomBytes);
-            for (int i = 0; i < length; i++)
-            {
-                randomChars[i] = chars[randomBytes[i] % chars.Length];
-            }
-            return new string(randomChars);
+            int randomInt = BitConverter.ToInt32(randomBytes, 0);
+            return Math.Abs(randomInt) % (int)Math.Pow(10, digits);
         }
     }
 

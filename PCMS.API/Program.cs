@@ -69,7 +69,6 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseSerilogRequestLogging();
 
-// Add this method to create default roles and admin user
 async Task CreateDefaultRolesAndAdminUser(IServiceProvider serviceProvider)
 {
     using var scope = serviceProvider.CreateScope();
