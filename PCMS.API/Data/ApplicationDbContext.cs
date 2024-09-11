@@ -31,9 +31,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<CaseAction>().HasKey(x => x.Id);
 
         modelBuilder.Entity<Case>()
-            .HasMany(e => e.CaseActions)
-            .WithOne(e => e.Case)
-            .HasForeignKey(e => e.CaseId);
+            .HasMany(c => c.CaseActions)
+            .WithOne(ca => ca.Case)
+            .HasForeignKey(ca => ca.CaseId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Reports
 
