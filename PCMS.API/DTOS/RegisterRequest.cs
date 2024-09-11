@@ -6,7 +6,7 @@ namespace PCMS.API.DTOS
     /// DTO for the user registration request.
     /// This excludes the AssignedCases property and is our own implementation based on ASP.Net Core Identity Routes Source Code.
     /// </summary>
-    public class RegisterRequest
+    public record RegisterRequest
     {
         /// <summary>
         /// The email address of the user to be registered.

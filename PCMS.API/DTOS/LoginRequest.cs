@@ -2,14 +2,12 @@
 
 namespace PCMS.API.DTOS
 {
-
     /// <summary>
     /// DTO for the user login request.
     /// The request type for the "/login" endpoint based on the ASP.Net Core Identity Routes Source Code.
     /// </summary>
-    public class LoginRequest
+    public record LoginRequest
     {
-
         /// <summary>
         /// The user's email address which acts as a user name.
         /// </summary>

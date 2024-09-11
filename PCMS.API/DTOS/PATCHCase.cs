@@ -6,7 +6,7 @@ namespace PCMS.API.DTOS
     /// <summary>
     /// DTO for a PATCH a case
     /// </summary>
-    public class PATCHCase
+    public record PATCHCase
     {
         /// <summary>
         /// Gets or sets the Case Title.

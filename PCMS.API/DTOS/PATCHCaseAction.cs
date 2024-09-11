@@ -5,7 +5,7 @@ namespace PCMS.API.DTOS
     /// <summary>
     /// DTO to PATCH a case action
     /// </summary>
-    public class PATCHCaseAction
+    public record PATCHCaseAction
     {
         /// <summary>
         /// Gets or sets the case action name.

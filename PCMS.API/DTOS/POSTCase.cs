@@ -6,7 +6,7 @@ namespace PCMS.API.DTOS
     /// <summary>
     /// DTO for the POST a case request.
     /// </summary>
-    public class POSTCase
+    public record POSTCase
     {
         /// <summary>
         /// Get or set the case title..

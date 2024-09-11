@@ -5,7 +5,7 @@ namespace PCMS.API.DTOS
     /// <summary>
     /// DTO to POST a case action
     /// </summary>
-    public class POSTCaseAction
+    public record POSTCaseAction
     {
         /// <summary>
         /// Gets or sets the case action name.

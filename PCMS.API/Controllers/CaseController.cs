@@ -107,6 +107,8 @@ namespace PCMS.API.Controllers
                             Type = ca.Type,
                             CreatedAt = ca.CreatedAt,
                             CreatedById = ca.CreatedById,
+                            LastEditedById = ca.LastEditedById,
+                            LastModifiedAt = ca.LastModifiedAt,
 
                         }).ToList(),
                         Reports = c.Reports,
@@ -176,6 +178,8 @@ namespace PCMS.API.Controllers
                                 Type = ca.Type,
                                 CreatedAt = ca.CreatedAt,
                                 CreatedById = ca.CreatedById,
+                                LastEditedById = ca.LastEditedById,
+                                LastModifiedAt = ca.LastModifiedAt,
 
                             }).ToList(),
                             Reports = c.Reports,
