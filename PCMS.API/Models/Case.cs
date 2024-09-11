@@ -20,12 +20,12 @@ namespace PCMS.API.Models
         /// <summary>
         /// Gets or sets the Case title.
         /// </summary>
-        public string Title { get; set; } = string.Empty;
+        public required string Title { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the Case description.
         /// </summary>
-        public string Description { get; set; } = string.Empty;
+        public required string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the Case status, defaults to <see cref="CaseStatus.Open"/>.
@@ -50,12 +50,12 @@ namespace PCMS.API.Models
         /// <summary>
         /// Gets or sets the case priority based on the <see cref="CasePriority"/> enum.
         /// </summary>
-        public CasePriority Priority { get; set; }
+        public required CasePriority Priority { get; set; }
 
         /// <summary>
         /// Gets or sets the case type.
         /// </summary>
-        public string Type { get; set; } = string.Empty;
+        public required string Type { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the user Id Who created the case.

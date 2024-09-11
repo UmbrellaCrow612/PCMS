@@ -13,17 +13,17 @@
         /// <summary>
         /// Gets or sets the case action name.
         /// </summary>
-        public string Name { get; set; } = string.Empty;
+        public required string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the case action description.
         /// </summary>
-        public string Description { get; set; } = string.Empty;
+        public required string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the case action type.
         /// </summary>
-        public string Type { get; set; } = string.Empty;
+        public required string Type { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the case action created at time, defaults to <see cref="DateTime.UtcNow"/>.
@@ -38,12 +38,12 @@
         /// <summary>
         /// Gets or sets the case action created by Id.
         /// </summary>
-        public string CreatedById { get; set; } = string.Empty;
+        public required string CreatedById { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the case action last edited by Id.
         /// </summary>
-        public string LastEditedById { get; set; } = string.Empty;
+        public required string LastEditedById { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the specific case Id this case action is linked to, required.
