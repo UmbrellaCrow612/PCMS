@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PCMS.API", "PCMS.API.csproj", "{C541206F-D74E-41A9-9C60-7E6AFA060865}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PCMS.API", "PCMS.API.csproj", "{CF0F30B4-92E2-4ABB-9B72-68CA087EEDDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C541206F-D74E-41A9-9C60-7E6AFA060865}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C541206F-D74E-41A9-9C60-7E6AFA060865}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C541206F-D74E-41A9-9C60-7E6AFA060865}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C541206F-D74E-41A9-9C60-7E6AFA060865}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF0F30B4-92E2-4ABB-9B72-68CA087EEDDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF0F30B4-92E2-4ABB-9B72-68CA087EEDDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF0F30B4-92E2-4ABB-9B72-68CA087EEDDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF0F30B4-92E2-4ABB-9B72-68CA087EEDDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

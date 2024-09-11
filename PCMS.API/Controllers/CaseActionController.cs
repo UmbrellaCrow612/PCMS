@@ -21,7 +21,7 @@ namespace PCMS.API.Controllers
         /// Create a new case action for a specific case
         /// </summary>
         /// <param name="request">The DTO containing POST case action information.</param>
-        /// <returns>A response indicating success or failure.</returns>
+        /// <returns><see cref="ActionResult"/></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -80,7 +80,7 @@ namespace PCMS.API.Controllers
         /// <summary>
         /// Get all case actions related to a case based on caseId.
         /// </summary>
-        /// <returns>A response indicating success or failure.</returns>
+        /// <returns><see cref="ActionResult"/></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -134,7 +134,7 @@ namespace PCMS.API.Controllers
         /// <param name="request">DTO for updating a case action</param>
         /// <param name="caseId">The case Id of the case</param>
         /// <param name="id">The Id of the case action</param>
-        /// <returns>A response indicating success or failure.</returns>
+        /// <returns><see cref="ActionResult"/></returns>
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -193,7 +193,7 @@ namespace PCMS.API.Controllers
         /// </summary>
         /// <param name="caseId">The Id of the case</param>
         /// <param name="id">The Id of the case action</param>
-        /// <returns>A response indicating success or failure.</returns>
+        /// <returns><see cref="ActionResult"/></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

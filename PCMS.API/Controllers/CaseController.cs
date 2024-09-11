@@ -20,7 +20,7 @@ namespace PCMS.API.Controllers
         /// Create a new case
         /// </summary>
         /// <param name="request">The DTO containing POST case information.</param>
-        /// <returns>A response indicating success or failure.</returns>
+        /// <returns><see cref="ActionResult"/></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -67,7 +67,7 @@ namespace PCMS.API.Controllers
         /// Get a case by Id
         /// </summary>
         /// <param name="id">The Id of the case</param>
-        /// <returns>A response indicating success or failure.</returns>
+        /// <returns><see cref="ActionResult"/></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(GETCase), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -143,7 +143,7 @@ namespace PCMS.API.Controllers
         /// <summary>
         /// Get all cases
         /// </summary>
-        /// <returns>A response indicating success or failure.</returns>
+        /// <returns><see cref="ActionResult"/></returns>
         [HttpGet]
         [ProducesResponseType(typeof(List<GETCase>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -207,7 +207,7 @@ namespace PCMS.API.Controllers
         /// </summary>
         /// <param name="request">The DTO for a patch case</param>
         /// <param name="id">The Id of the case</param>
-        /// <returns>A response indicating success or failure.</returns>
+        /// <returns><see cref="ActionResult"/></returns>
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -265,7 +265,7 @@ namespace PCMS.API.Controllers
         /// Delete a case by Id
         /// </summary>
         /// <param name="id">The Id of the case</param>
-        /// <returns>A response indicating success or failure.</returns>
+        /// <returns><see cref="ActionResult"/></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
