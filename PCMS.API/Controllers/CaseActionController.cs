@@ -68,6 +68,54 @@ namespace PCMS.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all case actions related to a case based on caseId.
+        /// </summary>
+        /// <returns>A response indicating success or failure.</returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetActions(string caseId)
+        {
+            try
+            {
+                _logger.LogInformation("Received GET request for case action for case Id: {caseId}", caseId);
+
+                if (string.IsNullOrEmpty(caseId))
+                {
+                    return BadRequest("Null or empty caseId");
+                }
+
+                var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
+
+                if (caseExists is false)
+                {
+                    return NotFound("Case dose not exist");
+                }
+
+                var _case_actions = await _context.Cases
+                            .Where(c => c.Id == caseId)
+                            .SelectMany(c => c.CaseActions)
+                            .Select(ca => new GETCaseAction
+                            {
+                                Id = ca.Id,
+                                Name = ca.Name,
+                                Description = ca.Description,
+                                Type = ca.Type,
+                                CreatedAt = ca.CreatedAt
+                            })
+                            .ToListAsync();
+
+                return Ok(_case_actions);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to get case actions : caseId: {caseId} ex: {ex}", caseId, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
+        }
+
         // TODO: Implement other action methods as per the convention
         // GET    /cases/{caseId}/actions
         // GET    /cases/{caseId}/actions/{actionId}

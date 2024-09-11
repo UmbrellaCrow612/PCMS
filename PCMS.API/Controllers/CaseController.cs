@@ -99,7 +99,15 @@ namespace PCMS.API.Controllers
                         Type = c.Type,
                         CreatedById = c.CreatedById,
                         LastModifiedById = c.LastModifiedById,
-                        CaseActions = c.CaseActions,
+                        CaseActions = c.CaseActions.Select(ca => new GETCaseAction
+                        {
+                            Id = ca.Id,
+                            Name = ca.Name,
+                            Description = ca.Description,
+                            Type = ca.Type,
+                            CreatedAt = ca.CreatedAt,
+                           
+                        }).ToList(),
                         Reports = c.Reports,
                         AssignedUsers = c.AssignedUsers.Select(u => new GETApplicationUser
                         {
@@ -159,7 +167,15 @@ namespace PCMS.API.Controllers
                             Type = c.Type,
                             CreatedById = c.CreatedById,
                             LastModifiedById = c.LastModifiedById,
-                            CaseActions = c.CaseActions,
+                            CaseActions = c.CaseActions.Select(ca => new GETCaseAction
+                            {
+                                Id = ca.Id,
+                                Name = ca.Name,
+                                Description = ca.Description,
+                                Type = ca.Type,
+                                CreatedAt = ca.CreatedAt,
+
+                            }).ToList(),
                             Reports = c.Reports,
                             AssignedUsers = c.AssignedUsers.Select(u => new GETApplicationUser
                             {

@@ -70,7 +70,7 @@ namespace PCMS.API.DTOS
         /// <summary>
         /// Gets or sets the case actions, list of CaseAction.
         /// </summary>
-        public List<CaseAction> CaseActions { get; set; } = [];
+        public List<GETCaseAction> CaseActions { get; set; } = [];
 
         /// <summary>
         /// Gets or sets the case assigned users, list of ApplicationUser.
