@@ -28,22 +28,22 @@ namespace PCMS.API.Models
         public string Description { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the Case status based on the <see cref="CaseStatus"/> enum.
+        /// Gets or sets the Case status, defaults to <see cref="CaseStatus.Open"/>.
         /// </summary>
         public CaseStatus Status { get; set; } = CaseStatus.Open;
 
         /// <summary>
-        /// Gets or sets the time the case was opened defaults to now.
+        /// Gets or sets the time the case was opened defaults to <see cref="DateTime.UtcNow"/>.
         /// </summary>
         public DateTime DateOpened { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// Gets or sets the time the case was closed defaults to null.
+        /// Gets or sets the time the case was closed defaults to <see cref="Nullable"/>.
         /// </summary>
         public DateTime? DateClosed { get; set; } = null;
 
         /// <summary>
-        /// Gets or sets the date and time when the case was last modified.
+        /// Gets or sets the date and time when the case was last modified, defaults to <see cref="DateTime.UtcNow;"/>.
         /// </summary>
         public DateTime LastModifiedDate { get; set; } = DateTime.UtcNow;
 
@@ -68,17 +68,17 @@ namespace PCMS.API.Models
         public required string LastModifiedById { get; set; }
 
         /// <summary>
-        /// Gets or sets the case actions, list of CaseAction.
+        /// Gets or sets the case actions, list of <see cref="CaseAction"/>.
         /// </summary>
         public List<CaseAction> CaseActions { get; set; } = [];
 
         /// <summary>
-        /// Gets or sets the case assigned users, list of ApplicationUser.
+        /// Gets or sets the case assigned users, list of <see cref="ApplicationUser"/>.
         /// </summary>
         public List<ApplicationUser> AssignedUsers { get; set; } = [];
 
         /// <summary>
-        /// Gets or sets the case reports, list of Report.
+        /// Gets or sets the case reports, list of <see cref="Report"/>.
         /// </summary>
         public List<Report> Reports { get; set; } = [];
     }
