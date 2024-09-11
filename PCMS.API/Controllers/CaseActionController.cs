@@ -182,5 +182,60 @@ namespace PCMS.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
+
+        /// <summary>
+        /// Delete a case action related to a case based on caseId and case action ID.
+        /// </summary>
+        /// <param name="caseId">The Id of the case</param>
+        /// <param name="id">The Id of the case action</param>
+        /// <returns>A response indicating success or failure.</returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteCaseAction(string caseId, string id)
+        {
+            try
+            {
+                _logger.LogInformation("Received DELETE request for case action for case Id: {caseId} and case action Id: {id}", caseId, id);
+
+                if (string.IsNullOrEmpty(caseId) | string.IsNullOrEmpty(id))
+                {
+                    return BadRequest("case Id or case action Id is null or empty");
+                }
+
+                var _caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
+                var _caseActionExists = await _context.CaseActions.AnyAsync(ca => ca.Id == id);
+
+                if (_caseExists is false)
+                {
+                    return NotFound("Case dose not exist");
+                }
+
+                if (_caseActionExists is false)
+                {
+                    return NotFound("Case action dose not exist");
+                }
+
+                var _case_action = await _context.CaseActions.FirstOrDefaultAsync(ca => ca.Id == id && ca.CaseId == caseId);
+
+                if (_case_action is null)
+                {
+                    return NotFound("Case action does not exist or is not linked to the specified case.");
+                }
+
+                _context.Remove(_case_action);
+
+                await _context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to DELETE case action : caseId: {caseId} case action Id: {id} ex: {ex}", caseId, id, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
+        }
     }
 }
