@@ -107,7 +107,7 @@ namespace PCMS.API.Controllers
                             Type = ca.Type,
                             CreatedAt = ca.CreatedAt,
                             CreatedById = ca.CreatedById,
-                           
+
                         }).ToList(),
                         Reports = c.Reports,
                         AssignedUsers = c.AssignedUsers.Select(u => new GETApplicationUser
