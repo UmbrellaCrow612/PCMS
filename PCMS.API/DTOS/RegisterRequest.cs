@@ -3,7 +3,7 @@
 namespace PCMS.API.DTOS
 {
     /// <summary>
-    /// DTO (Data Transfer Object) for the user registration request.
+    /// DTO for the user registration request.
     /// This excludes the AssignedCases property and is our own implementation based on ASP.Net Core Identity Routes Source Code.
     /// </summary>
     public class RegisterRequest

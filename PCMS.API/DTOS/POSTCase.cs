@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace PCMS.API.DTOS
 {
     /// <summary>
-    /// DTO for the POST case request.
+    /// DTO for the POST a case request.
     /// </summary>
     public class POSTCase
     {

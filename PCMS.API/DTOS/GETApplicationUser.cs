@@ -1,7 +1,7 @@
 ﻿namespace PCMS.API.DTOS
 {
     /// <summary>
-    /// DTO for a user object
+    /// DTO for GET a user object
     /// </summary>
     public class GETApplicationUser
     {

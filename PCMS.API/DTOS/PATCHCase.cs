@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace PCMS.API.DTOS
 {
     /// <summary>
-    /// DTO for a PATCH case
+    /// DTO for a PATCH a case
     /// </summary>
     public class PATCHCase
     {

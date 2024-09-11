@@ -3,7 +3,7 @@
 namespace PCMS.API.DTOS
 {
     /// <summary>
-    /// DTO for Getting a case
+    /// DTO for GET a case object
     /// </summary>
     public class GETCase
     {
