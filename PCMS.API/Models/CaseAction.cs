@@ -31,6 +31,11 @@
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         /// <summary>
+        /// Gets or sets the case action created by Id.
+        /// </summary>
+        public string CreatedById { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the specific case Id this case action is linked to, required.
         /// </summary>
         public required string CaseId { get; set; }

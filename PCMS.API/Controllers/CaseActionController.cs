@@ -38,6 +38,13 @@ namespace PCMS.API.Controllers
                     return BadRequest("Null or empty caseId");
                 }
 
+                var _userExists = await _context.Users.AnyAsync(u => u.Id == request.CreatedById);
+
+                if (_userExists is false)
+                {
+                    return NotFound("User not found");
+                }
+
                 var _case = await _context.Cases.FirstOrDefaultAsync(c => c.Id == caseId);
 
                 if (_case is null)
@@ -52,6 +59,7 @@ namespace PCMS.API.Controllers
                     Type = request.Type,
                     Case = _case,
                     CaseId = caseId,
+                    CreatedById = request.CreatedById,
                 };
 
                 await _context.AddAsync(_case_action);
@@ -103,7 +111,8 @@ namespace PCMS.API.Controllers
                                 Name = ca.Name,
                                 Description = ca.Description,
                                 Type = ca.Type,
-                                CreatedAt = ca.CreatedAt
+                                CreatedAt = ca.CreatedAt,
+                                CreatedById = ca.CreatedById,
                             })
                             .ToListAsync();
 

@@ -1,4 +1,6 @@
-﻿namespace PCMS.API.DTOS
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PCMS.API.DTOS
 {
     /// <summary>
     /// DTO for GET a case action
@@ -30,5 +32,9 @@
         /// </summary>
         public DateTime CreatedAt { get; set; }
 
+        /// <summary>
+        /// Gets or sets the case action created by Id.
+        /// </summary>
+        public string CreatedById { get; set; } = string.Empty;
     }
 }
