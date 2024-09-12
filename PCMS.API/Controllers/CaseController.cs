@@ -156,7 +156,7 @@ namespace PCMS.API.Controllers
 
                 var returnCases = _mapper.Map<List<GETCase>>(cases);
 
-                return Ok(cases);
+                return Ok(returnCases);
             }
             catch (Exception ex)
             {
@@ -261,7 +261,7 @@ namespace PCMS.API.Controllers
                     return BadRequest("Case id cannot be null or empty");
                 }
 
-                var caseToDelete = await _context.Cases.FirstOrDefaultAsync(c => c.Id == id);
+                var caseToDelete = await _context.Cases.FindAsync(id);
 
                 if (caseToDelete is null)
                 {
