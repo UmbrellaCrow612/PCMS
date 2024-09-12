@@ -6,6 +6,7 @@ using PCMS.API.DTOS;
 using PCMS.API.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
@@ -43,6 +44,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(GETReport), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<GETReport>> CreateReport([FromRoute] [Required] string caseId, [FromBody] POSTReport request)
         {
