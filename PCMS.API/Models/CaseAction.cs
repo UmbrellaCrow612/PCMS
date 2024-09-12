@@ -33,7 +33,7 @@
         /// <summary>
         /// Gets or sets the case action last modified at, defaults to <see cref="DateTime.UtcNow"/>.
         /// </summary>
-        public DateTime LastModifiedAt { get; set; } = DateTime.UtcNow;
+        public DateTime LastModifiedDate { get; set; } = DateTime.UtcNow;
 
         /// <summary>
         /// Gets or sets the case action created by Id.

@@ -265,7 +265,7 @@ namespace PCMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("LastModifiedById")
+                    b.Property<string>("LastEditedById")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -315,7 +315,7 @@ namespace PCMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("LastModifiedAt")
+                    b.Property<DateTime>("LastModifiedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")

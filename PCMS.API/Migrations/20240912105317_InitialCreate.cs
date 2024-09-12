@@ -70,7 +70,7 @@ namespace PCMS.API.Migrations
                     Priority = table.Column<int>(type: "INTEGER", nullable: false),
                     Type = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    LastModifiedById = table.Column<string>(type: "TEXT", nullable: false)
+                    LastEditedById = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -216,7 +216,7 @@ namespace PCMS.API.Migrations
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Type = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    LastModifiedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedById = table.Column<string>(type: "TEXT", nullable: false),
                     LastEditedById = table.Column<string>(type: "TEXT", nullable: false),
                     CaseId = table.Column<string>(type: "TEXT", nullable: false)

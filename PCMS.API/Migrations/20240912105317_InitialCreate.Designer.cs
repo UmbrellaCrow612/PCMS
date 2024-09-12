@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240911192920_InitialCreate")]
+    [Migration("20240912105317_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -268,7 +268,7 @@ namespace PCMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("LastModifiedById")
+                    b.Property<string>("LastEditedById")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -318,7 +318,7 @@ namespace PCMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("LastModifiedAt")
+                    b.Property<DateTime>("LastModifiedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")

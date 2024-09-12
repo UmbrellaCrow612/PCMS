@@ -65,7 +65,7 @@ namespace PCMS.API.DTOS
         /// <summary>
         /// Gets or sets the user Id who last modified the case.
         /// </summary>
-        public required string LastModifiedById { get; set; }
+        public required string LastEditedById { get; set; }
 
         /// <summary>
         /// Gets or sets the case actions, list of CaseAction.

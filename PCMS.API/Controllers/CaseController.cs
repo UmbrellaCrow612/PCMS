@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
 using PCMS.API.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace PCMS.API.Controllers
 {
@@ -17,10 +20,12 @@ namespace PCMS.API.Controllers
     [ApiController]
     [Route("cases")]
     [Produces("application/json")]
-    public class CaseController(ILogger<CaseController> logger, ApplicationDbContext context) : ControllerBase
+    [Authorize]
+    public class CaseController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager) : ControllerBase
     {
         private readonly ILogger<CaseController> _logger = logger;
         private readonly ApplicationDbContext _context = context;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
 
         /// <summary>
         /// Creates a new case.
@@ -40,11 +45,17 @@ namespace PCMS.API.Controllers
             {
                 _logger.LogInformation("POST case request received");
 
-                var userExists = await _context.Users.AnyAsync(u => u.Id == request.CreatedById);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                if (!userExists)
+                if (string.IsNullOrEmpty(userId))
                 {
-                    return BadRequest("User does not exist");
+                    return Unauthorized("Unauthorized");
+                }
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user is null)
+                {
+                    return Unauthorized("Unauthorized");
                 }
 
                 var newCase = new Case
@@ -53,10 +64,8 @@ namespace PCMS.API.Controllers
                     Description = request.Description,
                     Priority = request.Priority,
                     Type = request.Type,
-                    CreatedById = request.CreatedById,
-                    LastModifiedById = request.CreatedById,
-                    DateOpened = DateTime.UtcNow,
-                    LastModifiedDate = DateTime.UtcNow
+                    CreatedById = userId,
+                    LastEditedById = userId
                 };
 
                 await _context.Cases.AddAsync(newCase);
@@ -77,7 +86,7 @@ namespace PCMS.API.Controllers
                     Priority = createdCase.Priority,
                     Type = createdCase.Type,
                     CreatedById = createdCase.CreatedById,
-                    LastModifiedById = createdCase.LastModifiedById,
+                    LastEditedById = createdCase.LastEditedById,
                     CaseActions = createdCase.CaseActions.Select(ca => new GETCaseAction
                     {
                         Id = ca.Id,
@@ -87,7 +96,7 @@ namespace PCMS.API.Controllers
                         CreatedAt = ca.CreatedAt,
                         CreatedById = ca.CreatedById,
                         LastEditedById = ca.LastEditedById,
-                        LastModifiedAt = ca.LastModifiedAt,
+                        LastModifiedDate = ca.LastModifiedDate,
                     }).ToList(),
                     Reports = createdCase.Reports,
                     AssignedUsers = createdCase.AssignedUsers.Select(u => new GETApplicationUser
@@ -153,7 +162,7 @@ namespace PCMS.API.Controllers
                         Priority = c.Priority,
                         Type = c.Type,
                         CreatedById = c.CreatedById,
-                        LastModifiedById = c.LastModifiedById,
+                        LastEditedById = c.LastEditedById,
                         CaseActions = c.CaseActions.Select(ca => new GETCaseAction
                         {
                             Id = ca.Id,
@@ -163,7 +172,7 @@ namespace PCMS.API.Controllers
                             CreatedAt = ca.CreatedAt,
                             CreatedById = ca.CreatedById,
                             LastEditedById = ca.LastEditedById,
-                            LastModifiedAt = ca.LastModifiedAt,
+                            LastModifiedDate = ca.LastModifiedDate,
                         }).ToList(),
                         Reports = c.Reports,
                         AssignedUsers = c.AssignedUsers.Select(u => new GETApplicationUser
@@ -225,7 +234,7 @@ namespace PCMS.API.Controllers
                         Priority = c.Priority,
                         Type = c.Type,
                         CreatedById = c.CreatedById,
-                        LastModifiedById = c.LastModifiedById,
+                        LastEditedById = c.LastEditedById,
                         CaseActions = c.CaseActions.Select(ca => new GETCaseAction
                         {
                             Id = ca.Id,
@@ -235,7 +244,7 @@ namespace PCMS.API.Controllers
                             CreatedAt = ca.CreatedAt,
                             CreatedById = ca.CreatedById,
                             LastEditedById = ca.LastEditedById,
-                            LastModifiedAt = ca.LastModifiedAt,
+                            LastModifiedDate = ca.LastModifiedDate,
                         }).ToList(),
                         Reports = c.Reports,
                         AssignedUsers = c.AssignedUsers.Select(u => new GETApplicationUser
@@ -282,6 +291,19 @@ namespace PCMS.API.Controllers
             {
                 _logger.LogInformation("Patch request received for case {Id}", id);
 
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized("Unauthorized");
+                }
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user is null)
+                {
+                    return Unauthorized("Unauthorized");
+                }
+
                 if (string.IsNullOrEmpty(id))
                 {
                     return BadRequest("Case id cannot be null or empty");
@@ -294,19 +316,12 @@ namespace PCMS.API.Controllers
                     return NotFound("Case not found");
                 }
 
-                var userExists = await _context.Users.AnyAsync(u => u.Id == request.LastModifiedById);
-
-                if (!userExists)
-                {
-                    return NotFound("User not found");
-                }
-
                 existingCase.Title = request.Title;
                 existingCase.Description = request.Description;
                 existingCase.Status = request.Status;
                 existingCase.Priority = request.Priority;
                 existingCase.Type = request.Type;
-                existingCase.LastModifiedById = request.LastModifiedById;
+                existingCase.LastEditedById = userId;
                 existingCase.LastModifiedDate = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();

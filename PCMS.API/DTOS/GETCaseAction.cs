@@ -33,7 +33,7 @@
         /// <summary>
         /// Gets or sets the case action last modified at.
         /// </summary>
-        public required DateTime LastModifiedAt { get; set; }
+        public required DateTime LastModifiedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the case action created by Id.

@@ -69,8 +69,6 @@ namespace PCMS.API.Controllers
                     CaseId = caseId,
                     CreatedById = request.CreatedById,
                     LastEditedById = request.CreatedById,
-                    CreatedAt = DateTime.UtcNow,
-                    LastModifiedAt = DateTime.UtcNow
                 };
 
                 await _context.CaseActions.AddAsync(caseAction);
@@ -83,7 +81,7 @@ namespace PCMS.API.Controllers
                     Description = caseAction.Description,
                     Type = caseAction.Type,
                     CreatedAt = caseAction.CreatedAt,
-                    LastModifiedAt = caseAction.LastModifiedAt,
+                    LastModifiedDate = caseAction.LastModifiedDate,
                     CreatedById = caseAction.CreatedById,
                     LastEditedById = caseAction.LastEditedById
                 };
@@ -134,7 +132,7 @@ namespace PCMS.API.Controllers
                         Description = ca.Description,
                         Type = ca.Type,
                         CreatedAt = ca.CreatedAt,
-                        LastModifiedAt = ca.LastModifiedAt,
+                        LastModifiedDate = ca.LastModifiedDate,
                         CreatedById = ca.CreatedById,
                         LastEditedById = ca.LastEditedById
                     })
@@ -196,9 +194,10 @@ namespace PCMS.API.Controllers
                         Description = ca.Description,
                         Type = ca.Type,
                         CreatedAt = ca.CreatedAt,
-                        LastModifiedAt = ca.LastModifiedAt,
+                        LastModifiedDate = ca.LastModifiedDate,
                         CreatedById = ca.CreatedById,
-                        LastEditedById = ca.LastEditedById
+                        LastEditedById = ca.LastEditedById,
+                      
                     })
                     .ToListAsync();
 
@@ -248,7 +247,7 @@ namespace PCMS.API.Controllers
                 caseAction.Description = request.Description;
                 caseAction.Type = request.Type;
                 caseAction.LastEditedById = request.LastEditedById;
-                caseAction.LastModifiedAt = DateTime.UtcNow;
+                caseAction.LastModifiedDate = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
 

@@ -37,11 +37,5 @@ namespace PCMS.API.DTOS
         /// </summary>
         [Required(ErrorMessage = "Type is required")]
         public string Type { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the Case LastModifiedById.
-        /// </summary>
-        [Required(ErrorMessage = "LastModifiedById is required")]
-        public string LastModifiedById { get; set; } = string.Empty;
     }
 }

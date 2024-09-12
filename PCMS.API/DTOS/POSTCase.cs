@@ -32,11 +32,5 @@ namespace PCMS.API.DTOS
         [Required(ErrorMessage = "Type is required")]
         public string Type { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Get or set the case created by Id which would the user Id of the person who made / requested the creation of this case. />.
-        /// </summary>
-        [Required(ErrorMessage = "CreatedById is required")]
-        public string CreatedById { get; set; } = string.Empty;
-
     }
 }
