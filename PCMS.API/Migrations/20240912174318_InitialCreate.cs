@@ -237,8 +237,13 @@ namespace PCMS.API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: false)
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    LastEditedById = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Details = table.Column<string>(type: "TEXT", nullable: false),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

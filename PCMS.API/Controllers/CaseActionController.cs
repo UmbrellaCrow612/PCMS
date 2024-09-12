@@ -88,7 +88,7 @@ namespace PCMS.API.Controllers
 
                 _logger.LogInformation("Created a new case action with ID: {CaseActionId} for case ID: {CaseId}", returnCaseAction.Id, caseId);
 
-                return CreatedAtAction(nameof(GetAction), new { caseId, id = returnCaseAction.Id }, returnCaseAction);
+                return CreatedAtAction(nameof(CreateAction), new { caseId, id = returnCaseAction.Id }, returnCaseAction);
             }
             catch (Exception ex)
             {

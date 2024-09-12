@@ -27,6 +27,12 @@ namespace PCMS.API.Mapper
             CreateMap<GETCaseAction, CaseAction>();
             CreateMap<CaseAction, PATCHCaseAction>();
             CreateMap<PATCHCaseAction, CaseAction>();
+
+            // Report
+            CreateMap<Report, POSTReport>();
+            CreateMap<POSTReport, Report>();
+            CreateMap<Report, GETReport>();
+            CreateMap<GETReport, Report>();
         }
     }
 }

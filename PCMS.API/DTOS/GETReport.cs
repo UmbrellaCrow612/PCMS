@@ -1,14 +1,14 @@
-﻿namespace PCMS.API.Models
+﻿namespace PCMS.API.DTOS
 {
     /// <summary>
-    /// Represents a report in the system.
+    /// DTO for GET a report
     /// </summary>
-    public class Report
+    public class GETReport
     {
         /// <summary>
-        /// Gets the report ID, defaults to <see cref="Guid.NewGuid()"/>.
+        /// Get or set the report ID.
         /// </summary>
-        public string Id { get; } = Guid.NewGuid().ToString();
+        public required string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the report Title.
@@ -26,14 +26,14 @@
         public required string LastEditedById { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the report CreatedAt defaults to <see cref="DateTime.UtcNow"/>.
+        /// Gets or sets the report CreatedAt.
         /// </summary>
-        public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public required DateTime CreatedAt { get; set; }
 
         /// <summary>
-        /// Gets or sets the report LastModifiedDate, defaults to <see cref="DateTime.UtcNow"/>.
+        /// Gets or sets the report LastModifiedDate.
         /// </summary>
-        public required DateTime LastModifiedDate {  get; set; } = DateTime.UtcNow;
+        public required DateTime LastModifiedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the report Details.
@@ -41,13 +41,8 @@
         public required string Details { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the report CaseId it is linked to <see cref="Case"/>.
+        /// Gets or sets the report CaseId it is linked to.
         /// </summary>
         public required string CaseId { get; set; }
-
-        /// <summary>
-        /// Reference navigation property for <see cref="CaseId"/>.
-        /// </summary>
-        public Case? Case { get; set; } = null!;
     }
 }

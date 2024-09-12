@@ -103,7 +103,6 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<GETCase>> GetCase([FromRoute][Required] string id)
         {
-
             _logger.LogInformation("Get case request received for id: {Id}", id);
 
             try

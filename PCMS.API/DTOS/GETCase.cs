@@ -80,6 +80,6 @@ namespace PCMS.API.DTOS
         /// <summary>
         /// Gets or sets the case reports, list of Report.
         /// </summary>
-        public required List<Report> Reports { get; set; } = [];
+        public required List<GETReport> Reports { get; set; } = [];
     }
 }
