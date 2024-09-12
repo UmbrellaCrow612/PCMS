@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +22,12 @@ namespace PCMS.API.Controllers
     [Route("cases")]
     [Produces("application/json")]
     [Authorize]
-    public class CaseController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager) : ControllerBase
+    public class CaseController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseController> _logger = logger;
         private readonly ApplicationDbContext _context = context;
         private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly IMapper _mapper = mapper;
 
         /// <summary>
         /// Creates a new case.
@@ -58,59 +60,21 @@ namespace PCMS.API.Controllers
                     return Unauthorized("Unauthorized");
                 }
 
-                var newCase = new Case
-                {
-                    Title = request.Title,
-                    Description = request.Description,
-                    Priority = request.Priority,
-                    Type = request.Type,
-                    CreatedById = userId,
-                    LastEditedById = userId
-                };
+                var newCase = _mapper.Map<Case>(request);
+                newCase.CreatedById = userId;
+                newCase.LastEditedById = userId;
 
                 await _context.Cases.AddAsync(newCase);
                 await _context.SaveChangesAsync();
 
-                var createdCase = await _context.Cases.FirstOrDefaultAsync(c => c.Id == newCase.Id) ?? throw new Exception("Failed to retrieve the created case");
+                var createdCase = await _context.Cases
+                    .Include(c => c.CaseActions)
+                    .Include(c => c.AssignedUsers)
+                    .Include(c => c.Reports)
+                    .FirstOrDefaultAsync(c => c.Id == newCase.Id) ?? throw new Exception("Failed to retrieve the created case");
 
-                var getCaseResult = new GETCase
-                {
-                    Id = createdCase.Id,
-                    CaseNumber = createdCase.CaseNumber,
-                    Title = createdCase.Title,
-                    Description = createdCase.Description,
-                    Status = createdCase.Status,
-                    DateOpened = createdCase.DateOpened,
-                    DateClosed = createdCase.DateClosed,
-                    LastModifiedDate = createdCase.LastModifiedDate,
-                    Priority = createdCase.Priority,
-                    Type = createdCase.Type,
-                    CreatedById = createdCase.CreatedById,
-                    LastEditedById = createdCase.LastEditedById,
-                    CaseActions = createdCase.CaseActions.Select(ca => new GETCaseAction
-                    {
-                        Id = ca.Id,
-                        Name = ca.Name,
-                        Description = ca.Description,
-                        Type = ca.Type,
-                        CreatedAt = ca.CreatedAt,
-                        CreatedById = ca.CreatedById,
-                        LastEditedById = ca.LastEditedById,
-                        LastModifiedDate = ca.LastModifiedDate,
-                    }).ToList(),
-                    Reports = createdCase.Reports,
-                    AssignedUsers = createdCase.AssignedUsers.Select(u => new GETApplicationUser
-                    {
-                        Id = u.Id,
-                        FirstName = u.FirstName,
-                        LastName = u.LastName,
-                        Rank = u.Rank,
-                        BadgeNumber = u.BadgeNumber,
-                        DOB = u.DOB,
-                        UserName = u.UserName!,
-                        Email = u.Email!
-                    }).ToList()
-                };
+                // Use AutoMapper to map from Case model to GETCase DTO
+                var getCaseResult = _mapper.Map<GETCase>(createdCase);
 
                 _logger.LogInformation("Created a new case with ID: {CaseId}", getCaseResult.Id);
 
@@ -122,6 +86,7 @@ namespace PCMS.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
+
 
         /// <summary>
         /// Retrieves a case by its ID.

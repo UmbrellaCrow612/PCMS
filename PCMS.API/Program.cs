@@ -39,6 +39,8 @@ builder.Services.AddApiVersioning(option =>
 });
 
 builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
+builder.Services.AddAutoMapper(typeof(Program));
+
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 

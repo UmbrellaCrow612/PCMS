@@ -81,7 +81,5 @@ namespace PCMS.API.DTOS
         /// Gets or sets the case reports, list of Report.
         /// </summary>
         public required List<Report> Reports { get; set; } = [];
-
-
     }
 }
