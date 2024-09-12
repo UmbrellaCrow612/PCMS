@@ -114,6 +114,9 @@ namespace PCMS.API.Controllers
                 }
 
                 var caseEntity = await _context.Cases
+                    .Include(c => c.CaseActions)
+                    .Include(c => c.AssignedUsers)
+                    .Include(c => c.Reports)
                     .FirstOrDefaultAsync(c => c.Id == id);
 
                 if (caseEntity is null)
@@ -152,6 +155,9 @@ namespace PCMS.API.Controllers
             try
             {
                 var cases = await _context.Cases
+                    .Include(c => c.CaseActions)
+                    .Include(c => c.AssignedUsers)
+                    .Include(c => c.Reports)
                     .ToListAsync();
 
                 var returnCases = _mapper.Map<List<GETCase>>(cases);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +22,12 @@ namespace PCMS.API.Controllers
     [Route("cases/{caseId}/actions")]
     [Produces("application/json")]
     [Authorize]
-    public class CaseActionController(ILogger<CaseActionController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager) : ControllerBase
+    public class CaseActionController(ILogger<CaseActionController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseActionController> _logger = logger;
         private readonly ApplicationDbContext _context = context;
         private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly IMapper _mapper = mapper;
 
         /// <summary>
         /// Creates a new case action for a specific case.
@@ -35,73 +37,58 @@ namespace PCMS.API.Controllers
         /// <returns>The created case action details.</returns>
         /// <response code="201">Returns the newly created case action.</response>
         /// <response code="400">Returns when the request is invalid.</response>
+        /// <response code="401">Returns when the user is unauthorized.</response>
         /// <response code="404">Returns when the case or user is not found.</response>
         /// <response code="500">Returns when there's an internal server error.</response>
         [HttpPost]
         [ProducesResponseType(typeof(GETCaseAction), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<GETCaseAction>> CreateAction([FromRoute][Required] string caseId, [FromBody] POSTCaseAction request)
         {
+            _logger.LogInformation("POST case action request received for case ID: {CaseId}", caseId);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("Unauthorized");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                return Unauthorized("Unauthorized");
+            }
+
             try
             {
-                _logger.LogInformation("POST case action request received for case ID: {CaseId}", caseId);
-
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return Unauthorized("Unauthorized");
-                }
-
-                var user = await _userManager.GetUserAsync(User);
-                if (user is null)
-                {
-                    return Unauthorized("Unauthorized");
-                }
-
                 if (string.IsNullOrEmpty(caseId))
                 {
                     return BadRequest("Case ID cannot be null or empty");
                 }
 
-
-                var case_ = await _context.Cases.FirstOrDefaultAsync(c => c.Id == caseId);
-                if (case_ is null)
+                var existingCase = await _context.Cases.FindAsync(caseId);
+                if (existingCase is null)
                 {
                     return NotFound("Case does not exist");
                 }
 
-                var caseAction = new CaseAction
-                {
-                    Name = request.Name,
-                    Description = request.Description,
-                    Type = request.Type,
-                    Case = case_,
-                    CaseId = caseId,
-                    CreatedById = userId,
-                    LastEditedById = userId,
-                };
+                var caseAction = _mapper.Map<CaseAction>(request);
+                caseAction.CaseId = caseId;
+                caseAction.CreatedById = userId;
+                caseAction.LastEditedById = userId;
 
                 await _context.CaseActions.AddAsync(caseAction);
                 await _context.SaveChangesAsync();
 
-                var createdCaseAction = new GETCaseAction
-                {
-                    Id = caseAction.Id,
-                    Name = caseAction.Name,
-                    Description = caseAction.Description,
-                    Type = caseAction.Type,
-                    CreatedAt = caseAction.CreatedAt,
-                    LastModifiedDate = caseAction.LastModifiedDate,
-                    CreatedById = caseAction.CreatedById,
-                    LastEditedById = caseAction.LastEditedById
-                };
+                var returnCaseAction = _mapper.Map<GETCaseAction>(caseAction);
 
-                _logger.LogInformation("Created a new case action with ID: {CaseActionId} for case ID: {CaseId}", createdCaseAction.Id, caseId);
+                _logger.LogInformation("Created a new case action with ID: {CaseActionId} for case ID: {CaseId}", returnCaseAction.Id, caseId);
 
-                return CreatedAtAction(nameof(GetAction), new { caseId, id = createdCaseAction.Id }, createdCaseAction);
+                return CreatedAtAction(nameof(GetAction), new { caseId, id = returnCaseAction.Id }, returnCaseAction);
             }
             catch (Exception ex)
             {
@@ -117,48 +104,41 @@ namespace PCMS.API.Controllers
         /// <param name="id">The ID of the case action.</param>
         /// <returns>The requested case action.</returns>
         /// <response code="200">Returns the requested case action.</response>
+        /// <response code="401">Returns when the user is unauthorized.</response>
         /// <response code="400">Returns when the ID is invalid.</response>
         /// <response code="404">Returns when the case action is not found.</response>
         /// <response code="500">Returns when there's an internal server error.</response>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(GETCaseAction), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<GETCaseAction>> GetAction([FromRoute][Required] string caseId, [FromRoute][Required] string id)
         {
+            _logger.LogInformation("Get case action request received for case ID: {CaseId}, action ID: {Id}", caseId, id);
+
             try
             {
-                _logger.LogInformation("Get case action request received for case ID: {CaseId}, action ID: {Id}", caseId, id);
-
                 if (string.IsNullOrEmpty(caseId) || string.IsNullOrEmpty(id))
                 {
                     return BadRequest("Case ID or case action ID cannot be null or empty");
                 }
 
-                var caseAction = await _context.CaseActions
+                var existingCaseAction = await _context.CaseActions
                     .Where(ca => ca.CaseId == caseId && ca.Id == id)
-                    .Select(ca => new GETCaseAction
-                    {
-                        Id = ca.Id,
-                        Name = ca.Name,
-                        Description = ca.Description,
-                        Type = ca.Type,
-                        CreatedAt = ca.CreatedAt,
-                        LastModifiedDate = ca.LastModifiedDate,
-                        CreatedById = ca.CreatedById,
-                        LastEditedById = ca.LastEditedById
-                    })
                     .FirstOrDefaultAsync();
 
-                if (caseAction is null)
+                if (existingCaseAction is null)
                 {
                     return NotFound("Case action not found or not associated with the specified case");
                 }
 
+                var returnCaseAction = _mapper.Map<GETCaseAction>(existingCaseAction);
+
                 _logger.LogInformation("Get case action request for case ID: {CaseId}, action ID: {Id} successful", caseId, id);
 
-                return Ok(caseAction);
+                return Ok(returnCaseAction);
             }
             catch (Exception ex)
             {
@@ -174,19 +154,21 @@ namespace PCMS.API.Controllers
         /// <returns>A list of all case actions for the specified case.</returns>
         /// <response code="200">Returns the list of all case actions for the specified case.</response>
         /// <response code="400">Returns when the case ID is invalid.</response>
+        /// <response code="401">Returns when the case user is unauthorized.</response>
         /// <response code="404">Returns when the case is not found.</response>
         /// <response code="500">Returns when there's an internal server error.</response>
         [HttpGet]
         [ProducesResponseType(typeof(List<GETCaseAction>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<GETCaseAction>>> GetActions([FromRoute][Required] string caseId)
         {
+            _logger.LogInformation("Get request received for all case actions of case ID: {CaseId}", caseId);
+
             try
             {
-                _logger.LogInformation("Get request received for all case actions of case ID: {CaseId}", caseId);
-
                 if (string.IsNullOrEmpty(caseId))
                 {
                     return BadRequest("Case ID cannot be null or empty");
@@ -198,23 +180,13 @@ namespace PCMS.API.Controllers
                     return NotFound("Case does not exist");
                 }
 
-                var caseActions = await _context.CaseActions
+                var existingCaseActions = await _context.CaseActions
                     .Where(ca => ca.CaseId == caseId)
-                    .Select(ca => new GETCaseAction
-                    {
-                        Id = ca.Id,
-                        Name = ca.Name,
-                        Description = ca.Description,
-                        Type = ca.Type,
-                        CreatedAt = ca.CreatedAt,
-                        LastModifiedDate = ca.LastModifiedDate,
-                        CreatedById = ca.CreatedById,
-                        LastEditedById = ca.LastEditedById,
-                      
-                    })
                     .ToListAsync();
 
-                return Ok(caseActions);
+                var returnCaseActions = _mapper.Map<List<GETCaseAction>>(existingCaseActions);
+
+                return Ok(returnCaseActions);
             }
             catch (Exception ex)
             {
@@ -232,32 +204,33 @@ namespace PCMS.API.Controllers
         /// <returns>No content if successful.</returns>
         /// <response code="204">Returns when the case action is successfully updated.</response>
         /// <response code="400">Returns when the request is invalid.</response>
+        /// <response code="401">Returns when the case user is unauthorized.</response>
         /// <response code="404">Returns when the case action is not found.</response>
         /// <response code="500">Returns when there's an internal server error.</response>
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PatchCaseAction([FromRoute][Required] string caseId, [FromRoute][Required] string id, [FromBody] PATCHCaseAction request)
         {
+            _logger.LogInformation("Patch request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("Unauthorized");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                return Unauthorized("Unauthorized");
+            }
+
             try
             {
-                _logger.LogInformation("Patch request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);
-
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return Unauthorized("Unauthorized");
-                }
-
-                var user = await _userManager.GetUserAsync(User);
-                if (user is null)
-                {
-                    return Unauthorized("Unauthorized");
-                }
-
                 if (string.IsNullOrEmpty(caseId) || string.IsNullOrEmpty(id))
                 {
                     return BadRequest("Case ID or case action ID cannot be null or empty");
@@ -296,19 +269,21 @@ namespace PCMS.API.Controllers
         /// <returns>No content if successful.</returns>
         /// <response code="204">Returns when the case action is successfully deleted.</response>
         /// <response code="400">Returns when the ID is invalid.</response>
+        /// <response code="401">Returns when the case user is unauthorized.</response>
         /// <response code="404">Returns when the case action is not found.</response>
         /// <response code="500">Returns when there's an internal server error.</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteCaseAction([FromRoute][Required] string caseId, [FromRoute][Required] string id)
         {
+            _logger.LogInformation("Delete request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);
+
             try
             {
-                _logger.LogInformation("Delete request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);
-
                 if (string.IsNullOrEmpty(caseId) || string.IsNullOrEmpty(id))
                 {
                     return BadRequest("Case ID or case action ID cannot be null or empty");
