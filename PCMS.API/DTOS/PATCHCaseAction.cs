@@ -24,11 +24,5 @@ namespace PCMS.API.DTOS
         /// </summary>
         [Required(ErrorMessage = "Type is required")]
         public string Type { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the case action last edited by Id.
-        /// </summary>
-        [Required(ErrorMessage = "LastEditedById is required")]
-        public string LastEditedById { get; set; } = string.Empty;
     }
 }

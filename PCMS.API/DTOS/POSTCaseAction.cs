@@ -24,11 +24,5 @@ namespace PCMS.API.DTOS
         /// </summary>
         [Required(ErrorMessage = "Type is required")]
         public string Type { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the case action created by Id.
-        /// </summary>
-        [Required(ErrorMessage = "CreatedById is required")]
-        public string CreatedById { get; set; } = string.Empty;
     }
 }

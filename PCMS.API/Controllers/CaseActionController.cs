@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
 using PCMS.API.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace PCMS.API.Controllers
 {
@@ -17,10 +20,12 @@ namespace PCMS.API.Controllers
     [ApiController]
     [Route("cases/{caseId}/actions")]
     [Produces("application/json")]
-    public class CaseActionController(ILogger<CaseActionController> logger, ApplicationDbContext context) : ControllerBase
+    [Authorize]
+    public class CaseActionController(ILogger<CaseActionController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager) : ControllerBase
     {
         private readonly ILogger<CaseActionController> _logger = logger;
         private readonly ApplicationDbContext _context = context;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
 
         /// <summary>
         /// Creates a new case action for a specific case.
@@ -43,16 +48,24 @@ namespace PCMS.API.Controllers
             {
                 _logger.LogInformation("POST case action request received for case ID: {CaseId}", caseId);
 
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized("Unauthorized");
+                }
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user is null)
+                {
+                    return Unauthorized("Unauthorized");
+                }
+
                 if (string.IsNullOrEmpty(caseId))
                 {
                     return BadRequest("Case ID cannot be null or empty");
                 }
 
-                var userExists = await _context.Users.AnyAsync(u => u.Id == request.CreatedById);
-                if (!userExists)
-                {
-                    return NotFound("User does not exist");
-                }
 
                 var case_ = await _context.Cases.FirstOrDefaultAsync(c => c.Id == caseId);
                 if (case_ is null)
@@ -67,8 +80,8 @@ namespace PCMS.API.Controllers
                     Type = request.Type,
                     Case = case_,
                     CaseId = caseId,
-                    CreatedById = request.CreatedById,
-                    LastEditedById = request.CreatedById,
+                    CreatedById = userId,
+                    LastEditedById = userId,
                 };
 
                 await _context.CaseActions.AddAsync(caseAction);
@@ -232,6 +245,19 @@ namespace PCMS.API.Controllers
             {
                 _logger.LogInformation("Patch request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);
 
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized("Unauthorized");
+                }
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user is null)
+                {
+                    return Unauthorized("Unauthorized");
+                }
+
                 if (string.IsNullOrEmpty(caseId) || string.IsNullOrEmpty(id))
                 {
                     return BadRequest("Case ID or case action ID cannot be null or empty");
@@ -246,7 +272,7 @@ namespace PCMS.API.Controllers
                 caseAction.Name = request.Name;
                 caseAction.Description = request.Description;
                 caseAction.Type = request.Type;
-                caseAction.LastEditedById = request.LastEditedById;
+                caseAction.LastEditedById = userId;
                 caseAction.LastModifiedDate = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
