@@ -46,7 +46,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GETReport>> CreateReport([FromRoute] [Required] string caseId, [FromBody] POSTReport request)
+        public async Task<ActionResult<GETReport>> CreateReport([FromRoute][Required] string caseId, [FromBody] POSTReport request)
         {
             _logger.LogInformation("POST report request received for case ID: {CaseId}", caseId);
 

@@ -33,7 +33,7 @@
         /// <summary>
         /// Gets or sets the report LastModifiedDate, defaults to <see cref="DateTime.UtcNow"/>.
         /// </summary>
-        public required DateTime LastModifiedDate {  get; set; } = DateTime.UtcNow;
+        public required DateTime LastModifiedDate { get; set; } = DateTime.UtcNow;
 
         /// <summary>
         /// Gets or sets the report Details.
