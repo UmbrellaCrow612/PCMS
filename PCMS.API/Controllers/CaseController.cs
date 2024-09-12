@@ -112,15 +112,16 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<GETCase>> GetCase([FromRoute][Required] string id)
         {
-            _logger.LogInformation("Get case request received for id: {Id}", id);
+            _logger.LogInformation("GET case request received for ID: {Id}", id);
+
+            if (string.IsNullOrEmpty(id))
+            {
+                _logger.LogWarning("Get case request failed: Case ID is null or empty.");
+                return BadRequest("Case ID cannot be null or empty.");
+            }
 
             try
             {
-                if (string.IsNullOrEmpty(id))
-                {
-                    return BadRequest("Case ID cannot be null or empty.");
-                }
-
                 var caseEntity = await _context.Cases
                     .Include(c => c.CaseActions)
                     .Include(c => c.AssignedUsers)
@@ -129,18 +130,23 @@ namespace PCMS.API.Controllers
 
                 if (caseEntity is null)
                 {
+                    _logger.LogWarning("Get case request failed: Case with ID {Id} not found.", id);
                     return NotFound($"Case with ID '{id}' was not found.");
                 }
 
                 var caseResult = _mapper.Map<GETCase>(caseEntity);
 
-                _logger.LogInformation("Get case request for id: {Id} successful", id);
-
+                _logger.LogInformation("GET case request for ID: {Id} successful. Case found.", id);
                 return Ok(caseResult);
+            }
+            catch (AutoMapperMappingException ex)
+            {
+                _logger.LogError(ex, "Failed to map Case to GETCase for case ID {Id}", id);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to get a case for Id {Id}", id);
+                _logger.LogError(ex, "Unexpected error occurred while retrieving case with ID {Id}", id);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
@@ -158,7 +164,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<GETCase>>> GetCases()
         {
-            _logger.LogInformation("Get request received for all cases.");
+            _logger.LogInformation("GET request received to retrieve all cases.");
 
             try
             {
@@ -168,13 +174,26 @@ namespace PCMS.API.Controllers
                     .Include(c => c.Reports)
                     .ToListAsync();
 
+                if (cases.Count is 0)
+                {
+                    _logger.LogInformation("No cases found.");
+                    return Ok(new List<GETCase>());
+                }
+
                 var returnCases = _mapper.Map<List<GETCase>>(cases);
+
+                _logger.LogInformation("{Count} cases retrieved successfully.", returnCases.Count);
 
                 return Ok(returnCases);
             }
+            catch (AutoMapperMappingException ex)
+            {
+                _logger.LogError(ex, "Failed to map Case entities to GETCase DTOs.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to get cases");
+                _logger.LogError(ex, "Unexpected error occurred while retrieving cases.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
@@ -198,33 +217,35 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> PatchCase([FromRoute][Required] string id, [FromBody] PATCHCase request)
         {
-            _logger.LogInformation("Patch request received for case {Id}", id);
+            _logger.LogInformation("PATCH request received for case ID: {Id}", id);
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
             {
+                _logger.LogWarning("Unauthorized attempt to patch case ID: {Id}", id);
                 return Unauthorized("Unauthorized");
             }
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user is null)
             {
+                _logger.LogWarning("User with ID {UserId} not found during PATCH request for case ID: {CaseId}", userId, id);
                 return Unauthorized("Unauthorized");
+            }
+
+            if (string.IsNullOrEmpty(id))
+            {
+                _logger.LogWarning("PATCH request failed: Case ID is null or empty. User ID: {UserId}", userId);
+                return BadRequest("Case ID cannot be null or empty.");
             }
 
             try
             {
-
-                if (string.IsNullOrEmpty(id))
-                {
-                    return BadRequest("Case id cannot be null or empty");
-                }
-
                 var existingCase = await _context.Cases.FirstOrDefaultAsync(c => c.Id == id);
-
                 if (existingCase is null)
                 {
-                    return NotFound("Case not found");
+                    _logger.LogWarning("PATCH request failed: Case with ID {Id} not found. User ID: {UserId}", id, userId);
+                    return NotFound("Case not found.");
                 }
 
                 existingCase.Title = request.Title;
@@ -237,13 +258,23 @@ namespace PCMS.API.Controllers
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Patch request for case {Id} is successful", id);
+                _logger.LogInformation("Case ID {Id} successfully updated by User ID: {UserId}", id, userId);
 
                 return NoContent();
             }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, "Database update failed for PATCH request on case ID: {Id}. Request: {@Request}. User ID: {UserId}", id, request, userId);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the case.");
+            }
+            catch (AutoMapperMappingException ex)
+            {
+                _logger.LogError(ex, "Failed to map PATCHCase DTO to Case for PATCH request on case ID: {Id}. User ID: {UserId}", id, userId);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to patch a case of id: {Id}", id);
+                _logger.LogError(ex, "Unexpected error occurred while patching case ID: {Id}. User ID: {UserId}", id, userId);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
