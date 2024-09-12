@@ -45,22 +45,9 @@ namespace PCMS.API.Models
         public List<Case> AssignedCases { get; set; } = [];
 
         /// <summary>
-        /// Gets the full name of the user.
-        /// </summary>
-        public string FullName => $"{FirstName} {LastName}";
-
-        /// <summary>
         /// Initializes a new instance of the ApplicationUser class.
         /// </summary>
         public ApplicationUser() : base()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the ApplicationUser class with a specified user name.
-        /// </summary>
-        /// <param name="userName">The user name for the new user.</param>
-        public ApplicationUser(string userName) : base(userName)
         {
         }
     }

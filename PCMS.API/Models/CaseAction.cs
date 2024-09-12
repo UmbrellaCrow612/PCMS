@@ -53,6 +53,6 @@
         /// <summary>
         /// Gets or sets the specific case this case action is linked to, required.
         /// </summary>
-        public required Case Case { get; set; }
+        public Case? Case { get; set; } = null!;
     }
 }
