@@ -50,12 +50,14 @@ namespace PCMS.API.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
             {
+                _logger.LogWarning("Unauthorized attempt to create case.");
                 return Unauthorized("Unauthorized");
             }
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user is null)
             {
+                _logger.LogWarning("User with ID {UserId} not found.", userId);
                 return Unauthorized("Unauthorized");
             }
 
@@ -69,20 +71,27 @@ namespace PCMS.API.Controllers
                 await _context.SaveChangesAsync();
 
                 var createdCase = await _context.Cases
-                    .FirstOrDefaultAsync(c => c.Id == newCase.Id) ?? throw new ApplicationException("Failed to retrieve the created case");
+                    .FirstOrDefaultAsync(c => c.Id == newCase.Id)
+                    ?? throw new ApplicationException("Failed to retrieve the created case");
 
                 var returnCase = _mapper.Map<GETCase>(createdCase);
 
-                _logger.LogInformation("Created a new case with ID: {CaseId}", returnCase.Id);
+                _logger.LogInformation("User {UserId} created a new case with ID: {CaseId}", userId, returnCase.Id);
 
                 return CreatedAtAction(nameof(GetCase), new { id = returnCase.Id }, returnCase);
             }
+            catch (AutoMapperMappingException ex)
+            {
+                _logger.LogError(ex, "Failed to map POSTCase to Case for request: {@Request} by user {UserId}", request, userId);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to create a new case. Request: {@Request}", request);
+                _logger.LogError(ex, "Unexpected error occurred while creating a new case. Request: {@Request} by user {UserId}", request, userId);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
+
 
 
         /// <summary>
