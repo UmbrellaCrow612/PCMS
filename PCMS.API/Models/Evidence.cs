@@ -46,13 +46,28 @@
         public required DateTime CollectionDateTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the officer who created the evidence entry.
+        /// Gets or sets the ID of the user who created the evidence entry.
         /// </summary>
         public required string CreatedById { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the evidence LastEditedBy.
+        /// </summary>
+        public required string LastEditedById { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the person details of who collected the evidence.
         /// </summary>
         public required string CollectedByDetails { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the evidence LastModifiedDate, defaults to <see cref="DateTime.UtcNow"/>.
+        /// </summary>
+        public required DateTime LastModifiedDate { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// Gets or sets the evidence CreatedAt defaults to <see cref="DateTime.UtcNow"/>.
+        /// </summary>
+        public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

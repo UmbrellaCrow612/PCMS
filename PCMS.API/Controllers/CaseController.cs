@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
+using PCMS.API.Filters;
 using PCMS.API.Models;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace PCMS.API.Controllers
@@ -22,6 +22,7 @@ namespace PCMS.API.Controllers
     [Route("cases")]
     [Produces("application/json")]
     [Authorize]
+    [ValidateRouteParameters]
     public class CaseController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseController> _logger = logger;
@@ -96,15 +97,9 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETCase>> GetCase([FromRoute][Required] string id)
+        public async Task<ActionResult<GETCase>> GetCase([FromRoute] string id)
         {
             _logger.LogInformation("GET case request received for ID: {Id}", id);
-
-            if (string.IsNullOrEmpty(id))
-            {
-                _logger.LogWarning("Get case request failed: Case ID is null or empty.");
-                return BadRequest("Case ID cannot be null or empty.");
-            }
 
             try
             {
@@ -194,7 +189,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> PatchCase([FromRoute][Required] string id, [FromBody] PATCHCase request)
+        public async Task<ActionResult> PatchCase([FromRoute] string id, [FromBody] PATCHCase request)
         {
             _logger.LogInformation("PATCH request received for case ID: {Id}", id);
 
@@ -210,12 +205,6 @@ namespace PCMS.API.Controllers
             {
                 _logger.LogWarning("User with ID {UserId} not found during PATCH request for case ID: {CaseId}", userId, id);
                 return Unauthorized("Unauthorized");
-            }
-
-            if (string.IsNullOrEmpty(id))
-            {
-                _logger.LogWarning("PATCH request failed: Case ID is null or empty. User ID: {UserId}", userId);
-                return BadRequest("Case ID cannot be null or empty.");
             }
 
             try
@@ -269,17 +258,12 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCase([FromRoute][Required] string id)
+        public async Task<IActionResult> DeleteCase([FromRoute] string id)
         {
             _logger.LogInformation("Delete request received for case {Id}", id);
 
             try
             {
-                if (string.IsNullOrEmpty(id))
-                {
-                    return BadRequest("Case id cannot be null or empty");
-                }
-
                 var caseToDelete = await _context.Cases.FindAsync(id);
 
                 if (caseToDelete is null)

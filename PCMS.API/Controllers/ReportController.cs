@@ -7,6 +7,7 @@ using PCMS.API.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using PCMS.API.Filters;
 
 namespace PCMS.API.Controllers
 {
@@ -24,6 +25,7 @@ namespace PCMS.API.Controllers
     [Route("/cases/{caseId}/reports")]
     [Produces("application/json")]
     [Authorize]
+    [ValidateRouteParameters]
     public class ReportController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseController> _logger = logger;
@@ -39,7 +41,7 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<GETReport>> CreateReport([FromRoute][Required] string caseId, [FromBody] POSTReport request)
+        public async Task<ActionResult<GETReport>> CreateReport([FromRoute] string caseId, [FromBody] POSTReport request)
         {
             _logger.LogInformation("POST report request received for case ID: {CaseId}", caseId);
 
@@ -58,11 +60,6 @@ namespace PCMS.API.Controllers
 
             try
             {
-                if (string.IsNullOrEmpty(caseId))
-                {
-                    return BadRequest("Case ID cannot be null or empty");
-                }
-
                 var existingCase = await _context.Cases.FindAsync(caseId);
                 if (existingCase is null)
                 {
@@ -98,17 +95,12 @@ namespace PCMS.API.Controllers
         [HttpGet]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<GETReport>>> GetReports([FromRoute][Required] string caseId)
+        public async Task<ActionResult<List<GETReport>>> GetReports([FromRoute] string caseId)
         {
             _logger.LogInformation("GET reports request received for case ID: {CaseId}", caseId);
 
             try
             {
-                if (string.IsNullOrEmpty(caseId))
-                {
-                    return BadRequest("Case ID cannot be null or empty");
-                }
-
                 var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
 
                 if (!caseExists)
@@ -144,17 +136,12 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETReport>> GetReport([FromRoute][Required] string caseId, [FromRoute][Required] string id)
+        public async Task<ActionResult<GETReport>> GetReport([FromRoute] string caseId, [FromRoute] string id)
         {
             _logger.LogInformation("GET report request received for case ID: {caseId} report ID: {id}", caseId, id);
 
             try
             {
-                if (string.IsNullOrEmpty(caseId) | string.IsNullOrEmpty(id))
-                {
-                    return BadRequest("Case ID or Report ID is null or empty");
-                }
-
                 var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
 
                 if (!caseExists)
@@ -198,7 +185,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> PatchReport([FromRoute][Required] string caseId, [FromRoute][Required] string id, [FromBody] PATCHReport request)
+        public async Task<ActionResult> PatchReport([FromRoute] string caseId, [FromRoute] string id, [FromBody] PATCHReport request)
         {
             _logger.LogInformation("PATCH report request received for case ID: {caseId} report ID: {id} request: {request}", caseId, id, request);
 
@@ -217,11 +204,6 @@ namespace PCMS.API.Controllers
 
             try
             {
-                if (string.IsNullOrEmpty(caseId) | string.IsNullOrEmpty(id))
-                {
-                    return BadRequest("Case ID or report ID is null or empty");
-                }
-
                 var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
 
                 if (report is null)
@@ -255,17 +237,12 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> DeleteReport([FromRoute][Required] string caseId, [FromRoute][Required] string id)
+        public async Task<ActionResult> DeleteReport([FromRoute] string caseId, [FromRoute] string id)
         {
             _logger.LogInformation("DELETE report request received for case ID: {caseId} report ID: {id}", caseId, id);
 
             try
             {
-                if (string.IsNullOrEmpty(caseId) | string.IsNullOrEmpty(id))
-                {
-                    return BadRequest("Case ID or report ID is null or empty");
-                }
-
                 var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
 
                 if (report is null)

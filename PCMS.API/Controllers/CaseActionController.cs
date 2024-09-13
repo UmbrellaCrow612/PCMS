@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
+using PCMS.API.Filters;
 using PCMS.API.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
@@ -22,6 +23,7 @@ namespace PCMS.API.Controllers
     [Route("cases/{caseId}/actions")]
     [Produces("application/json")]
     [Authorize]
+    [ValidateRouteParameters]
     public class CaseActionController(ILogger<CaseActionController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseActionController> _logger = logger;
@@ -42,7 +44,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<GETCaseAction>> CreateAction([FromRoute][Required] string caseId, [FromBody] POSTCaseAction request)
+        public async Task<ActionResult<GETCaseAction>> CreateAction([FromRoute] string caseId, [FromBody] POSTCaseAction request)
         {
             _logger.LogInformation("POST case action request received for case ID: {CaseId}", caseId);
 
@@ -61,10 +63,6 @@ namespace PCMS.API.Controllers
 
             try
             {
-                if (string.IsNullOrEmpty(caseId))
-                {
-                    return BadRequest("Case ID cannot be null or empty");
-                }
 
                 var existingCase = await _context.Cases.FindAsync(caseId);
                 if (existingCase is null)
@@ -105,16 +103,12 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<GETCaseAction>> GetAction([FromRoute][Required] string caseId, [FromRoute][Required] string id)
+        public async Task<ActionResult<GETCaseAction>> GetAction([FromRoute] string caseId, [FromRoute] string id)
         {
             _logger.LogInformation("Get case action request received for case ID: {CaseId}, action ID: {Id}", caseId, id);
 
             try
             {
-                if (string.IsNullOrEmpty(caseId) || string.IsNullOrEmpty(id))
-                {
-                    return BadRequest("Case ID or case action ID cannot be null or empty");
-                }
 
                 var existingCaseAction = await _context.CaseActions
                     .Where(ca => ca.CaseId == caseId && ca.Id == id)
@@ -149,16 +143,12 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<List<GETCaseAction>>> GetActions([FromRoute][Required] string caseId)
+        public async Task<ActionResult<List<GETCaseAction>>> GetActions([FromRoute] string caseId)
         {
             _logger.LogInformation("Get request received for all case actions of case ID: {CaseId}", caseId);
 
             try
             {
-                if (string.IsNullOrEmpty(caseId))
-                {
-                    return BadRequest("Case ID cannot be null or empty");
-                }
 
                 var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
                 if (!caseExists)
@@ -195,7 +185,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> PatchCaseAction([FromRoute][Required] string caseId, [FromRoute][Required] string id, [FromBody] PATCHCaseAction request)
+        public async Task<IActionResult> PatchCaseAction([FromRoute] string caseId, [FromRoute] string id, [FromBody] PATCHCaseAction request)
         {
             _logger.LogInformation("Patch request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);
 
@@ -213,11 +203,6 @@ namespace PCMS.API.Controllers
 
             try
             {
-                if (string.IsNullOrEmpty(caseId) || string.IsNullOrEmpty(id))
-                {
-                    return BadRequest("Case ID or case action ID cannot be null or empty");
-                }
-
                 var caseAction = await _context.CaseActions.FirstOrDefaultAsync(ca => ca.Id == id && ca.CaseId == caseId);
                 if (caseAction is null)
                 {
@@ -255,17 +240,12 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCaseAction([FromRoute][Required] string caseId, [FromRoute][Required] string id)
+        public async Task<IActionResult> DeleteCaseAction([FromRoute] string caseId, [FromRoute] string id)
         {
             _logger.LogInformation("Delete request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);
 
             try
             {
-                if (string.IsNullOrEmpty(caseId) || string.IsNullOrEmpty(id))
-                {
-                    return BadRequest("Case ID or case action ID cannot be null or empty");
-                }
-
                 var caseAction = await _context.CaseActions.FirstOrDefaultAsync(ca => ca.Id == id && ca.CaseId == caseId);
                 if (caseAction is null)
                 {
