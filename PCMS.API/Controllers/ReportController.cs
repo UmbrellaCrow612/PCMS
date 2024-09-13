@@ -223,20 +223,6 @@ namespace PCMS.API.Controllers
                     return BadRequest("Case ID or report ID is null or empty");
                 }
 
-                var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
-
-                if (!caseExists)
-                {
-                    return NotFound("Case not found");
-                }
-
-                var reportExists = await _context.Reports.AnyAsync(r => r.Id == id);
-
-                if (!reportExists)
-                {
-                    return NotFound("Report not found");
-                }
-
                 var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
 
                 if (report is null)
@@ -256,6 +242,46 @@ namespace PCMS.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to patch report. CaseId: {caseId} report ID: {id} request: {request}", caseId, id, request);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
+        }
+
+        /// <summary>
+        /// Delete a report.
+        /// </summary>
+        /// <param name="caseId">The case ID</param>
+        /// <param name="id">The ID of the report</param>
+        /// <returns>No content</returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeleteReport([FromRoute][Required] string caseId, [FromRoute][Required] string id)
+        {
+            _logger.LogInformation("DELETE report request received for case ID: {caseId} report ID: {id}", caseId, id);
+
+            try
+            {
+                if (string.IsNullOrEmpty(caseId) | string.IsNullOrEmpty(id))
+                {
+                    return BadRequest("Case ID or report ID is null or empty");
+                }
+
+                var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
+
+                if (report is null)
+                {
+                    return NotFound("Report dose not exist or is linked to this case");
+                }
+
+                _context.Remove(report);
+                await _context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to delete report. CaseId: {caseId} report ID: {id}", caseId, id);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
