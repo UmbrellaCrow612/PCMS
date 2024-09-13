@@ -6,7 +6,7 @@ using PCMS.API.DTOS;
 using PCMS.API.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace PCMS.API.Controllers
 {
@@ -36,16 +36,9 @@ namespace PCMS.API.Controllers
         /// </summary>
         /// <param name="request">The DTO containing POST report information.</param>
         /// <returns>The created report details.</returns>
-        /// <response code="201">Returns the newly created report.</response>
-        /// <response code="400">Returns when the request is invalid.</response>
-        /// <response code="401">Returns when the request is unauthorized.</response>
-        /// <response code="500">Returns when there's an internal server error.</response>
         [HttpPost]
-        [ProducesResponseType(typeof(GETReport), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<GETReport>> CreateReport([FromRoute][Required] string caseId, [FromBody] POSTReport request)
         {
             _logger.LogInformation("POST report request received for case ID: {CaseId}", caseId);
@@ -97,5 +90,45 @@ namespace PCMS.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
+
+        /// <summary>
+        /// Get all reports.
+        /// </summary>
+        /// <returns>The list of reports for a case.</returns>
+        [HttpGet]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<GETReport>>> GetReports([FromRoute][Required] string caseId)
+        {
+            _logger.LogInformation("GET reports request received for case ID: {CaseId}", caseId);
+
+            try
+            {
+                if (string.IsNullOrEmpty(caseId))
+                {
+                    return BadRequest("Case ID cannot be null or empty");
+                }
+
+                var existingCase = await _context.Cases.Include(e => e.Reports).FirstOrDefaultAsync(e => e.Id == caseId);
+                if (existingCase is null)
+                {
+                    return NotFound("Case does not exist");
+                }
+
+
+                var reports = existingCase.Reports;
+
+                var returnReports = _mapper.Map<List<GETReport>>(reports);
+
+                return Ok(returnReports);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get reports. CaseId: {CaseId}", caseId);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
+        }
+        // read specific report
     }
 }

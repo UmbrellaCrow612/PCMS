@@ -35,17 +35,13 @@ namespace PCMS.API.Controllers
         /// <param name="caseId">The ID of the case.</param>
         /// <param name="request">The DTO containing POST case action information.</param>
         /// <returns>The created case action details.</returns>
-        /// <response code="201">Returns the newly created case action.</response>
-        /// <response code="400">Returns when the request is invalid.</response>
-        /// <response code="401">Returns when the user is unauthorized.</response>
-        /// <response code="404">Returns when the case or user is not found.</response>
-        /// <response code="500">Returns when there's an internal server error.</response>
         [HttpPost]
-        [ProducesResponseType(typeof(GETCaseAction), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<GETCaseAction>> CreateAction([FromRoute][Required] string caseId, [FromBody] POSTCaseAction request)
         {
             _logger.LogInformation("POST case action request received for case ID: {CaseId}", caseId);
@@ -103,17 +99,12 @@ namespace PCMS.API.Controllers
         /// <param name="caseId">The ID of the case.</param>
         /// <param name="id">The ID of the case action.</param>
         /// <returns>The requested case action.</returns>
-        /// <response code="200">Returns the requested case action.</response>
-        /// <response code="401">Returns when the user is unauthorized.</response>
-        /// <response code="400">Returns when the ID is invalid.</response>
-        /// <response code="404">Returns when the case action is not found.</response>
-        /// <response code="500">Returns when there's an internal server error.</response>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(GETCaseAction), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<GETCaseAction>> GetAction([FromRoute][Required] string caseId, [FromRoute][Required] string id)
         {
             _logger.LogInformation("Get case action request received for case ID: {CaseId}, action ID: {Id}", caseId, id);
@@ -152,17 +143,12 @@ namespace PCMS.API.Controllers
         /// </summary>
         /// <param name="caseId">The ID of the case.</param>
         /// <returns>A list of all case actions for the specified case.</returns>
-        /// <response code="200">Returns the list of all case actions for the specified case.</response>
-        /// <response code="400">Returns when the case ID is invalid.</response>
-        /// <response code="401">Returns when the case user is unauthorized.</response>
-        /// <response code="404">Returns when the case is not found.</response>
-        /// <response code="500">Returns when there's an internal server error.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(List<GETCaseAction>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<List<GETCaseAction>>> GetActions([FromRoute][Required] string caseId)
         {
             _logger.LogInformation("Get request received for all case actions of case ID: {CaseId}", caseId);
@@ -202,17 +188,13 @@ namespace PCMS.API.Controllers
         /// <param name="id">The ID of the case action to update.</param>
         /// <param name="request">The DTO containing the updated case action information.</param>
         /// <returns>No content if successful.</returns>
-        /// <response code="204">Returns when the case action is successfully updated.</response>
-        /// <response code="400">Returns when the request is invalid.</response>
-        /// <response code="401">Returns when the case user is unauthorized.</response>
-        /// <response code="404">Returns when the case action is not found.</response>
-        /// <response code="500">Returns when there's an internal server error.</response>
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> PatchCaseAction([FromRoute][Required] string caseId, [FromRoute][Required] string id, [FromBody] PATCHCaseAction request)
         {
             _logger.LogInformation("Patch request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);
@@ -267,17 +249,12 @@ namespace PCMS.API.Controllers
         /// <param name="caseId">The ID of the case.</param>
         /// <param name="id">The ID of the case action to delete.</param>
         /// <returns>No content if successful.</returns>
-        /// <response code="204">Returns when the case action is successfully deleted.</response>
-        /// <response code="400">Returns when the ID is invalid.</response>
-        /// <response code="401">Returns when the case user is unauthorized.</response>
-        /// <response code="404">Returns when the case action is not found.</response>
-        /// <response code="500">Returns when there's an internal server error.</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteCaseAction([FromRoute][Required] string caseId, [FromRoute][Required] string id)
         {
             _logger.LogInformation("Delete request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);
