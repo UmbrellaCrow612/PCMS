@@ -7,6 +7,7 @@ using PCMS.API.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
@@ -109,16 +110,21 @@ namespace PCMS.API.Controllers
                     return BadRequest("Case ID cannot be null or empty");
                 }
 
-                var existingCase = await _context.Cases.Include(e => e.Reports).FirstOrDefaultAsync(e => e.Id == caseId);
-                if (existingCase is null)
+                var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
+
+                if (!caseExists)
                 {
-                    return NotFound("Case does not exist");
+                    return NotFound("Case not found");
                 }
 
+                var existingReports = await _context.Reports.Where(r => r.CaseId == caseId).ToListAsync();
 
-                var reports = existingCase.Reports;
+                if (existingReports.Count is 0)
+                {
+                    return Ok(new List<GETReport>());
+                }
 
-                var returnReports = _mapper.Map<List<GETReport>>(reports);
+                var returnReports = _mapper.Map<List<GETReport>>(existingReports);
 
                 return Ok(returnReports);
 
@@ -129,6 +135,57 @@ namespace PCMS.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
-        // read specific report
+
+        /// <summary>
+        /// Get a report.
+        /// </summary>
+        /// <param name="caseId">The case ID</param>
+        /// <param name="id">The ID of the report</param>
+        /// <returns>The report for a case.</returns>
+        [HttpGet("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<GETReport>> GetReport([FromRoute][Required] string caseId, [FromRoute][Required] string id)
+        {
+            _logger.LogInformation("GET report request received for case ID: {caseId} report ID: {id}", caseId, id);
+
+            try
+            {
+                if (string.IsNullOrEmpty(caseId) | string.IsNullOrEmpty(id))
+                {
+                    return BadRequest("Case ID or Report ID is null or empty");
+                }
+
+                var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
+
+                if (!caseExists)
+                {
+                    return NotFound("Case not found");
+                }
+
+                var reportExists = await _context.Reports.AnyAsync(r => r.Id == id);
+
+                if (!reportExists)
+                {
+                    return NotFound("Report not found");
+                }
+
+                var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
+
+                if (report is null)
+                {
+                    return NotFound("Report not found");
+                }
+
+                var returnReport = _mapper.Map<GETReport>(report);
+
+                return Ok(returnReport);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get report. CaseId: {caseId} report ID: {id}", caseId, id);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
+        }
     }
 }
