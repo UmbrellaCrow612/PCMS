@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240912174318_InitialCreate")]
+    [Migration("20240913160018_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -336,6 +336,49 @@ namespace PCMS.API.Migrations
                     b.ToTable("CaseActions");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.Evidence", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CaseId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CollectedByDetails")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CollectionDateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CaseId");
+
+                    b.ToTable("Evidences");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Report", b =>
                 {
                     b.Property<string>("Id")
@@ -451,6 +494,17 @@ namespace PCMS.API.Migrations
                     b.Navigation("Case");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.Evidence", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Case", "Case")
+                        .WithMany("Evidences")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Report", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
@@ -465,6 +519,8 @@ namespace PCMS.API.Migrations
             modelBuilder.Entity("PCMS.API.Models.Case", b =>
                 {
                     b.Navigation("CaseActions");
+
+                    b.Navigation("Evidences");
 
                     b.Navigation("Reports");
                 });

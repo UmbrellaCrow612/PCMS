@@ -81,6 +81,11 @@ namespace PCMS.API.Models
         /// Gets or sets the case reports, list of <see cref="Report"/>.
         /// </summary>
         public List<Report> Reports { get; set; } = [];
+
+        /// <summary>
+        /// Gets or sets the case evidence, list of <see cref="Evidence"/>.
+        /// </summary>
+        public List<Evidence> Evidences { get; set; } = [];
     }
 
 

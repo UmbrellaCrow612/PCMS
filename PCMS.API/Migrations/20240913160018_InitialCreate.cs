@@ -233,6 +233,31 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Evidences",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    FileUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Location = table.Column<string>(type: "TEXT", nullable: false),
+                    CollectionDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    CollectedByDetails = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Evidences", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Evidences_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reports",
                 columns: table => new
                 {
@@ -304,6 +329,11 @@ namespace PCMS.API.Migrations
                 column: "CaseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Evidences_CaseId",
+                table: "Evidences",
+                column: "CaseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reports_CaseId",
                 table: "Reports",
                 column: "CaseId");
@@ -332,6 +362,9 @@ namespace PCMS.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "CaseActions");
+
+            migrationBuilder.DropTable(
+                name: "Evidences");
 
             migrationBuilder.DropTable(
                 name: "Reports");
