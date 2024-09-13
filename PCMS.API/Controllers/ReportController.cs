@@ -187,5 +187,77 @@ namespace PCMS.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
+
+        /// <summary>
+        /// Patch a report.
+        /// </summary>
+        /// <param name="caseId">The case ID</param>
+        /// <param name="id">The ID of the report</param>
+        /// <param name="request">The DTO for post report information</param>
+        /// <returns>No content</returns>
+        [HttpPatch("{id}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> PatchReport([FromRoute][Required] string caseId, [FromRoute][Required] string id, [FromBody] PATCHReport request)
+        {
+            _logger.LogInformation("PATCH report request received for case ID: {caseId} report ID: {id} request: {request}", caseId, id, request);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("Unauthorized");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                return Unauthorized("Unauthorized");
+            }
+
+            try
+            {
+                if (string.IsNullOrEmpty(caseId) | string.IsNullOrEmpty(id))
+                {
+                    return BadRequest("Case ID or report ID is null or empty");
+                }
+
+                var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
+
+                if (!caseExists)
+                {
+                    return NotFound("Case not found");
+                }
+
+                var reportExists = await _context.Reports.AnyAsync(r => r.Id == id);
+
+                if (!reportExists)
+                {
+                    return NotFound("Report not found");
+                }
+
+                var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
+
+                if (report is null)
+                {
+                    return NotFound("Report not found or is linked to this case");
+                }
+
+                report.Title = request.Title;
+                report.Details = request.Details;
+                report.LastEditedById = userId;
+                report.LastModifiedDate = DateTime.UtcNow;
+
+                await _context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to patch report. CaseId: {caseId} report ID: {id} request: {request}", caseId, id, request);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
+        }
     }
 }

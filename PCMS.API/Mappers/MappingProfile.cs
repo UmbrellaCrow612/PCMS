@@ -33,6 +33,8 @@ namespace PCMS.API.Mapper
             CreateMap<POSTReport, Report>();
             CreateMap<Report, GETReport>();
             CreateMap<GETReport, Report>();
+            CreateMap<Report, PATCHReport>();
+            CreateMap<PATCHReport, Report>();
         }
     }
 }
