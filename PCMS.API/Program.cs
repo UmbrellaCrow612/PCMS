@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PCMS.API.Filters;
 using PCMS.API.Models;
 using PCMS.API.OpenApi;
 using Serilog;
@@ -40,6 +41,7 @@ builder.Services.AddApiVersioning(option =>
 
 builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<UserAuthorizationFilter>();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();

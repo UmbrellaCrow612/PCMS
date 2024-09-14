@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PCMS.API.DTOS;
 using PCMS.API.Models;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.Filters;
@@ -25,6 +24,7 @@ namespace PCMS.API.Controllers
     [Route("/cases/{caseId}/reports")]
     [Produces("application/json")]
     [Authorize]
+    [ServiceFilter(typeof(UserAuthorizationFilter))]
     [ValidateRouteParameters]
     public class ReportController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
@@ -45,18 +45,7 @@ namespace PCMS.API.Controllers
         {
             _logger.LogInformation("POST report request received for case ID: {CaseId}", caseId);
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized("Unauthorized");
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
-            {
-                return Unauthorized("Unauthorized");
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
             try
             {
@@ -189,18 +178,7 @@ namespace PCMS.API.Controllers
         {
             _logger.LogInformation("PATCH report request received for case ID: {caseId} report ID: {id} request: {request}", caseId, id, request);
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized("Unauthorized");
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
-            {
-                return Unauthorized("Unauthorized");
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
             try
             {

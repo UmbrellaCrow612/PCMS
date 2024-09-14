@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
 using PCMS.API.Filters;
 using PCMS.API.Models;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace PCMS.API.Controllers
@@ -23,6 +22,7 @@ namespace PCMS.API.Controllers
     [Route("cases/{caseId}/actions")]
     [Produces("application/json")]
     [Authorize]
+    [ServiceFilter(typeof(UserAuthorizationFilter))]
     [ValidateRouteParameters]
     public class CaseActionController(ILogger<CaseActionController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
@@ -48,18 +48,7 @@ namespace PCMS.API.Controllers
         {
             _logger.LogInformation("POST case action request received for case ID: {CaseId}", caseId);
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized("Unauthorized");
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
-            {
-                return Unauthorized("Unauthorized");
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
             try
             {
@@ -189,17 +178,7 @@ namespace PCMS.API.Controllers
         {
             _logger.LogInformation("Patch request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized("Unauthorized");
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
-            {
-                return Unauthorized("Unauthorized");
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
             try
             {

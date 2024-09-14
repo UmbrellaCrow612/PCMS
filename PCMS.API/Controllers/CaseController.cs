@@ -22,6 +22,7 @@ namespace PCMS.API.Controllers
     [Route("cases")]
     [Produces("application/json")]
     [Authorize]
+    [ServiceFilter(typeof(UserAuthorizationFilter))]
     [ValidateRouteParameters]
     public class CaseController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
@@ -42,19 +43,7 @@ namespace PCMS.API.Controllers
         {
             _logger.LogInformation("POST case request received");
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-            {
-                _logger.LogWarning("Unauthorized attempt to create case.");
-                return Unauthorized("Unauthorized");
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
-            {
-                _logger.LogWarning("User with ID {UserId} not found.", userId);
-                return Unauthorized("Unauthorized");
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
             try
             {
@@ -193,19 +182,7 @@ namespace PCMS.API.Controllers
         {
             _logger.LogInformation("PATCH request received for case ID: {Id}", id);
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-            {
-                _logger.LogWarning("Unauthorized attempt to patch case ID: {Id}", id);
-                return Unauthorized("Unauthorized");
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
-            {
-                _logger.LogWarning("User with ID {UserId} not found during PATCH request for case ID: {CaseId}", userId, id);
-                return Unauthorized("Unauthorized");
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
             try
             {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PCMS.API.DTOS;
+using PCMS.API.Filters;
 using PCMS.API.Models;
 using System.ComponentModel.DataAnnotations;
 
@@ -22,6 +23,8 @@ namespace PCMS.API.Controllers
     [Route("cases/{caseId}/evidences")]
     [Produces("application/json")]
     [Authorize]
+    [ServiceFilter(typeof(UserAuthorizationFilter))]
+    [ValidateRouteParameters]
     public class EvidenceController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseController> _logger = logger;
