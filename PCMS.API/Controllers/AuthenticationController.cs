@@ -5,6 +5,7 @@ using PCMS.API.DTOS;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace PCMS.API.Controllers
@@ -85,6 +86,7 @@ namespace PCMS.API.Controllers
         /// <param name="useCookies">Query string if a client wants to use cookie based auth</param>
         /// <param name="useSessionCookies">Query string if a client wants to use session cookies based auth</param>
         /// <returns>Success or Failure</returns>
+        [AllowAnonymous]
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]

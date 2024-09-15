@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
-using PCMS.API.Filters;
 using PCMS.API.Models;
 using System.Security.Claims;
 
@@ -20,10 +18,6 @@ namespace PCMS.API.Controllers
     /// <param name="context">The database context.</param>
     [ApiController]
     [Route("cases")]
-    [Produces("application/json")]
-    [Authorize]
-    [ServiceFilter(typeof(UserAuthorizationFilter))]
-    [ValidateRouteParameters]
     public class CaseController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseController> _logger = logger;

@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.Filters;
 using PCMS.API.Models;
@@ -19,7 +20,13 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(option =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<CustomExceptionFilter>();
+    options.Filters.Add<ValidateRouteParametersAttribute>();
+    options.Filters.Add<UserAuthorizationFilter>();
+    options.Filters.Add(new AuthorizeFilter());
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -42,6 +49,7 @@ builder.Services.AddApiVersioning(option =>
 builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<UserAuthorizationFilter>();
+builder.Services.AddScoped<CustomExceptionFilter>();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
