@@ -42,7 +42,7 @@ namespace PCMS.API.Controllers
             newCase.CreatedById = userId;
             newCase.LastEditedById = userId;
 
-            _context.Cases.Add(newCase);
+            await _context.Cases.AddAsync(newCase);
             await _context.SaveChangesAsync();
 
             var createdCase = await _context.Cases
