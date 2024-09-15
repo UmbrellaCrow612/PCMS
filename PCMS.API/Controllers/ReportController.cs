@@ -23,11 +23,10 @@ namespace PCMS.API.Controllers
     [ApiController]
     [Route("/cases/{caseId}/reports")]
     [Authorize]
-    public class ReportController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
+    public class ReportController(ILogger<CaseController> logger, ApplicationDbContext context,IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseController> _logger = logger;
         private readonly ApplicationDbContext _context = context;
-        private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly IMapper _mapper = mapper;
 
         /// <summary>

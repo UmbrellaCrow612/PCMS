@@ -21,11 +21,10 @@ namespace PCMS.API.Controllers
     [ApiController]
     [Route("cases/{caseId}/actions")]
     [Authorize]
-    public class CaseActionController(ILogger<CaseActionController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
+    public class CaseActionController(ILogger<CaseActionController> logger, ApplicationDbContext context,IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseActionController> _logger = logger;
         private readonly ApplicationDbContext _context = context;
-        private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly IMapper _mapper = mapper;
 
         /// <summary>
