@@ -22,7 +22,6 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(option =>
 
 builder.Services.AddControllers(options =>
 {
-    options.Filters.Add<CustomExceptionFilter>();
     options.Filters.Add<ValidateRouteParametersAttribute>();
 });
 builder.Services.AddEndpointsApiExplorer();
@@ -47,7 +46,6 @@ builder.Services.AddApiVersioning(option =>
 builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<UserAuthorizationFilter>();
-builder.Services.AddScoped<CustomExceptionFilter>();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();

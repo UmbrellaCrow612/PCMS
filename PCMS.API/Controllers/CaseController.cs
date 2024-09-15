@@ -39,9 +39,9 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<ActionResult<GETCase>> CreateCase([FromBody] POSTCase request)
         {
-            _logger.LogInformation("POST case request received");
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            _logger.LogInformation("POST case request received from user ID: {userId} request: {request}", userId, request);
 
             try
             {
@@ -58,18 +58,13 @@ namespace PCMS.API.Controllers
 
                 var returnCase = _mapper.Map<GETCase>(createdCase);
 
-                _logger.LogInformation("User {UserId} created a new case with ID: {CaseId}", userId, returnCase.Id);
+                _logger.LogInformation("User {userId} created a new case with ID: {CaseId}", userId, returnCase.Id);
 
                 return CreatedAtAction(nameof(GetCase), new { id = returnCase.Id }, returnCase);
             }
-            catch (AutoMapperMappingException ex)
-            {
-                _logger.LogError(ex, "Failed to map POSTCase to Case for request: {@Request} by user {UserId}", request, userId);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected error occurred while creating a new case. Request: {@Request} by user {UserId}", request, userId);
+                _logger.LogError(ex, "Unexpected error occurred while creating a new case. Request: {request} by user {UserId}", request, userId);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }
@@ -98,7 +93,6 @@ namespace PCMS.API.Controllers
 
                 if (caseEntity is null)
                 {
-                    _logger.LogWarning("Get case request failed: Case with ID {Id} not found.", id);
                     return NotFound($"Case with ID '{id}' was not found.");
                 }
 
@@ -106,11 +100,6 @@ namespace PCMS.API.Controllers
 
                 _logger.LogInformation("GET case request for ID: {Id} successful. Case found.", id);
                 return Ok(caseResult);
-            }
-            catch (AutoMapperMappingException ex)
-            {
-                _logger.LogError(ex, "Failed to map Case to GETCase for case ID {Id}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
             catch (Exception ex)
             {
@@ -141,7 +130,6 @@ namespace PCMS.API.Controllers
 
                 if (cases.Count is 0)
                 {
-                    _logger.LogInformation("No cases found.");
                     return Ok(new List<GETCase>());
                 }
 
@@ -150,11 +138,6 @@ namespace PCMS.API.Controllers
                 _logger.LogInformation("{Count} cases retrieved successfully.", returnCases.Count);
 
                 return Ok(returnCases);
-            }
-            catch (AutoMapperMappingException ex)
-            {
-                _logger.LogError(ex, "Failed to map Case entities to GETCase DTOs.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
             catch (Exception ex)
             {
@@ -179,16 +162,15 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<ActionResult> PatchCase([FromRoute] string id, [FromBody] PATCHCase request)
         {
-            _logger.LogInformation("PATCH request received for case ID: {Id}", id);
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            _logger.LogInformation("PATCH request received for case ID: {Id} from user ID {userId}", id, userId);
 
             try
             {
                 var existingCase = await _context.Cases.FirstOrDefaultAsync(c => c.Id == id);
                 if (existingCase is null)
                 {
-                    _logger.LogWarning("PATCH request failed: Case with ID {Id} not found. User ID: {UserId}", id, userId);
                     return NotFound("Case not found.");
                 }
 
@@ -202,19 +184,9 @@ namespace PCMS.API.Controllers
 
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Case ID {Id} successfully updated by User ID: {UserId}", id, userId);
+                _logger.LogInformation("Case ID {id} successfully updated by User ID: {userId}", id, userId);
 
                 return NoContent();
-            }
-            catch (DbUpdateException ex)
-            {
-                _logger.LogError(ex, "Database update failed for PATCH request on case ID: {Id}. Request: {@Request}. User ID: {UserId}", id, request, userId);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the case.");
-            }
-            catch (AutoMapperMappingException ex)
-            {
-                _logger.LogError(ex, "Failed to map PATCHCase DTO to Case for PATCH request on case ID: {Id}. User ID: {UserId}", id, userId);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
             catch (Exception ex)
             {
