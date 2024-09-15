@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
+using PCMS.API.Filters;
 using PCMS.API.Models;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using PCMS.API.Filters;
 
 namespace PCMS.API.Controllers
 {
@@ -23,9 +23,9 @@ namespace PCMS.API.Controllers
     [ApiController]
     [Route("/cases/{caseId}/reports")]
     [Authorize]
-    public class ReportController(ILogger<CaseController> logger, ApplicationDbContext context,IMapper mapper) : ControllerBase
+    public class ReportController(ApplicationDbContext context, IMapper mapper) : ControllerBase
     {
-        private readonly ILogger<CaseController> _logger = logger;
+
         private readonly ApplicationDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
@@ -40,38 +40,25 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<ActionResult<GETReport>> CreateReport([FromRoute] string caseId, [FromBody] POSTReport request)
         {
-            _logger.LogInformation("POST report request received for case ID: {CaseId}", caseId);
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            try
+            var existingCase = await _context.Cases.FindAsync(caseId);
+            if (existingCase is null)
             {
-                var existingCase = await _context.Cases.FindAsync(caseId);
-                if (existingCase is null)
-                {
-                    return NotFound("Case does not exist");
-                }
-
-                var report = _mapper.Map<Report>(request);
-                report.CreatedById = userId;
-                report.LastEditedById = userId;
-                report.CaseId = caseId;
-
-                await _context.Reports.AddAsync(report);
-                await _context.SaveChangesAsync();
-
-                var returnReport = _mapper.Map<GETReport>(report);
-
-                _logger.LogInformation("Created a new report with ID: {id} for case ID: {CaseId}", report.Id, caseId);
-
-                return CreatedAtAction(nameof(CreateReport), new { caseId, id = returnReport.Id }, returnReport);
-
+                return NotFound("Case does not exist");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to create a new report. CaseId: {CaseId}, Request: {@Request}", caseId, request);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            var report = _mapper.Map<Report>(request);
+            report.CreatedById = userId;
+            report.LastEditedById = userId;
+            report.CaseId = caseId;
+
+            await _context.Reports.AddAsync(report);
+            await _context.SaveChangesAsync();
+
+            var returnReport = _mapper.Map<GETReport>(report);
+
+            return CreatedAtAction(nameof(CreateReport), new { caseId, id = returnReport.Id }, returnReport);
         }
 
         /// <summary>
@@ -83,34 +70,23 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GETReport>>> GetReports([FromRoute] string caseId)
         {
-            _logger.LogInformation("GET reports request received for case ID: {CaseId}", caseId);
+            var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
 
-            try
+            if (!caseExists)
             {
-                var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
-
-                if (!caseExists)
-                {
-                    return NotFound("Case not found");
-                }
-
-                var existingReports = await _context.Reports.Where(r => r.CaseId == caseId).ToListAsync();
-
-                if (existingReports.Count is 0)
-                {
-                    return Ok(new List<GETReport>());
-                }
-
-                var returnReports = _mapper.Map<List<GETReport>>(existingReports);
-
-                return Ok(returnReports);
-
+                return NotFound("Case not found");
             }
-            catch (Exception ex)
+
+            var existingReports = await _context.Reports.Where(r => r.CaseId == caseId).ToListAsync();
+
+            if (existingReports.Count is 0)
             {
-                _logger.LogError(ex, "Failed to get reports. CaseId: {CaseId}", caseId);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+                return Ok(new List<GETReport>());
             }
+
+            var returnReports = _mapper.Map<List<GETReport>>(existingReports);
+
+            return Ok(returnReports);
         }
 
         /// <summary>
@@ -124,40 +100,30 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<GETReport>> GetReport([FromRoute] string caseId, [FromRoute] string id)
         {
-            _logger.LogInformation("GET report request received for case ID: {caseId} report ID: {id}", caseId, id);
+            var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
 
-            try
+            if (!caseExists)
             {
-                var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
-
-                if (!caseExists)
-                {
-                    return NotFound("Case not found");
-                }
-
-                var reportExists = await _context.Reports.AnyAsync(r => r.Id == id);
-
-                if (!reportExists)
-                {
-                    return NotFound("Report not found");
-                }
-
-                var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
-
-                if (report is null)
-                {
-                    return NotFound("Report not found");
-                }
-
-                var returnReport = _mapper.Map<GETReport>(report);
-
-                return Ok(returnReport);
+                return NotFound("Case not found");
             }
-            catch (Exception ex)
+
+            var reportExists = await _context.Reports.AnyAsync(r => r.Id == id);
+
+            if (!reportExists)
             {
-                _logger.LogError(ex, "Failed to get report. CaseId: {caseId} report ID: {id}", caseId, id);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+                return NotFound("Report not found");
             }
+
+            var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
+
+            if (report is null)
+            {
+                return NotFound("Report not found");
+            }
+
+            var returnReport = _mapper.Map<GETReport>(report);
+
+            return Ok(returnReport);
         }
 
         /// <summary>
@@ -174,33 +140,23 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<ActionResult> PatchReport([FromRoute] string caseId, [FromRoute] string id, [FromBody] PATCHReport request)
         {
-            _logger.LogInformation("PATCH report request received for case ID: {caseId} report ID: {id} request: {request}", caseId, id, request);
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            try
+            var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
+
+            if (report is null)
             {
-                var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
-
-                if (report is null)
-                {
-                    return NotFound("Report not found or is linked to this case");
-                }
-
-                report.Title = request.Title;
-                report.Details = request.Details;
-                report.LastEditedById = userId;
-                report.LastModifiedDate = DateTime.UtcNow;
-
-                await _context.SaveChangesAsync();
-
-                return NoContent();
+                return NotFound("Report not found or is linked to this case");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to patch report. CaseId: {caseId} report ID: {id} request: {request}", caseId, id, request);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            report.Title = request.Title;
+            report.Details = request.Details;
+            report.LastEditedById = userId;
+            report.LastModifiedDate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
         /// <summary>
@@ -215,27 +171,17 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteReport([FromRoute] string caseId, [FromRoute] string id)
         {
-            _logger.LogInformation("DELETE report request received for case ID: {caseId} report ID: {id}", caseId, id);
+            var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
 
-            try
+            if (report is null)
             {
-                var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
-
-                if (report is null)
-                {
-                    return NotFound("Report dose not exist or is linked to this case");
-                }
-
-                _context.Remove(report);
-                await _context.SaveChangesAsync();
-
-                return NoContent();
+                return NotFound("Report dose not exist or is linked to this case");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to delete report. CaseId: {caseId} report ID: {id}", caseId, id);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            _context.Remove(report);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

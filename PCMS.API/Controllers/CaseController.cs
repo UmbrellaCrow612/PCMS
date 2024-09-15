@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
@@ -21,9 +20,8 @@ namespace PCMS.API.Controllers
     [ApiController]
     [Route("cases")]
     [Authorize]
-    public class CaseController(ILogger<CaseController> logger, ApplicationDbContext context,IMapper mapper) : ControllerBase
+    public class CaseController(ApplicationDbContext context, IMapper mapper) : ControllerBase
     {
-        private readonly ILogger<CaseController> _logger = logger;
         private readonly ApplicationDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
@@ -33,39 +31,27 @@ namespace PCMS.API.Controllers
         /// <param name="request">The DTO containing POST case information.</param>
         /// <returns>The created case details.</returns>
         [HttpPost]
+        [ServiceFilter(typeof(UserAuthorizationFilter))]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<ActionResult<GETCase>> CreateCase([FromBody] POSTCase request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            _logger.LogInformation("POST case request received from user ID: {userId} request: {request}", userId, request);
+            var newCase = _mapper.Map<Case>(request);
+            newCase.CreatedById = userId;
+            newCase.LastEditedById = userId;
 
-            try
-            {
-                var newCase = _mapper.Map<Case>(request);
-                newCase.CreatedById = userId;
-                newCase.LastEditedById = userId;
+            _context.Cases.Add(newCase);
+            await _context.SaveChangesAsync();
 
-                _context.Cases.Add(newCase);
-                await _context.SaveChangesAsync();
+            var createdCase = await _context.Cases
+                .FirstOrDefaultAsync(c => c.Id == newCase.Id)
+                ?? throw new ApplicationException("Failed to retrieve the created case");
 
-                var createdCase = await _context.Cases
-                    .FirstOrDefaultAsync(c => c.Id == newCase.Id)
-                    ?? throw new ApplicationException("Failed to retrieve the created case");
+            var returnCase = _mapper.Map<GETCase>(createdCase);
 
-                var returnCase = _mapper.Map<GETCase>(createdCase);
-
-                _logger.LogInformation("User {userId} created a new case with ID: {CaseId}", userId, returnCase.Id);
-
-                return CreatedAtAction(nameof(GetCase), new { id = returnCase.Id }, returnCase);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error occurred while creating a new case. Request: {request} by user {UserId}", request, userId);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+            return CreatedAtAction(nameof(GetCase), new { id = returnCase.Id }, returnCase);
         }
 
 
@@ -80,31 +66,20 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<GETCase>> GetCase([FromRoute] string id)
         {
-            _logger.LogInformation("GET case request received for ID: {Id}", id);
+            var caseEntity = await _context.Cases
+                .Include(c => c.CaseActions)
+                .Include(c => c.AssignedUsers)
+                .Include(c => c.Reports)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
-            try
+            if (caseEntity is null)
             {
-                var caseEntity = await _context.Cases
-                    .Include(c => c.CaseActions)
-                    .Include(c => c.AssignedUsers)
-                    .Include(c => c.Reports)
-                    .FirstOrDefaultAsync(c => c.Id == id);
-
-                if (caseEntity is null)
-                {
-                    return NotFound($"Case with ID '{id}' was not found.");
-                }
-
-                var caseResult = _mapper.Map<GETCase>(caseEntity);
-
-                _logger.LogInformation("GET case request for ID: {Id} successful. Case found.", id);
-                return Ok(caseResult);
+                return NotFound($"Case with ID '{id}' was not found.");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error occurred while retrieving case with ID {Id}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            var caseResult = _mapper.Map<GETCase>(caseEntity);
+
+            return Ok(caseResult);
         }
 
         /// <summary>
@@ -117,32 +92,20 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<List<GETCase>>> GetCases()
         {
-            _logger.LogInformation("GET request received to retrieve all cases.");
+            var cases = await _context.Cases
+                .Include(c => c.CaseActions)
+                .Include(c => c.AssignedUsers)
+                .Include(c => c.Reports)
+                .ToListAsync();
 
-            try
+            if (cases.Count is 0)
             {
-                var cases = await _context.Cases
-                    .Include(c => c.CaseActions)
-                    .Include(c => c.AssignedUsers)
-                    .Include(c => c.Reports)
-                    .ToListAsync();
-
-                if (cases.Count is 0)
-                {
-                    return Ok(new List<GETCase>());
-                }
-
-                var returnCases = _mapper.Map<List<GETCase>>(cases);
-
-                _logger.LogInformation("{Count} cases retrieved successfully.", returnCases.Count);
-
-                return Ok(returnCases);
+                return Ok(new List<GETCase>());
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error occurred while retrieving cases.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            var returnCases = _mapper.Map<List<GETCase>>(cases);
+
+            return Ok(returnCases);
         }
 
         /// <summary>
@@ -163,35 +126,23 @@ namespace PCMS.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            _logger.LogInformation("PATCH request received for case ID: {Id} from user ID {userId}", id, userId);
-
-            try
+            var existingCase = await _context.Cases.FirstOrDefaultAsync(c => c.Id == id);
+            if (existingCase is null)
             {
-                var existingCase = await _context.Cases.FirstOrDefaultAsync(c => c.Id == id);
-                if (existingCase is null)
-                {
-                    return NotFound("Case not found.");
-                }
-
-                existingCase.Title = request.Title;
-                existingCase.Description = request.Description;
-                existingCase.Status = request.Status;
-                existingCase.Priority = request.Priority;
-                existingCase.Type = request.Type;
-                existingCase.LastEditedById = userId;
-                existingCase.LastModifiedDate = DateTime.UtcNow;
-
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation("Case ID {id} successfully updated by User ID: {userId}", id, userId);
-
-                return NoContent();
+                return NotFound("Case not found.");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error occurred while patching case ID: {Id}. User ID: {UserId}", id, userId);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            existingCase.Title = request.Title;
+            existingCase.Description = request.Description;
+            existingCase.Status = request.Status;
+            existingCase.Priority = request.Priority;
+            existingCase.Type = request.Type;
+            existingCase.LastEditedById = userId;
+            existingCase.LastModifiedDate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
         /// <summary>
@@ -207,29 +158,17 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteCase([FromRoute] string id)
         {
-            _logger.LogInformation("DELETE request received for case {Id}", id);
+            var caseToDelete = await _context.Cases.FindAsync(id);
 
-            try
+            if (caseToDelete is null)
             {
-                var caseToDelete = await _context.Cases.FindAsync(id);
-
-                if (caseToDelete is null)
-                {
-                    return NotFound("Case not found");
-                }
-
-                _context.Remove(caseToDelete);
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation("DELETE request for case {Id} successful", id);
-
-                return NoContent();
+                return NotFound("Case not found");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to delete a case of Id {Id}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            _context.Remove(caseToDelete);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

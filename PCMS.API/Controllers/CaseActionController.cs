@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
@@ -21,9 +20,8 @@ namespace PCMS.API.Controllers
     [ApiController]
     [Route("cases/{caseId}/actions")]
     [Authorize]
-    public class CaseActionController(ILogger<CaseActionController> logger, ApplicationDbContext context,IMapper mapper) : ControllerBase
+    public class CaseActionController(ApplicationDbContext context, IMapper mapper) : ControllerBase
     {
-        private readonly ILogger<CaseActionController> _logger = logger;
         private readonly ApplicationDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
@@ -45,36 +43,24 @@ namespace PCMS.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            _logger.LogInformation("POST case action request received for case ID: {CaseId} from user ID: {userId}", caseId, userId);
-
-            try
+            var existingCase = await _context.Cases.FindAsync(caseId);
+            if (existingCase is null)
             {
-
-                var existingCase = await _context.Cases.FindAsync(caseId);
-                if (existingCase is null)
-                {
-                    return NotFound("Case does not exist");
-                }
-
-                var caseAction = _mapper.Map<CaseAction>(request);
-                caseAction.CaseId = caseId;
-                caseAction.CreatedById = userId;
-                caseAction.LastEditedById = userId;
-
-                await _context.CaseActions.AddAsync(caseAction);
-                await _context.SaveChangesAsync();
-
-                var returnCaseAction = _mapper.Map<GETCaseAction>(caseAction);
-
-                _logger.LogInformation("Created a new case action with ID: {CaseActionId} for case ID: {CaseId}", returnCaseAction.Id, caseId);
-
-                return CreatedAtAction(nameof(CreateAction), new { caseId, id = returnCaseAction.Id }, returnCaseAction);
+                return NotFound("Case does not exist");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to create a new case action. CaseId: {CaseId}, Request: {@Request} user ID: {userId}", caseId, request, userId);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            var caseAction = _mapper.Map<CaseAction>(request);
+            caseAction.CaseId = caseId;
+            caseAction.CreatedById = userId;
+            caseAction.LastEditedById = userId;
+
+            await _context.CaseActions.AddAsync(caseAction);
+            await _context.SaveChangesAsync();
+
+            var returnCaseAction = _mapper.Map<GETCaseAction>(caseAction);
+
+            return CreatedAtAction(nameof(CreateAction), new { caseId, id = returnCaseAction.Id }, returnCaseAction);
+
         }
 
         /// <summary>
@@ -91,31 +77,18 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<GETCaseAction>> GetAction([FromRoute] string caseId, [FromRoute] string id)
         {
-            _logger.LogInformation("Get case action request received for case ID: {CaseId}, action ID: {Id}", caseId, id);
+            var existingCaseAction = await _context.CaseActions
+                .Where(ca => ca.CaseId == caseId && ca.Id == id)
+                .FirstOrDefaultAsync();
 
-            try
+            if (existingCaseAction is null)
             {
-
-                var existingCaseAction = await _context.CaseActions
-                    .Where(ca => ca.CaseId == caseId && ca.Id == id)
-                    .FirstOrDefaultAsync();
-
-                if (existingCaseAction is null)
-                {
-                    return NotFound("Case action not found or not associated with the specified case");
-                }
-
-                var returnCaseAction = _mapper.Map<GETCaseAction>(existingCaseAction);
-
-                _logger.LogInformation("Get case action request for case ID: {CaseId}, action ID: {Id} successful", caseId, id);
-
-                return Ok(returnCaseAction);
+                return NotFound("Case action not found or not associated with the specified case");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to get a case action. CaseId: {CaseId}, ActionId: {Id}", caseId, id);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            var returnCaseAction = _mapper.Map<GETCaseAction>(existingCaseAction);
+
+            return Ok(returnCaseAction);
         }
 
         /// <summary>
@@ -131,30 +104,19 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<List<GETCaseAction>>> GetActions([FromRoute] string caseId)
         {
-            _logger.LogInformation("Get request received for all case actions of case ID: {CaseId}", caseId);
-
-            try
+            var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
+            if (!caseExists)
             {
-
-                var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
-                if (!caseExists)
-                {
-                    return NotFound("Case does not exist");
-                }
-
-                var existingCaseActions = await _context.CaseActions
-                    .Where(ca => ca.CaseId == caseId)
-                    .ToListAsync();
-
-                var returnCaseActions = _mapper.Map<List<GETCaseAction>>(existingCaseActions);
-
-                return Ok(returnCaseActions);
+                return NotFound("Case does not exist");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to get case actions for case ID: {CaseId}", caseId);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            var existingCaseActions = await _context.CaseActions
+                .Where(ca => ca.CaseId == caseId)
+                .ToListAsync();
+
+            var returnCaseActions = _mapper.Map<List<GETCaseAction>>(existingCaseActions);
+
+            return Ok(returnCaseActions);
         }
 
         /// <summary>
@@ -174,35 +136,23 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<IActionResult> PatchCaseAction([FromRoute] string caseId, [FromRoute] string id, [FromBody] PATCHCaseAction request)
         {
-            _logger.LogInformation("Patch request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            try
+            var caseAction = await _context.CaseActions.FirstOrDefaultAsync(ca => ca.Id == id && ca.CaseId == caseId);
+            if (caseAction is null)
             {
-                var caseAction = await _context.CaseActions.FirstOrDefaultAsync(ca => ca.Id == id && ca.CaseId == caseId);
-                if (caseAction is null)
-                {
-                    return NotFound("Case action does not exist or is not linked to the specified case");
-                }
-
-                caseAction.Name = request.Name;
-                caseAction.Description = request.Description;
-                caseAction.Type = request.Type;
-                caseAction.LastEditedById = userId;
-                caseAction.LastModifiedDate = DateTime.UtcNow;
-
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation("Patch request for case action. Case ID: {CaseId}, Action ID: {Id} is successful", caseId, id);
-
-                return NoContent();
+                return NotFound("Case action does not exist or is not linked to the specified case");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to patch a case action. CaseId: {CaseId}, ActionId: {Id}", caseId, id);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            caseAction.Name = request.Name;
+            caseAction.Description = request.Description;
+            caseAction.Type = request.Type;
+            caseAction.LastEditedById = userId;
+            caseAction.LastModifiedDate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
         /// <summary>
@@ -219,28 +169,16 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteCaseAction([FromRoute] string caseId, [FromRoute] string id)
         {
-            _logger.LogInformation("Delete request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);
-
-            try
+            var caseAction = await _context.CaseActions.FirstOrDefaultAsync(ca => ca.Id == id && ca.CaseId == caseId);
+            if (caseAction is null)
             {
-                var caseAction = await _context.CaseActions.FirstOrDefaultAsync(ca => ca.Id == id && ca.CaseId == caseId);
-                if (caseAction is null)
-                {
-                    return NotFound("Case action does not exist or is not linked to the specified case");
-                }
-
-                _context.CaseActions.Remove(caseAction);
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation("Delete request for case action. Case ID: {CaseId}, Action ID: {Id} successful", caseId, id);
-
-                return NoContent();
+                return NotFound("Case action does not exist or is not linked to the specified case");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to delete a case action. CaseId: {CaseId}, ActionId: {Id}", caseId, id);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            _context.CaseActions.Remove(caseAction);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

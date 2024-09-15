@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using PCMS.API.DTOS;
-using PCMS.API.Models;
 using Microsoft.EntityFrameworkCore;
+using PCMS.API.DTOS;
 using PCMS.API.Filters;
+using PCMS.API.Models;
 using System.Security.Claims;
 
 namespace PCMS.API.Controllers
@@ -23,9 +22,8 @@ namespace PCMS.API.Controllers
     [ApiController]
     [Route("cases/{caseId}/evidences")]
     [Authorize]
-    public class EvidenceController(ILogger<CaseController> logger, ApplicationDbContext context,IMapper mapper) : ControllerBase
+    public class EvidenceController(ApplicationDbContext context, IMapper mapper) : ControllerBase
     {
-        private readonly ILogger<CaseController> _logger = logger;
         private readonly ApplicationDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
@@ -45,36 +43,24 @@ namespace PCMS.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            _logger.LogInformation("POST request received for evidence for case ID: {caseId} with request: {request} from user ID: {userId}", caseId, request, userId);
-
-            try
+            var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
+            if (!caseExists)
             {
-                var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
-                if (!caseExists)
-                {
-                    return NotFound("Case not found");
-                }
-
-                var evidence = _mapper.Map<Evidence>(request);
-                evidence.CaseId = caseId;
-                evidence.LastEditedById = userId;
-                evidence.CreatedById = userId;
-
-                await _context.Evidences.AddAsync(evidence);
-
-                await _context.SaveChangesAsync();
-
-                var returnEvidence = _mapper.Map<GETEvidence>(evidence);
-
-                _logger.LogInformation("Successfully added evidence for case ID: {caseId}", caseId);
-
-                return CreatedAtAction(nameof(CreateEvidence), new { id = returnEvidence.Id }, returnEvidence);
+                return NotFound("Case not found");
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "POST request for evidence with case ID: {caseId} with request: {request} from user ID: {userId} failed", caseId, request, userId);
-                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
-            }
+
+            var evidence = _mapper.Map<Evidence>(request);
+            evidence.CaseId = caseId;
+            evidence.LastEditedById = userId;
+            evidence.CreatedById = userId;
+
+            await _context.Evidences.AddAsync(evidence);
+
+            await _context.SaveChangesAsync();
+
+            var returnEvidence = _mapper.Map<GETEvidence>(evidence);
+
+            return CreatedAtAction(nameof(CreateEvidence), new { id = returnEvidence.Id }, returnEvidence);
 
         }
     }

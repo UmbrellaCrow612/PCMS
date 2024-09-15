@@ -23,6 +23,8 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(option =>
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidateRouteParametersAttribute>();
+    options.Filters.Add<LoggingActionFilter>();
+    options.Filters.Add<ExceptionFilter>();
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
