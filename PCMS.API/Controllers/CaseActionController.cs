@@ -44,9 +44,9 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<ActionResult<GETCaseAction>> CreateAction([FromRoute] string caseId, [FromBody] POSTCaseAction request)
         {
-            _logger.LogInformation("POST case action request received for case ID: {CaseId}", caseId);
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            _logger.LogInformation("POST case action request received for case ID: {CaseId} from user ID: {userId}", caseId, userId);
 
             try
             {
@@ -73,7 +73,7 @@ namespace PCMS.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to create a new case action. CaseId: {CaseId}, Request: {@Request}", caseId, request);
+                _logger.LogError(ex, "Failed to create a new case action. CaseId: {CaseId}, Request: {@Request} user ID: {userId}", caseId, request, userId);
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
         }

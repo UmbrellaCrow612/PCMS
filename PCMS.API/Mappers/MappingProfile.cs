@@ -35,6 +35,12 @@ namespace PCMS.API.Mapper
             CreateMap<GETReport, Report>();
             CreateMap<Report, PATCHReport>();
             CreateMap<PATCHReport, Report>();
+
+            // Evidence
+            CreateMap<Evidence, POSTEvidence>();
+            CreateMap<POSTEvidence, Evidence>();
+            CreateMap<Evidence, GETEvidence>();
+            CreateMap<GETEvidence, Evidence>();
         }
     }
 }

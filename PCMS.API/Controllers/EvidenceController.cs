@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PCMS.API.DTOS;
-using PCMS.API.Filters;
 using PCMS.API.Models;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+using PCMS.API.Filters;
+using System.Security.Claims;
 
 namespace PCMS.API.Controllers
 {
@@ -36,11 +37,46 @@ namespace PCMS.API.Controllers
         /// <param name="request">The DTO containing POST evidence information.</param>
         /// <returns>The created evidence details.</returns>
         [HttpPost]
-        public async Task<ActionResult<GETEvidence>> CreateEvidence([FromRoute][Required] string caseId, POSTEvidence request)
+        [ServiceFilter(typeof(UserAuthorizationFilter))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<ActionResult<GETEvidence>> CreateEvidence([FromRoute] string caseId, POSTEvidence request)
         {
-            await _context.SaveChangesAsync();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            return Ok();
+            _logger.LogInformation("POST request received for evidence for case ID: {caseId} with request: {request} from user ID: {userId}", caseId, request, userId);
+
+            try
+            {
+                var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
+                if (!caseExists)
+                {
+                    return NotFound("Case not found");
+                }
+
+                var evidence = _mapper.Map<Evidence>(request);
+                evidence.CaseId = caseId;
+                evidence.LastEditedById = userId;
+                evidence.CreatedById = userId;
+
+                await _context.Evidences.AddAsync(evidence);
+
+                await _context.SaveChangesAsync();
+
+                var returnEvidence = _mapper.Map<GETEvidence>(evidence);
+
+                _logger.LogInformation("Successfully added evidence for case ID: {caseId}", caseId);
+
+                return CreatedAtAction(nameof(CreateEvidence), new { id = returnEvidence.Id }, returnEvidence);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "POST request for evidence with case ID: {caseId} with request: {request} from user ID: {userId} failed", caseId, request, userId);
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
+            }
+
         }
     }
 }
