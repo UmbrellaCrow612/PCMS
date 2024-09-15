@@ -22,6 +22,7 @@ namespace PCMS.API.Controllers
     /// <param name="userManager">Identity helper service.</param>
     [ApiController]
     [Route("/cases/{caseId}/reports")]
+    [Authorize]
     public class ReportController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseController> _logger = logger;
@@ -37,6 +38,7 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<ActionResult<GETReport>> CreateReport([FromRoute] string caseId, [FromBody] POSTReport request)
         {
             _logger.LogInformation("POST report request received for case ID: {CaseId}", caseId);
@@ -170,6 +172,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<ActionResult> PatchReport([FromRoute] string caseId, [FromRoute] string id, [FromBody] PATCHReport request)
         {
             _logger.LogInformation("PATCH report request received for case ID: {caseId} report ID: {id} request: {request}", caseId, id, request);

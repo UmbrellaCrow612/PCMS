@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
+using PCMS.API.Filters;
 using PCMS.API.Models;
 using System.Security.Claims;
 
@@ -18,6 +20,7 @@ namespace PCMS.API.Controllers
     /// <param name="context">The database context.</param>
     [ApiController]
     [Route("cases")]
+    [Authorize]
     public class CaseController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseController> _logger = logger;
@@ -33,6 +36,7 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<ActionResult<GETCase>> CreateCase([FromBody] POSTCase request)
         {
             _logger.LogInformation("POST case request received");
@@ -172,6 +176,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
+        [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<ActionResult> PatchCase([FromRoute] string id, [FromBody] PATCHCase request)
         {
             _logger.LogInformation("PATCH request received for case ID: {Id}", id);

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
+using PCMS.API.Filters;
 using PCMS.API.Models;
 using System.Security.Claims;
 
@@ -18,6 +20,7 @@ namespace PCMS.API.Controllers
     /// <param name="context">The database context.</param>
     [ApiController]
     [Route("cases/{caseId}/actions")]
+    [Authorize]
     public class CaseActionController(ILogger<CaseActionController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseActionController> _logger = logger;
@@ -38,6 +41,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
+        [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<ActionResult<GETCaseAction>> CreateAction([FromRoute] string caseId, [FromBody] POSTCaseAction request)
         {
             _logger.LogInformation("POST case action request received for case ID: {CaseId}", caseId);
@@ -168,6 +172,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
+        [ServiceFilter(typeof(UserAuthorizationFilter))]
         public async Task<IActionResult> PatchCaseAction([FromRoute] string caseId, [FromRoute] string id, [FromBody] PATCHCaseAction request)
         {
             _logger.LogInformation("Patch request received for case action. Case ID: {CaseId}, Action ID: {Id}", caseId, id);

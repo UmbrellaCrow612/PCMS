@@ -24,8 +24,6 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<CustomExceptionFilter>();
     options.Filters.Add<ValidateRouteParametersAttribute>();
-    options.Filters.Add<UserAuthorizationFilter>();
-    options.Filters.Add(new AuthorizeFilter());
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -21,6 +21,7 @@ namespace PCMS.API.Controllers
     /// <param name="mapper">Automapper instance</param>
     [ApiController]
     [Route("cases/{caseId}/evidences")]
+    [Authorize]
     public class EvidenceController(ILogger<CaseController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
     {
         private readonly ILogger<CaseController> _logger = logger;
