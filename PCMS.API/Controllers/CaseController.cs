@@ -208,7 +208,7 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteCase([FromRoute] string id)
         {
-            _logger.LogInformation("Delete request received for case {Id}", id);
+            _logger.LogInformation("DELETE request received for case {Id}", id);
 
             try
             {
@@ -222,7 +222,7 @@ namespace PCMS.API.Controllers
                 _context.Remove(caseToDelete);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation("Delete request for case {Id} successful", id);
+                _logger.LogInformation("DELETE request for case {Id} successful", id);
 
                 return NoContent();
             }
