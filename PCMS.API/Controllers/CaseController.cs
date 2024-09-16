@@ -75,7 +75,7 @@ namespace PCMS.API.Controllers
 
             if (caseEntity is null)
             {
-                return NotFound($"Case with ID '{id}' was not found.");
+                return NotFound("Case not found.");
             }
 
             var caseResult = _mapper.Map<GETCase>(caseEntity);
