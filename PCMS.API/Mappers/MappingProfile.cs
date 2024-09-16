@@ -41,6 +41,8 @@ namespace PCMS.API.Mapper
             CreateMap<POSTEvidence, Evidence>();
             CreateMap<Evidence, GETEvidence>();
             CreateMap<GETEvidence, Evidence>();
+            CreateMap<Evidence, PATCHEvidence>();
+            CreateMap<PATCHEvidence, Evidence>();
         }
     }
 }
