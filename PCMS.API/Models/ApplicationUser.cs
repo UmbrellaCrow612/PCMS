@@ -39,11 +39,6 @@ namespace PCMS.API.Models
         public DateTime DOB { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of cases assigned to the user.
-        /// </summary>
-        public List<Case> AssignedCases { get; set; } = [];
-
-        /// <summary>
         /// Initializes a new instance of the ApplicationUser class.
         /// </summary>
         public ApplicationUser() : base()

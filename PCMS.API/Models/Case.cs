@@ -73,11 +73,6 @@ namespace PCMS.API.Models
         public List<CaseAction> CaseActions { get; set; } = [];
 
         /// <summary>
-        /// Gets or sets the case assigned users, list of <see cref="ApplicationUser"/>.
-        /// </summary>
-        public List<ApplicationUser> AssignedUsers { get; set; } = [];
-
-        /// <summary>
         /// Gets or sets the case reports, list of <see cref="Report"/>.
         /// </summary>
         public List<Report> Reports { get; set; } = [];

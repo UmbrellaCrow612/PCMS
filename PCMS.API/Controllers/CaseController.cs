@@ -68,7 +68,6 @@ namespace PCMS.API.Controllers
         {
             var caseEntity = await _context.Cases
                 .Include(c => c.CaseActions)
-                .Include(c => c.AssignedUsers)
                 .Include(c => c.Reports)
                 .Include(c => c.Evidences)
                 .FirstOrDefaultAsync(c => c.Id == id);

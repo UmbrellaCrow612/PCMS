@@ -73,11 +73,6 @@ namespace PCMS.API.DTOS
         public required List<GETCaseAction> CaseActions { get; set; } = [];
 
         /// <summary>
-        /// Gets or sets the case assigned users, list of ApplicationUser.
-        /// </summary>
-        public required List<GETApplicationUser> AssignedUsers { get; set; } = [];
-
-        /// <summary>
         /// Gets or sets the case reports, list of Report.
         /// </summary>
         public required List<GETReport> Reports { get; set; } = [];

@@ -198,30 +198,6 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AssignedCasesAssignedUsers",
-                columns: table => new
-                {
-                    AssignedCasesId = table.Column<string>(type: "TEXT", nullable: false),
-                    AssignedUsersId = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AssignedCasesAssignedUsers", x => new { x.AssignedCasesId, x.AssignedUsersId });
-                    table.ForeignKey(
-                        name: "FK_AssignedCasesAssignedUsers_AspNetUsers_AssignedUsersId",
-                        column: x => x.AssignedUsersId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AssignedCasesAssignedUsers_Cases_AssignedCasesId",
-                        column: x => x.AssignedCasesId,
-                        principalTable: "Cases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CaseActions",
                 columns: table => new
                 {
@@ -361,11 +337,6 @@ namespace PCMS.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssignedCasesAssignedUsers_AssignedUsersId",
-                table: "AssignedCasesAssignedUsers",
-                column: "AssignedUsersId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CaseActions_CaseId",
                 table: "CaseActions",
                 column: "CaseId");
@@ -403,9 +374,6 @@ namespace PCMS.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
-
-            migrationBuilder.DropTable(
-                name: "AssignedCasesAssignedUsers");
 
             migrationBuilder.DropTable(
                 name: "CaseActions");

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240916133941_InitialCreate")]
+    [Migration("20240916134705_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -18,21 +18,6 @@ namespace PCMS.API.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
-
-            modelBuilder.Entity("AssignedCasesAssignedUsers", b =>
-                {
-                    b.Property<string>("AssignedCasesId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AssignedUsersId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("AssignedCasesId", "AssignedUsersId");
-
-                    b.HasIndex("AssignedUsersId");
-
-                    b.ToTable("AssignedCasesAssignedUsers");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -464,21 +449,6 @@ namespace PCMS.API.Migrations
                     b.HasIndex("CaseId");
 
                     b.ToTable("Reports");
-                });
-
-            modelBuilder.Entity("AssignedCasesAssignedUsers", b =>
-                {
-                    b.HasOne("PCMS.API.Models.Case", null)
-                        .WithMany()
-                        .HasForeignKey("AssignedCasesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PCMS.API.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("AssignedUsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -27,11 +27,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         modelBuilder.Entity<Case>().HasKey(x => x.Id);
 
-        modelBuilder.Entity<ApplicationUser>()
-                    .HasMany(e => e.AssignedCases)
-                    .WithMany(e => e.AssignedUsers)
-                    .UsingEntity("AssignedCasesAssignedUsers");
-
         // Case Actions
 
         modelBuilder.Entity<CaseAction>().HasKey(x => x.Id);
