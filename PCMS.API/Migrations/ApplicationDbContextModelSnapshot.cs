@@ -227,6 +227,21 @@ namespace PCMS.API.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.ApplicationUserCase", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CaseId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId", "CaseId");
+
+                    b.HasIndex("CaseId");
+
+                    b.ToTable("ApplicationUserCases");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Case", b =>
                 {
                     b.Property<string>("Id")
@@ -499,6 +514,25 @@ namespace PCMS.API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.ApplicationUserCase", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Case", "Case")
+                        .WithMany("AssignedUsers")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("AssignedUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Case");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.CaseAction", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
@@ -551,8 +585,15 @@ namespace PCMS.API.Migrations
                     b.Navigation("Case");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("AssignedUsers");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Case", b =>
                 {
+                    b.Navigation("AssignedUsers");
+
                     b.Navigation("CaseActions");
 
                     b.Navigation("Evidences");

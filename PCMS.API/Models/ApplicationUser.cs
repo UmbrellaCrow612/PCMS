@@ -39,6 +39,11 @@ namespace PCMS.API.Models
         public DateTime DOB { get; set; }
 
         /// <summary>
+        /// Navigation property for the cases assigned to the user
+        /// </summary>
+        public ICollection<ApplicationUserCase> AssignedUsers { get; set; } = [];
+
+        /// <summary>
         /// Initializes a new instance of the ApplicationUser class.
         /// </summary>
         public ApplicationUser() : base()

@@ -86,6 +86,12 @@ namespace PCMS.API.Models
         /// Navigation ef core
         /// </summary>
         public List<CasePerson> PersonsInvolved { get; set; } = [];
+
+        /// <summary>
+        /// Navigation property for the users assigned to the case.
+        /// A case can have many users assigned to it.
+        /// </summary>
+        public List<ApplicationUserCase> AssignedUsers { get; set; } = [];
     }
 
 

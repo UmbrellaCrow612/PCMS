@@ -198,6 +198,30 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ApplicationUserCases",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUserCases", x => new { x.UserId, x.CaseId });
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserCases_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserCases_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CaseActions",
                 columns: table => new
                 {
@@ -300,6 +324,11 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUserCases_CaseId",
+                table: "ApplicationUserCases",
+                column: "CaseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -360,6 +389,9 @@ namespace PCMS.API.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ApplicationUserCases");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 

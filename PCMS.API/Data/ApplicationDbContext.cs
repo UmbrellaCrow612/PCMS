@@ -19,6 +19,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<CasePerson> CasePersons { get; set; }
 
+    public DbSet<ApplicationUserCase> ApplicationUserCases { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -75,6 +77,19 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .WithMany(p => p.CasesInvolved)
             .HasForeignKey(cp => cp.PersonId);
 
+        // Application User Cases
 
+        modelBuilder.Entity<ApplicationUserCase>()
+                .HasKey(uc => new { uc.UserId, uc.CaseId });
+
+        modelBuilder.Entity<ApplicationUserCase>()
+            .HasOne(uc => uc.ApplicationUser)
+            .WithMany(u => u.AssignedUsers)
+            .HasForeignKey(uc => uc.UserId);
+
+        modelBuilder.Entity<ApplicationUserCase>()
+                .HasOne(uc => uc.Case)
+                .WithMany(c => c.AssignedUsers)
+                .HasForeignKey(uc => uc.CaseId);
     }
 }
