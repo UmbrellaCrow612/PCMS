@@ -63,7 +63,7 @@ namespace PCMS.API.DTOS
         [Required(ErrorMessage = "Date of birth is required.")]
         [DataType(DataType.Date)]
         [NotInFuture(ErrorMessage = "Date of birth must be a valid past date.")]
-        public DateTime DOB { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
         /// <summary>
         /// The username of the user.

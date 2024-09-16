@@ -52,7 +52,7 @@ namespace PCMS.API.Controllers
                     LastName = request.LastName,
                     Rank = request.Rank,
                     BadgeNumber = request.BadgeNumber,
-                    DOB = request.DOB,
+                    DateOfBirth = request.DateOfBirth,
                     PhoneNumber = request.PhoneNumber,
                 };
 

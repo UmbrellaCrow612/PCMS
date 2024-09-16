@@ -31,7 +31,7 @@
         public required string BadgeNumber { get; set; } = string.Empty;
 
         /// <summary>
-        /// Get or set user DOB
+        /// Get or set user DateOfBirth
         /// </summary>
         public required DateTime DOB { get; set; }
 

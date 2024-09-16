@@ -36,7 +36,7 @@ namespace PCMS.API.Models
         /// Gets or sets the user's date of birth.
         /// </summary>
         [ProtectedPersonalData]
-        public DateTime DOB { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
         /// <summary>
         /// Navigation property for the cases assigned to the user
