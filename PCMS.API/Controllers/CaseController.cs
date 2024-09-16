@@ -76,7 +76,7 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETCase>> GetCase([FromRoute] string id)
+        public async Task<ActionResult<GETCase>> GetCase(string id)
         {
             var caseEntity = await _context.Cases
                 .Include(c => c.CaseActions)
@@ -131,7 +131,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
         [ServiceFilter(typeof(UserAuthorizationFilter))]
-        public async Task<ActionResult> PatchCase([FromRoute] string id, [FromBody] PATCHCase request)
+        public async Task<ActionResult> PatchCase(string id, [FromBody] PATCHCase request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -165,7 +165,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCase([FromRoute] string id)
+        public async Task<IActionResult> DeleteCase(string id)
         {
             var caseToDelete = await _context.Cases.FindAsync(id);
 

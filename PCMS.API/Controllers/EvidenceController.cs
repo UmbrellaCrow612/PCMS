@@ -39,7 +39,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<GETEvidence>> CreateEvidence([FromRoute] string caseId, POSTEvidence request)
+        public async Task<ActionResult<GETEvidence>> CreateEvidence(string caseId, POSTEvidence request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -73,7 +73,7 @@ namespace PCMS.API.Controllers
         [HttpGet]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<GETEvidence>>> GetEvidences([FromRoute] string caseId)
+        public async Task<ActionResult<List<GETEvidence>>> GetEvidences(string caseId)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
             if (!caseExists)
@@ -100,7 +100,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETEvidence>> GetEvidence([FromRoute] string caseId, [FromRoute] string id)
+        public async Task<ActionResult<GETEvidence>> GetEvidence(string caseId, string id)
         {
             var evidence = await _context.Evidences
                 .Where(e => e.Id == id && e.CaseId == caseId)
@@ -126,7 +126,7 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserAuthorizationFilter))]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> PatchEvidence([FromRoute] string caseId, [FromRoute] string id, PATCHEvidence request)
+        public async Task<ActionResult> PatchEvidence(string caseId, string id, [FromBody] PATCHEvidence request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -154,7 +154,7 @@ namespace PCMS.API.Controllers
         [HttpDelete("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> DeleteEvidence([FromRoute] string caseId, [FromRoute] string id)
+        public async Task<ActionResult> DeleteEvidence(string caseId, string id)
         {
             var evidence = await _context.Evidences.Where(e => e.CaseId == caseId && e.Id == id).FirstOrDefaultAsync();
             if (evidence is null)

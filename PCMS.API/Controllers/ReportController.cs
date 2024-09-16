@@ -38,7 +38,7 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ServiceFilter(typeof(UserAuthorizationFilter))]
-        public async Task<ActionResult<GETReport>> CreateReport([FromRoute] string caseId, [FromBody] POSTReport request)
+        public async Task<ActionResult<GETReport>> CreateReport(string caseId, [FromBody] POSTReport request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -68,7 +68,7 @@ namespace PCMS.API.Controllers
         [HttpGet]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<GETReport>>> GetReports([FromRoute] string caseId)
+        public async Task<ActionResult<List<GETReport>>> GetReports(string caseId)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
 
@@ -98,7 +98,7 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETReport>> GetReport([FromRoute] string caseId, [FromRoute] string id)
+        public async Task<ActionResult<GETReport>> GetReport(string caseId, string id)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
 
@@ -138,7 +138,7 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ServiceFilter(typeof(UserAuthorizationFilter))]
-        public async Task<ActionResult> PatchReport([FromRoute] string caseId, [FromRoute] string id, [FromBody] PATCHReport request)
+        public async Task<ActionResult> PatchReport(string caseId, string id, [FromBody] PATCHReport request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -169,7 +169,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> DeleteReport([FromRoute] string caseId, [FromRoute] string id)
+        public async Task<ActionResult> DeleteReport(string caseId, string id)
         {
             var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
 

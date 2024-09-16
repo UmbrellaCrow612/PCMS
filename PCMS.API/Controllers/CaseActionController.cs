@@ -39,7 +39,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
         [ServiceFilter(typeof(UserAuthorizationFilter))]
-        public async Task<ActionResult<GETCaseAction>> CreateAction([FromRoute] string caseId, [FromBody] POSTCaseAction request)
+        public async Task<ActionResult<GETCaseAction>> CreateAction(string caseId, [FromBody] POSTCaseAction request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -75,7 +75,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<GETCaseAction>> GetAction([FromRoute] string caseId, [FromRoute] string id)
+        public async Task<ActionResult<GETCaseAction>> GetAction(string caseId, string id)
         {
             var existingCaseAction = await _context.CaseActions
                 .Where(ca => ca.CaseId == caseId && ca.Id == id)
@@ -102,7 +102,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<List<GETCaseAction>>> GetActions([FromRoute] string caseId)
+        public async Task<ActionResult<List<GETCaseAction>>> GetActions(string caseId)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
             if (!caseExists)
@@ -134,7 +134,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
         [ServiceFilter(typeof(UserAuthorizationFilter))]
-        public async Task<IActionResult> PatchCaseAction([FromRoute] string caseId, [FromRoute] string id, [FromBody] PATCHCaseAction request)
+        public async Task<IActionResult> PatchCaseAction(string caseId, string id, [FromBody] PATCHCaseAction request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -167,7 +167,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteCaseAction([FromRoute] string caseId, [FromRoute] string id)
+        public async Task<IActionResult> DeleteCaseAction(string caseId, string id)
         {
             var caseAction = await _context.CaseActions.FirstOrDefaultAsync(ca => ca.Id == id && ca.CaseId == caseId);
             if (caseAction is null)
