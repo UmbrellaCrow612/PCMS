@@ -1,8 +1,7 @@
 ﻿namespace PCMS.API.Models
 {
     /// <summary>
-    /// Join table between <see cref="Case"/> and <see cref="Person"/> i.e a person is linked to a case as a witness, suspect
-    /// or victim
+    /// Represents the many-to-many relationship between case and person.
     /// </summary>
     public class CasePerson
     {

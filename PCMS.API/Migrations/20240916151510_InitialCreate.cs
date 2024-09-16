@@ -78,7 +78,7 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "People",
+                name: "Persons",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
@@ -88,7 +88,7 @@ namespace PCMS.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_People", x => x.Id);
+                    table.PrimaryKey("PK_Persons", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -316,9 +316,9 @@ namespace PCMS.API.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CasePersons_People_PersonId",
+                        name: "FK_CasePersons_Persons_PersonId",
                         column: x => x.PersonId,
-                        principalTable: "People",
+                        principalTable: "Persons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -426,7 +426,7 @@ namespace PCMS.API.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "People");
+                name: "Persons");
 
             migrationBuilder.DropTable(
                 name: "Cases");

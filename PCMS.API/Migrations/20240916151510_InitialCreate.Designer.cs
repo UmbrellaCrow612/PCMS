@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240916144501_InitialCreate")]
+    [Migration("20240916151510_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -425,7 +425,7 @@ namespace PCMS.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("People");
+                    b.ToTable("Persons");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Report", b =>

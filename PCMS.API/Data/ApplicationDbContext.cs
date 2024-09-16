@@ -15,7 +15,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<Evidence> Evidences { get; set; }
 
-    public DbSet<Person> People { get; set; }
+    public DbSet<Person> Persons { get; set; }
 
     public DbSet<CasePerson> CasePersons { get; set; }
 
@@ -57,10 +57,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            .WithOne(e => e.Case)
            .HasForeignKey(e => e.CaseId);
 
-        // Person
+        // Persons
 
         modelBuilder.Entity<Person>().HasKey(x => x.Id);
-
 
         // Case Persons
 

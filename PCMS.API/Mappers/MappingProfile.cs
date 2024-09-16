@@ -43,6 +43,12 @@ namespace PCMS.API.Mapper
             CreateMap<GETEvidence, Evidence>();
             CreateMap<Evidence, PATCHEvidence>();
             CreateMap<PATCHEvidence, Evidence>();
+
+            // Persons
+            CreateMap<Person, POSTPerson>();
+            CreateMap<POSTPerson, Person>();
+            CreateMap<Person, GETPerson>();
+            CreateMap<GETPerson, Person>();
         }
     }
 }

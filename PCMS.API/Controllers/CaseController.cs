@@ -9,6 +9,18 @@ using System.Security.Claims;
 
 namespace PCMS.API.Controllers
 {
+
+    // TODO
+    /*
+     
+     
+     Linking Persons to Cases
+     POST /cases/{caseId}/persons/{personId}/link - Link a person to a case
+     DELETE /cases/{caseId}/persons/{personId}/link - Unlink a person from a case
+     
+     
+     */
+
     /// <summary>
     /// Controller for handling case-related actions.
     /// </summary>
@@ -51,7 +63,7 @@ namespace PCMS.API.Controllers
 
             var returnCase = _mapper.Map<GETCase>(createdCase);
 
-            return CreatedAtAction(nameof(GetCase), new { id = returnCase.Id }, returnCase);
+            return CreatedAtAction(nameof(CreateCase), new { id = returnCase.Id }, returnCase);
         }
 
 

@@ -422,7 +422,7 @@ namespace PCMS.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("People");
+                    b.ToTable("Persons");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Report", b =>
