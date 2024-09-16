@@ -7,6 +7,7 @@ using PCMS.API.Filters;
 using PCMS.API.Models;
 using System.Security.Claims;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
@@ -141,6 +142,29 @@ namespace PCMS.API.Controllers
             evidence.LastModifiedDate = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Delete a evidence item for a specific case.
+        /// </summary>
+        /// <param name="caseId">The ID of the case.</param>
+        /// <param name="id">The ID of the evidence</param>
+        /// <returns>No Content.</returns>
+        [HttpDelete("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeleteEvidence([FromRoute] string caseId, [FromRoute] string id)
+        {
+            var evidence = await _context.Evidences.Where(e => e.CaseId == caseId && e.Id == id).FirstOrDefaultAsync();
+            if (evidence is null)
+            {
+                return NotFound("Case not found or is linked to this case");
+            }
+
+            _context.Remove(evidence);
+            await _context.SaveChangesAsync();
+
             return NoContent();
         }
     }
