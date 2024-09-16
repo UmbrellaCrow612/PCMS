@@ -122,6 +122,7 @@ namespace PCMS.API.Controllers
         /// <param name="request">The DTO PATCH data for the evidence item.</param>
         /// <returns>No Content.</returns>
         [HttpPatch("{id}")]
+        [ServiceFilter(typeof(UserAuthorizationFilter))]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> PatchEvidence([FromRoute] string caseId, [FromRoute] string id, PATCHEvidence request)
