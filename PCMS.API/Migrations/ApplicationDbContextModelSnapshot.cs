@@ -333,6 +333,24 @@ namespace PCMS.API.Migrations
                     b.ToTable("CaseActions");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.CasePerson", b =>
+                {
+                    b.Property<string>("CaseId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PersonId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CaseId", "PersonId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("CasePersons");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Evidence", b =>
                 {
                     b.Property<string>("Id")
@@ -384,6 +402,27 @@ namespace PCMS.API.Migrations
                     b.HasIndex("CaseId");
 
                     b.ToTable("Evidences");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Person", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ContactInfo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("People");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Report", b =>
@@ -501,6 +540,25 @@ namespace PCMS.API.Migrations
                     b.Navigation("Case");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.CasePerson", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Case", "Case")
+                        .WithMany("PersonsInvolved")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.Person", "Person")
+                        .WithMany("CasesInvolved")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+
+                    b.Navigation("Person");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Evidence", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
@@ -529,7 +587,14 @@ namespace PCMS.API.Migrations
 
                     b.Navigation("Evidences");
 
+                    b.Navigation("PersonsInvolved");
+
                     b.Navigation("Reports");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Person", b =>
+                {
+                    b.Navigation("CasesInvolved");
                 });
 #pragma warning restore 612, 618
         }

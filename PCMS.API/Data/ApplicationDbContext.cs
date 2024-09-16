@@ -15,6 +15,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<Evidence> Evidences { get; set; }
 
+    public DbSet<Person> People { get; set; }
+
+    public DbSet<CasePerson> CasePersons { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -55,5 +59,27 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            .HasMany(e => e.Evidences)
            .WithOne(e => e.Case)
            .HasForeignKey(e => e.CaseId);
+
+        // Person
+
+        modelBuilder.Entity<Person>().HasKey(x => x.Id);
+
+
+        // Case Persons
+
+        modelBuilder.Entity<CasePerson>()
+            .HasKey(cp => new { cp.CaseId, cp.PersonId });
+
+        modelBuilder.Entity<CasePerson>()
+          .HasOne(cp => cp.Case)
+          .WithMany(c => c.PersonsInvolved)
+          .HasForeignKey(cp => cp.CaseId);
+
+        modelBuilder.Entity<CasePerson>()
+            .HasOne(cp => cp.Person)
+            .WithMany(p => p.CasesInvolved)
+            .HasForeignKey(cp => cp.PersonId);
+
+
     }
 }

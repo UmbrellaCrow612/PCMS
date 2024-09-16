@@ -86,6 +86,11 @@ namespace PCMS.API.Models
         /// Gets or sets the case evidence, list of <see cref="Evidence"/>.
         /// </summary>
         public List<Evidence> Evidences { get; set; } = [];
+
+        /// <summary>
+        /// Navigation ef core
+        /// </summary>
+        public List<CasePerson> PersonsInvolved { get; set; } = [];
     }
 
 
