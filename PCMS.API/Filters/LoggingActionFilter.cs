@@ -3,6 +3,9 @@ using System.Security.Claims;
 
 namespace PCMS.API.Filters
 {
+    /// <summary>
+    /// Custom Filter to make logs when users hit an endpoint.
+    /// </summary>
     public class LoggingActionFilter(ILogger<LoggingActionFilter> logger) : IAsyncActionFilter
     {
         private readonly ILogger<LoggingActionFilter> _logger = logger;

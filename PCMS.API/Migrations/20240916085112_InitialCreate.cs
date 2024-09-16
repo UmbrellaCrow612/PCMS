@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -244,7 +244,10 @@ namespace PCMS.API.Migrations
                     Location = table.Column<string>(type: "TEXT", nullable: false),
                     CollectionDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    CollectedByDetails = table.Column<string>(type: "TEXT", nullable: false)
+                    LastEditedById = table.Column<string>(type: "TEXT", nullable: false),
+                    CollectedByDetails = table.Column<string>(type: "TEXT", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

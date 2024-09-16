@@ -349,6 +349,9 @@ namespace PCMS.API.Migrations
                     b.Property<DateTime>("CollectionDateTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CreatedById")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -359,6 +362,13 @@ namespace PCMS.API.Migrations
 
                     b.Property<string>("FileUrl")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastEditedById")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastModifiedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Location")

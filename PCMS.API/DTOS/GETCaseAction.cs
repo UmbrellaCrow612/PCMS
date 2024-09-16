@@ -45,5 +45,10 @@
         /// </summary>
         public required string LastEditedById { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Gets or sets the case action CaseId.
+        /// </summary>
+        public required string CaseId { get; set; } = string.Empty;
+
     }
 }

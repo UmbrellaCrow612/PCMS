@@ -4,6 +4,9 @@ using System.Security.Claims;
 
 namespace PCMS.API.Filters
 {
+    /// <summary>
+    /// Custom Filter to make sure errors are loged in a central format.
+    /// </summary>
     public class ExceptionFilter(ILogger<ExceptionFilter> logger, IHostEnvironment env) : IExceptionFilter
     {
         private readonly ILogger<ExceptionFilter> _logger = logger;

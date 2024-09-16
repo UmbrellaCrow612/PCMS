@@ -70,6 +70,7 @@ namespace PCMS.API.Controllers
                 .Include(c => c.CaseActions)
                 .Include(c => c.AssignedUsers)
                 .Include(c => c.Reports)
+                .Include(c => c.Evidences)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (caseEntity is null)
@@ -93,9 +94,6 @@ namespace PCMS.API.Controllers
         public async Task<ActionResult<List<GETCase>>> GetCases()
         {
             var cases = await _context.Cases
-                .Include(c => c.CaseActions)
-                .Include(c => c.AssignedUsers)
-                .Include(c => c.Reports)
                 .ToListAsync();
 
             if (cases.Count is 0)
