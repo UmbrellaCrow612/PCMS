@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PCMS.API.Filters;
+using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.DTOS
 {
@@ -61,7 +62,7 @@ namespace PCMS.API.DTOS
         /// </summary>
         [Required(ErrorMessage = "Date of birth is required.")]
         [DataType(DataType.Date)]
-        [CustomDateRange(ErrorMessage = "Date of birth must be a valid past date.")]
+        [NotInFuture(ErrorMessage = "Date of birth must be a valid past date.")]
         public DateTime DOB { get; set; }
 
         /// <summary>
@@ -79,16 +80,5 @@ namespace PCMS.API.DTOS
         [Phone(ErrorMessage = "Invalid phone number format.")]
         [StringLength(15, ErrorMessage = "Phone number cannot exceed 15 characters.")]
         public string PhoneNumber { get; set; } = string.Empty;
-    }
-
-    /// <summary>
-    /// Custom validation for date range to ensure that the date is not in the future.
-    /// </summary>
-    public class CustomDateRangeAttribute : RangeAttribute
-    {
-        public CustomDateRangeAttribute()
-            : base(typeof(DateTime), DateTime.MinValue.ToShortDateString(), DateTime.Now.ToShortDateString())
-        {
-        }
     }
 }
