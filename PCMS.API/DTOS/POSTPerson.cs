@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PCMS.API.Filters;
+using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.DTOS
 {
@@ -23,6 +24,7 @@ namespace PCMS.API.DTOS
         /// Gets or sets the Person DateOfBirth.
         /// </summary>
         [Required(ErrorMessage = "DateOfBirth is required")]
+        [NotInFuture(ErrorMessage = "DateOfBirth can not be in the future")]
         public required DateTime DateOfBirth { get; set; }
     }
 }

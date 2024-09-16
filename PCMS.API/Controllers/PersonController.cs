@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PCMS.API.DTOS;
 using PCMS.API.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
