@@ -1,6 +1,5 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.Filters;
 using PCMS.API.Models;
@@ -22,7 +21,6 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>(option =>
 
 builder.Services.AddControllers(options =>
 {
-    options.Filters.Add<ValidateRouteParametersAttribute>();
     options.Filters.Add<LoggingActionFilter>();
     options.Filters.Add<ExceptionFilter>();
 });

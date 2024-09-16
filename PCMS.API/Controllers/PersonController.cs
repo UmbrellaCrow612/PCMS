@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
 using PCMS.API.Models;
 
@@ -16,7 +17,7 @@ namespace PCMS.API.Controllers
     /// <param name="mapper">AutoMapper instance</param>
     [ApiController]
     [Route("persons")]
-    [Authorize]
+    [AllowAnonymous]
     public class PersonController(ApplicationDbContext context, IMapper mapper) : ControllerBase
     {
         private readonly ApplicationDbContext _context = context;
@@ -41,5 +42,26 @@ namespace PCMS.API.Controllers
 
             return CreatedAtAction(nameof(CreatePerson), new { id = returnPerson.Id }, returnPerson);
         }
+
+        /// <summary>
+        /// Get a person
+        /// </summary>
+        /// <param name="id">The ID of the person</param>
+        /// <returns>A person</returns>
+        [HttpGet("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<GETPerson>> GetPerson(string id)
+        {
+            var person = await _context.Persons.Where(p => p.Id == id).FirstOrDefaultAsync();
+            if(person is null)
+            {
+                return NotFound("Person not found");
+            }
+
+            var returnPerson = _mapper.Map<GETPerson>(person);
+            return Ok(returnPerson);
+        }
+
     }
 }
