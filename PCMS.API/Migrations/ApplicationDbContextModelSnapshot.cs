@@ -358,6 +358,9 @@ namespace PCMS.API.Migrations
 
                     b.HasKey("CaseId", "PersonId");
 
+                    b.HasIndex("Id")
+                        .IsUnique();
+
                     b.HasIndex("PersonId");
 
                     b.ToTable("CasePersons");
