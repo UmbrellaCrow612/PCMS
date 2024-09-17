@@ -190,7 +190,7 @@ namespace PCMS.API.Controllers
         /// <returns>No content.</returns>
         [HttpPost("{id}/persons/{personId}/link")]
         [ProducesDefaultResponseType]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> CreateCasePerson(string id, string personId, POSTCasePerson request)
         {
             var existingCase = await _context.Cases.AnyAsync(c => c.Id == id);
@@ -210,7 +210,9 @@ namespace PCMS.API.Controllers
             await _context.CasePersons.AddAsync(casePerson);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            var returnCasePerson = _mapper.Map<GETCasePerson>(casePerson);
+
+            return Ok(returnCasePerson);
         }
 
         /// <summary>

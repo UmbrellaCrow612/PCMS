@@ -55,6 +55,8 @@ namespace PCMS.API.Mapper
             // case person
             CreateMap<CasePerson, POSTCasePerson>();
             CreateMap<POSTCasePerson, CasePerson>();
+            CreateMap<CasePerson, GETCasePerson>();
+            CreateMap<GETCasePerson, CasePerson>();
         }
     }
 }
