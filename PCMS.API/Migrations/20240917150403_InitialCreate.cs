@@ -400,6 +400,12 @@ namespace PCMS.API.Migrations
                 column: "CaseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Evidences_Id",
+                table: "Evidences",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reports_CaseId",
                 table: "Reports",
                 column: "CaseId");
