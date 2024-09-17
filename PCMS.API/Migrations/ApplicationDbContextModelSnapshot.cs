@@ -336,6 +336,11 @@ namespace PCMS.API.Migrations
 
                     b.HasIndex("CaseId");
 
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
                     b.ToTable("CaseActions");
                 });
 
