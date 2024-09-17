@@ -6,22 +6,9 @@ using PCMS.API.DTOS;
 using PCMS.API.Filters;
 using PCMS.API.Models;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
-
-    // TODO
-    /*
-     
-     
-     Linking Persons to Cases
-     POST /cases/{caseId}/persons/{personId}/link - Link a person to a case
-     DELETE /cases/{caseId}/persons/{personId}/link - Unlink a person from a case
-     
-     
-     */
-
     /// <summary>
     /// Controller for handling case-related actions.
     /// </summary>

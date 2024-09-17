@@ -336,8 +336,6 @@ namespace PCMS.API.Migrations
 
                     b.HasIndex("CaseId");
 
-                    b.HasIndex("CreatedAt");
-
                     b.HasIndex("Id")
                         .IsUnique();
 
@@ -473,6 +471,9 @@ namespace PCMS.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CaseId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
 
                     b.ToTable("Reports");
                 });

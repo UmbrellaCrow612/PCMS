@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.Models
@@ -8,8 +7,6 @@ namespace PCMS.API.Models
     /// Represents a specific action taken on a case.
     /// </summary>
     [Index(nameof(Id), IsUnique = true)]
-    [Index(nameof(CaseId))]
-    [Index(nameof(CreatedAt))]
     public class CaseAction
     {
         /// <summary>
@@ -72,7 +69,6 @@ namespace PCMS.API.Models
         /// <summary>
         /// Gets or sets the specific case this case action is linked to, required.
         /// </summary>
-        [ForeignKey("CaseId")]
         public Case? Case { get; set; } = null;
     }
 }

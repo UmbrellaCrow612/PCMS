@@ -372,11 +372,6 @@ namespace PCMS.API.Migrations
                 column: "CaseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CaseActions_CreatedAt",
-                table: "CaseActions",
-                column: "CreatedAt");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CaseActions_Id",
                 table: "CaseActions",
                 column: "Id",
@@ -408,6 +403,12 @@ namespace PCMS.API.Migrations
                 name: "IX_Reports_CaseId",
                 table: "Reports",
                 column: "CaseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reports_Id",
+                table: "Reports",
+                column: "Id",
+                unique: true);
         }
 
         /// <inheritdoc />
