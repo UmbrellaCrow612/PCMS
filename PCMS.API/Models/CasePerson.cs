@@ -5,6 +5,8 @@
     /// </summary>
     public class CasePerson
     {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+
         public required string CaseId { get; set; }
         public Case Case { get; set; } = null!;
 

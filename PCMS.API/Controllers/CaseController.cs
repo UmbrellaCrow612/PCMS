@@ -6,6 +6,7 @@ using PCMS.API.DTOS;
 using PCMS.API.Filters;
 using PCMS.API.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
@@ -190,28 +191,50 @@ namespace PCMS.API.Controllers
         [HttpPost("{id}/persons/{personId}/link")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> LinkCasePerson(string id, string personId, POSTLinkCasePerson request)
+        public async Task<ActionResult> CreateCasePerson(string id, string personId, POSTCasePerson request)
         {
-            var existingCase = await _context.Cases.Where(c => c.Id == id).FirstOrDefaultAsync();
-            if (existingCase is null)
+            var existingCase = await _context.Cases.AnyAsync(c => c.Id == id);
+            if (!existingCase)
             {
                 return NotFound("Case not found");
             }
 
-            var existingPerson = await _context.Persons.Where(p => p.Id == personId).FirstOrDefaultAsync();
-            if (existingPerson == null)
+            var existingPerson = await _context.Persons.AnyAsync(p => p.Id == personId);
+            if (!existingPerson)
             {
                 return NotFound("Person not found.");
             }
 
-            var casePerson = new CasePerson
-            {
-                CaseId = id,
-                PersonId = personId,
-                Role = request.Role
-            };
+            var casePerson = _mapper.Map<CasePerson>(request);
 
             await _context.CasePersons.AddAsync(casePerson);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Deletes a person case link.
+        /// </summary>
+        /// <param name="id">The ID of the case.</param>
+        /// <param name="personId">The ID of the person.</param>
+        /// <param name="linkdId">The ID of the person case</param>
+        /// <returns>No content.</returns>
+        [HttpDelete("{id}/persons/{personId}/link/{linkId}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeleteCasePerson(string id, string personId, string linkdId)
+        {
+            var casePerson = await _context.CasePersons
+                .Where(cp => cp.CaseId == id && cp.PersonId == personId && cp.Id == linkdId)
+                .FirstOrDefaultAsync();
+
+            if (casePerson is null)
+            {
+                return NotFound("Case person link not found");
+            }
+
+            _context.Remove(casePerson);
             await _context.SaveChangesAsync();
 
             return NoContent();

@@ -341,6 +341,9 @@ namespace PCMS.API.Migrations
                     b.Property<string>("PersonId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Role")
                         .HasColumnType("INTEGER");
 

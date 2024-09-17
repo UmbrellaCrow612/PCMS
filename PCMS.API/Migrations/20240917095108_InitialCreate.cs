@@ -304,6 +304,7 @@ namespace PCMS.API.Migrations
                 {
                     CaseId = table.Column<string>(type: "TEXT", nullable: false),
                     PersonId = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<string>(type: "TEXT", nullable: true),
                     Role = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>

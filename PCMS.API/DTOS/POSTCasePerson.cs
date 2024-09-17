@@ -6,7 +6,7 @@ namespace PCMS.API.DTOS
     /// <summary>
     /// DTO for POST data for linking a case and person.
     /// </summary>
-    public class POSTLinkCasePerson
+    public class POSTCasePerson
     {
         [Required]
         [EnumDataType(typeof(CaseRole))]
