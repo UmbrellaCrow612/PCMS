@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
 using PCMS.API.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
@@ -63,5 +64,52 @@ namespace PCMS.API.Controllers
             return Ok(returnPerson);
         }
 
+        /// <summary>
+        /// Patch a person.
+        /// </summary>
+        /// <param name="id">The ID of the person.</param>
+        /// <param name="request">The DTO of the POST data of the person.</param>
+        /// <returns>No Content</returns>
+        [HttpPatch("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> PatchPerson(string id, [FromBody] PATCHPerson request)
+        {
+            var person = await _context.Persons.Where(p => p.Id == id).FirstOrDefaultAsync();
+            if (person is null)
+            {
+                return NotFound("Person not found");
+            }
+
+            _mapper.Map(request, person);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Delete a person.
+        /// </summary>
+        /// <param name="id">The ID of the person.</param>
+        /// <returns>No Content</returns>
+        [HttpDelete("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeletePerson(string id)
+        {
+            var person = await _context.Persons.Where(p => p.Id == id).FirstOrDefaultAsync();
+            if (person is null)
+            {
+                return NotFound("Person not found");
+            }
+
+            var casePeople = await _context.CasePersons.Where(cp => cp.PersonId == id).ToListAsync();
+
+            _context.Remove(person);
+            _context.Remove(casePeople);
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }

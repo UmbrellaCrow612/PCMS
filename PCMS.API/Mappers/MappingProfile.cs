@@ -49,6 +49,8 @@ namespace PCMS.API.Mapper
             CreateMap<POSTPerson, Person>();
             CreateMap<Person, GETPerson>();
             CreateMap<GETPerson, Person>();
+            CreateMap<Person, PATCHPerson>();
+            CreateMap<PATCHPerson, Person>();
         }
     }
 }
