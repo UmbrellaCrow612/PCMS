@@ -288,6 +288,12 @@ namespace PCMS.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CaseNumber")
+                        .IsUnique();
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
                     b.ToTable("Cases");
                 });
 

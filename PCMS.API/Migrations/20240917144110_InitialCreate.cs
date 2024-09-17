@@ -377,6 +377,18 @@ namespace PCMS.API.Migrations
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cases_CaseNumber",
+                table: "Cases",
+                column: "CaseNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cases_Id",
+                table: "Cases",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Evidences_CaseId",
                 table: "Evidences",
                 column: "CaseId");
