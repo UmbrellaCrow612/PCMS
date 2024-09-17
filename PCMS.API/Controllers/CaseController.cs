@@ -218,10 +218,10 @@ namespace PCMS.API.Controllers
         [HttpDelete("{id}/persons/{personId}/link/{linkId}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> DeleteCasePerson(string id, string personId, string linkdId)
+        public async Task<ActionResult> DeleteCasePerson(string id, string personId, string linkId)
         {
             var casePerson = await _context.CasePersons
-                .Where(cp => cp.CaseId == id && cp.PersonId == personId && cp.Id == linkdId)
+                .Where(cp => cp.CaseId == id && cp.PersonId == personId && cp.Id == linkId)
                 .FirstOrDefaultAsync();
 
             if (casePerson is null)
