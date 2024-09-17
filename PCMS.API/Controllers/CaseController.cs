@@ -83,6 +83,7 @@ namespace PCMS.API.Controllers
                 .Include(c => c.CaseActions)
                 .Include(c => c.Reports)
                 .Include(c => c.Evidences)
+                .Include(c => c.PersonsInvolved)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (caseEntity is null)
@@ -205,7 +206,12 @@ namespace PCMS.API.Controllers
                 return NotFound("Person not found.");
             }
 
-            var casePerson = _mapper.Map<CasePerson>(request);
+            var casePerson = new CasePerson
+            {
+                CaseId = id,
+                PersonId = personId,
+                Role = request.Role
+            };
 
             await _context.CasePersons.AddAsync(casePerson);
             await _context.SaveChangesAsync();

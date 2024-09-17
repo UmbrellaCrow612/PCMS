@@ -81,5 +81,7 @@ namespace PCMS.API.DTOS
         /// Gets or sets the case evidences, list of Evidence.
         /// </summary>
         public required List<GETEvidence> Evidences { get; set; } = [];
+
+        public required List<GETCasePerson> PersonsInvolved { get; set; } = [];
     }
 }
