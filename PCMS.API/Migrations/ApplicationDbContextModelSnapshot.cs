@@ -440,6 +440,9 @@ namespace PCMS.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Id")
+                        .IsUnique();
+
                     b.ToTable("Persons");
                 });
 
