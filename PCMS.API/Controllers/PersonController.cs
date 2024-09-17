@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS;
 using PCMS.API.Models;
-using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {

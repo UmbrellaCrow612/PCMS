@@ -1,4 +1,5 @@
-﻿using PCMS.API.Models;
+﻿using PCMS.API.Filters;
+using PCMS.API.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.DTOS
@@ -24,6 +25,7 @@ namespace PCMS.API.DTOS
         /// Get or set the case priority based on the enum <see cref="CasePriority"/>.
         /// </summary>
         [Required(ErrorMessage = "Priority is required")]
+        [ValidEnumValue(typeof(CasePriority))]
         public CasePriority Priority { get; set; }
 
         /// <summary>

@@ -179,5 +179,42 @@ namespace PCMS.API.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Links a person to a case.
+        /// </summary>
+        /// <param name="id">The ID of the case.</param>
+        /// <param name="personId">The ID of the person.</param>
+        /// <param name="request">The DTO of the POST data for linking a person.</param>
+        /// <returns>No content.</returns>
+        [HttpPost("{id}/persons/{personId}/link")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> LinkCasePerson(string id, string personId, POSTLinkCasePerson request)
+        {
+            var existingCase = await _context.Cases.Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (existingCase is null)
+            {
+                return NotFound("Case not found");
+            }
+
+            var existingPerson = await _context.Persons.Where(p => p.Id == personId).FirstOrDefaultAsync();
+            if (existingPerson == null)
+            {
+                return NotFound("Person not found.");
+            }
+
+            var casePerson = new CasePerson
+            {
+                CaseId = id,
+                PersonId = personId,
+                Role = request.Role
+            };
+
+            await _context.CasePersons.AddAsync(casePerson);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }

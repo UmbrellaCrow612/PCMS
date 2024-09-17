@@ -1,4 +1,5 @@
-﻿using PCMS.API.Models;
+﻿using PCMS.API.Filters;
+using PCMS.API.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.DTOS
@@ -24,12 +25,14 @@ namespace PCMS.API.DTOS
         /// Gets or sets the Case Status.
         /// </summary>
         [Required(ErrorMessage = "Status is required")]
+        [ValidEnumValue(typeof(CaseStatus))]
         public CaseStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the Case Priority.
         /// </summary>
         [Required(ErrorMessage = "Priority is required")]
+        [ValidEnumValue(typeof(CasePriority))]
         public CasePriority Priority { get; set; }
 
         /// <summary>
