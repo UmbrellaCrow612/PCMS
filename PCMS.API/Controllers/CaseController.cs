@@ -6,6 +6,7 @@ using PCMS.API.DTOS;
 using PCMS.API.Filters;
 using PCMS.API.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
@@ -230,6 +231,36 @@ namespace PCMS.API.Controllers
             }
 
             _context.Remove(casePerson);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
+        [HttpPost("{id}/users/{userId}/assign")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> CreateUserCase(string id, string userId)
+        {
+            var caseExists = await _context.Cases.Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (caseExists is null)
+            {
+                return NotFound("Case not found");
+            }
+
+            var user = await _context.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+            if (user is null)
+            {
+                return NotFound("User not found");
+            }
+
+            var applicationUserCase = new ApplicationUserCase
+            {
+                CaseId = id,
+                UserId = userId,
+            };
+
+            await _context.ApplicationUserCases.AddAsync(applicationUserCase);
             await _context.SaveChangesAsync();
 
             return NoContent();

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240917155920_InitialCreate")]
+    [Migration("20240917160728_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -550,7 +550,7 @@ namespace PCMS.API.Migrations
                         .IsRequired();
 
                     b.HasOne("PCMS.API.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("AssignedUsers")
+                        .WithMany("AssignedCases")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -614,7 +614,7 @@ namespace PCMS.API.Migrations
 
             modelBuilder.Entity("PCMS.API.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("AssignedUsers");
+                    b.Navigation("AssignedCases");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Case", b =>

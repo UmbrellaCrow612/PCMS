@@ -83,7 +83,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         modelBuilder.Entity<ApplicationUserCase>()
             .HasOne(uc => uc.ApplicationUser)
-            .WithMany(u => u.AssignedUsers)
+            .WithMany(u => u.AssignedCases)
             .HasForeignKey(uc => uc.UserId);
 
         modelBuilder.Entity<ApplicationUserCase>()

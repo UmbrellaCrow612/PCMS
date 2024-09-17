@@ -41,7 +41,7 @@ namespace PCMS.API.Models
         /// <summary>
         /// Navigation property for the cases assigned to the user
         /// </summary>
-        public ICollection<ApplicationUserCase> AssignedUsers { get; set; } = [];
+        public ICollection<ApplicationUserCase> AssignedCases { get; set; } = [];
 
         /// <summary>
         /// Initializes a new instance of the ApplicationUser class.
