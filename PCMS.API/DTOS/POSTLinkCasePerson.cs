@@ -1,5 +1,4 @@
-﻿using PCMS.API.Filters;
-using PCMS.API.Models;
+﻿using PCMS.API.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.DTOS
@@ -10,7 +9,7 @@ namespace PCMS.API.DTOS
     public class POSTLinkCasePerson
     {
         [Required]
-        [ValidEnumValue(typeof(CaseRole))]
+        [EnumDataType(typeof(CaseRole))]
         public required CaseRole Role { get; set; }
     }
 }

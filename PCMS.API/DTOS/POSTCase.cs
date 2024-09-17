@@ -25,7 +25,7 @@ namespace PCMS.API.DTOS
         /// Get or set the case priority based on the enum <see cref="CasePriority"/>.
         /// </summary>
         [Required(ErrorMessage = "Priority is required")]
-        [ValidEnumValue(typeof(CasePriority))]
+        [EnumDataType(typeof(CasePriority))]
         public CasePriority Priority { get; set; }
 
         /// <summary>

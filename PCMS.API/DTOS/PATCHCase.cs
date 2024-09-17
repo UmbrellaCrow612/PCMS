@@ -25,14 +25,14 @@ namespace PCMS.API.DTOS
         /// Gets or sets the Case Status.
         /// </summary>
         [Required(ErrorMessage = "Status is required")]
-        [ValidEnumValue(typeof(CaseStatus))]
+        [EnumDataType(typeof(CaseStatus))]
         public CaseStatus Status { get; set; }
 
         /// <summary>
         /// Gets or sets the Case Priority.
         /// </summary>
         [Required(ErrorMessage = "Priority is required")]
-        [ValidEnumValue(typeof(CasePriority))]
+        [EnumDataType(typeof(CasePriority))]
         public CasePriority Priority { get; set; }
 
         /// <summary>
