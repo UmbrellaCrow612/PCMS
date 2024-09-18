@@ -40,4 +40,10 @@
     <None Include="C:\dev\PCMS\PCMS.API\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOS\Get\" />
+    <Folder Include="DTOS\Post\" />
+    <Folder Include="DTOS\Patch\" />
+  </ItemGroup>
+
 </Project>
