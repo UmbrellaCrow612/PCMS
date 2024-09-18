@@ -268,9 +268,27 @@ namespace PCMS.API.Controllers
                 UserId = userId,
             };
 
-            var exi
-
             await _context.ApplicationUserCases.AddAsync(applicationUserCase);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}/users/{userId}/assign")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeleteUserCase(string id, string userId)
+        {
+            var existingLink = await _context.ApplicationUserCases
+                .Where(auc => auc.CaseId == id && auc.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            if (existingLink is null)
+            {
+                return BadRequest("User link dose not exist");
+            }
+
+            _context.Remove(existingLink);
             await _context.SaveChangesAsync();
 
             return NoContent();
