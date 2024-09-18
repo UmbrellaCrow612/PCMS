@@ -78,6 +78,25 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Locations",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Address = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    City = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    PostalCode = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
+                    Latitude = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Longitude = table.Column<decimal>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Locations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Persons",
                 columns: table => new
                 {
@@ -299,6 +318,35 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Properties",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    PropertyType = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Status = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
+                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Bedrooms = table.Column<int>(type: "INTEGER", nullable: false),
+                    Bathrooms = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Area = table.Column<decimal>(type: "TEXT", nullable: false),
+                    YearBuilt = table.Column<int>(type: "INTEGER", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LocationId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Properties", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Properties_Locations_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "Locations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CasePersons",
                 columns: table => new
                 {
@@ -412,10 +460,27 @@ namespace PCMS.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Locations_Id",
+                table: "Locations",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Persons_Id",
                 table: "Persons",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Properties_Id",
+                table: "Properties",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Properties_LocationId",
+                table: "Properties",
+                column: "LocationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reports_CaseId",
@@ -460,6 +525,9 @@ namespace PCMS.API.Migrations
                 name: "Evidences");
 
             migrationBuilder.DropTable(
+                name: "Properties");
+
+            migrationBuilder.DropTable(
                 name: "Reports");
 
             migrationBuilder.DropTable(
@@ -470,6 +538,9 @@ namespace PCMS.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Persons");
+
+            migrationBuilder.DropTable(
+                name: "Locations");
 
             migrationBuilder.DropTable(
                 name: "Cases");

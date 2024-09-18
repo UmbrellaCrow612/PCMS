@@ -69,5 +69,10 @@ namespace PCMS.API.Models
         /// </summary>
         [DataType(DataType.DateTime)]
         public DateTime? LastModifiedDate { get; set; }
+
+        /// <summary>
+        /// EF Core nav
+        /// </summary>
+        public ICollection<Property> Properties { get; set; } = [];
     }
 }

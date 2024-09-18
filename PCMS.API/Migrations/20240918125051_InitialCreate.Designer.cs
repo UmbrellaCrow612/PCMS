@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240917160728_InitialCreate")]
+    [Migration("20240918125051_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -425,6 +425,51 @@ namespace PCMS.API.Migrations
                     b.ToTable("Evidences");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.Location", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Latitude")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("Locations");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Person", b =>
                 {
                     b.Property<string>("Id")
@@ -447,6 +492,65 @@ namespace PCMS.API.Migrations
                         .IsUnique();
 
                     b.ToTable("Persons");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Property", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Area")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Bathrooms")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Bedrooms")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LocationId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PropertyType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("YearBuilt")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("Properties");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Report", b =>
@@ -601,6 +705,17 @@ namespace PCMS.API.Migrations
                     b.Navigation("Case");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.Property", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Location", "Location")
+                        .WithMany("Properties")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Report", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
@@ -628,6 +743,11 @@ namespace PCMS.API.Migrations
                     b.Navigation("PersonsInvolved");
 
                     b.Navigation("Reports");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Location", b =>
+                {
+                    b.Navigation("Properties");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Person", b =>

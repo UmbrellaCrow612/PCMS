@@ -19,6 +19,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<CasePerson> CasePersons { get; set; }
 
+    public DbSet<Location> Locations { get; set; }
+
+    public DbSet<Property> Properties { get; set; }
+
     public DbSet<ApplicationUserCase> ApplicationUserCases { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -90,5 +94,19 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .HasOne(uc => uc.Case)
                 .WithMany(c => c.AssignedUsers)
                 .HasForeignKey(uc => uc.CaseId);
+
+
+        // Locations
+
+        modelBuilder.Entity<Location>().HasKey(x => x.Id);
+
+        modelBuilder.Entity<Location>()
+           .HasMany(e => e.Properties)
+           .WithOne(e => e.Location)
+           .HasForeignKey(e => e.LocationId);
+
+        // Properties
+
+        modelBuilder.Entity<Property>().HasKey(x => x.Id);
     }
 }
