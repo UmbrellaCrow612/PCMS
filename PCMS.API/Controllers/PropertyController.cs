@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS.GET;
 using PCMS.API.DTOS.POST;
+using PCMS.API.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
@@ -29,9 +32,27 @@ namespace PCMS.API.Controllers
         /// <returns>The created property details.</returns>
         [HttpPost]
         [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<GETProperty>> CreateProperty([FromBody] POSTProperty request)
         {
-            return Ok();
+            var location = await _context.Locations.Where(l => l.Id == request.LocationId).FirstOrDefaultAsync();
+            if (location == null)
+            {
+                return NotFound("Location not found");
+            }
+
+            var property =  _mapper.Map<Property>(request);
+
+            await _context.Properties.AddAsync(property);
+            await _context.SaveChangesAsync();
+
+            var _property = await _context.Properties.Where(p => p.Id == property.Id)
+                .Include(p => p.Location)
+                .FirstOrDefaultAsync() ?? throw new Exception("Could not fetch the property just made");
+
+            var returnProperty = _mapper.Map<GETProperty>(_property);
+
+            return CreatedAtAction(nameof(CreateProperty), new { id = returnProperty.Id }, returnProperty);
         }
     }
 }
