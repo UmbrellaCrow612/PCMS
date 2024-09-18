@@ -77,6 +77,8 @@ namespace PCMS.API.Mapper
             CreateMap<POSTProperty, Property>();
             CreateMap<Property, GETProperty>();
             CreateMap<GETProperty, Property>();
+            CreateMap<Property, PATCHProperty>();
+            CreateMap<PATCHProperty, Property>();
         }
     }
 }
