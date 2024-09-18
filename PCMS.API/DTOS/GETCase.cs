@@ -83,5 +83,8 @@ namespace PCMS.API.DTOS
         public required List<GETEvidence> Evidences { get; set; } = [];
 
         public required List<GETCasePerson> PersonsInvolved { get; set; } = [];
+
+        public List<GETApplicationUserCase> AssignedUsers { get; set; } = [];
+
     }
 }

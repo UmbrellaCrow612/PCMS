@@ -72,6 +72,7 @@ namespace PCMS.API.Controllers
                 .Include(c => c.Reports)
                 .Include(c => c.Evidences)
                 .Include(c => c.PersonsInvolved)
+                .Include(c => c.AssignedUsers)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (caseEntity is null)
@@ -254,11 +255,20 @@ namespace PCMS.API.Controllers
                 return NotFound("User not found");
             }
 
+            var existingLink = await _context.ApplicationUserCases.Where(auc => auc.CaseId == id && auc.UserId == userId).FirstOrDefaultAsync();
+
+            if (existingLink is not null)
+            {
+                return BadRequest("User link already exists");
+            }
+
             var applicationUserCase = new ApplicationUserCase
             {
                 CaseId = id,
                 UserId = userId,
             };
+
+            var exi
 
             await _context.ApplicationUserCases.AddAsync(applicationUserCase);
             await _context.SaveChangesAsync();
