@@ -6,6 +6,10 @@ namespace PCMS.API.Models
     /// <summary>
     /// Represents the many-to-many relationship between case and person.
     /// </summary>
+    /// <remarks>
+    /// A person can have multiple links or CasePerson for or on multiple cases, for example they could be both the 
+    /// victim and witness so you could link them as both.
+    /// </remarks>
     [Index(nameof(Id), IsUnique = true)]
     public class CasePerson
     {

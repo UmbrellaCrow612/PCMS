@@ -237,7 +237,12 @@ namespace PCMS.API.Controllers
             return NoContent();
         }
 
-
+        /// <summary>
+        /// Creates a application user case which is used as a ref to check if a user is assigned to a given case.
+        /// </summary>
+        /// <param name="id">The ID of the case.</param>
+        /// <param name="userId">The ID of the app user i.e officer NOT a person.</param>
+        /// <returns>No content</returns>
         [HttpPost("{id}/users/{userId}/assign")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -274,6 +279,12 @@ namespace PCMS.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a application user case.
+        /// </summary>
+        /// <param name="id">The ID of the case.</param>
+        /// <param name="userId">The ID of the app user i.e officer NOT a person.</param>
+        /// <returns>No content</returns>
         [HttpDelete("{id}/users/{userId}/assign")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
