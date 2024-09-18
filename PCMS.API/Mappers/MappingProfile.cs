@@ -71,6 +71,12 @@ namespace PCMS.API.Mapper
             CreateMap<GETLocation, Location>();
             CreateMap<Location, PATCHLocation>();
             CreateMap<PATCHLocation, Location>();
+
+            // Property
+            CreateMap<Property, POSTProperty>();
+            CreateMap<POSTProperty, Property>();
+            CreateMap<Property, GETProperty>();
+            CreateMap<GETProperty, Property>();
         }
     }
 }
