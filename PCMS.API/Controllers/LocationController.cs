@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PCMS.API.DTOS;
 using PCMS.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using PCMS.API.DTOS.POST;
+using PCMS.API.DTOS.PATCH;
+using PCMS.API.DTOS.GET;
 
 namespace PCMS.API.Controllers
 {

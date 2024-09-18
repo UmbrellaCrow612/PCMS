@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PCMS.API.DTOS
+namespace PCMS.API.DTOS.POST
 {
     /// <summary>
-    /// DTO for a PATCH report.
+    /// DTO for POST a report
     /// </summary>
-    public class PATCHReport
+    public class POSTReport
     {
         /// <summary>
-        /// Gets or sets the report Title.
+        /// Get or set the report title.
         /// </summary>
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; } = string.Empty;

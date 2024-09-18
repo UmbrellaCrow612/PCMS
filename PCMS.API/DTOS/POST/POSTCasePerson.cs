@@ -1,7 +1,7 @@
 ﻿using PCMS.API.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace PCMS.API.DTOS
+namespace PCMS.API.DTOS.POST
 {
     /// <summary>
     /// DTO for POST data for linking a case and person.

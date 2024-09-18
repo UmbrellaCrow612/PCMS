@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PCMS.API.DTOS
+namespace PCMS.API.DTOS.PATCH
 {
     /// <summary>
     /// DTO to PATCH a case action

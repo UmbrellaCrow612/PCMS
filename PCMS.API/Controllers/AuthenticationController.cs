@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using PCMS.API.DTOS;
+using PCMS.API.DTOS.POST;
 using PCMS.API.Models;
 using System.Diagnostics;
 

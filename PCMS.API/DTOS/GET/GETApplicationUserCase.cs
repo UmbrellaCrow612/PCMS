@@ -1,4 +1,4 @@
-﻿namespace PCMS.API.DTOS
+﻿namespace PCMS.API.DTOS.GET
 {
     /// <summary>
     /// DTO for GET a Application User Case

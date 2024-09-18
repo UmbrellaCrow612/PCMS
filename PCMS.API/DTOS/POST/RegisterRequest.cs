@@ -1,7 +1,7 @@
 ﻿using PCMS.API.Filters;
 using System.ComponentModel.DataAnnotations;
 
-namespace PCMS.API.DTOS
+namespace PCMS.API.DTOS.POST
 {
     /// <summary>
     /// DTO for the user registration request.

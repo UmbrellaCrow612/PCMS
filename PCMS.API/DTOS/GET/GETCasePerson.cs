@@ -1,6 +1,6 @@
 ﻿using PCMS.API.Models;
 
-namespace PCMS.API.DTOS
+namespace PCMS.API.DTOS.GET
 {
     /// <summary>
     /// DTO for GET Case Person
