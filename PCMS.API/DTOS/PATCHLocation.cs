@@ -3,9 +3,9 @@
 namespace PCMS.API.DTOS
 {
     /// <summary>
-    /// DTO to POST a location.
+    /// DTO to PATCH a location.
     /// </summary>
-    public class POSTLocation
+    public class PATCHLocation
     {
         [Required(ErrorMessage = "Name is required")]
         public required string Name { get; set; }

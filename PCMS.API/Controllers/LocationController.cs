@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PCMS.API.DTOS;
+using PCMS.API.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace PCMS.API.Controllers
 {
@@ -25,12 +28,85 @@ namespace PCMS.API.Controllers
         /// Creates a new location.
         /// </summary>
         /// <param name="request">The DTO containing POST location information.</param>
-        /// <returns>The location case details.</returns>
+        /// <returns>The location details.</returns>
         [HttpPost]
         [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<GETLocation>> CreateLocation([FromBody] POSTLocation request)
         {
-            return Ok();
+            var location = _mapper.Map<Location>(request);
+
+            await _context.Locations.AddAsync(location);
+            await _context.SaveChangesAsync();
+
+            var returnLocation = _mapper.Map<GETLocation>(location);
+            return CreatedAtAction(nameof(CreateLocation), new { id = returnLocation.Id }, returnLocation);
+        }
+
+
+        /// <summary>
+        /// Get a location.
+        /// </summary>
+        /// <param name="id">The ID of the location</param>
+        /// <returns>The location details.</returns>
+        [HttpGet("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<GETLocation>> GetLocation(string id)
+        {
+            var location = await _context.Locations.Where(l => l.Id == id).FirstOrDefaultAsync();
+            if (location is null)
+            {
+                return NotFound("Location not found.");
+            }
+
+            var returnLocation = _mapper.Map<GETLocation>(location);
+            return Ok(returnLocation);
+        }
+
+        /// <summary>
+        /// Patch a location.
+        /// </summary>
+        /// <param name="id">The ID of the location</param>
+        /// <returns>No content.</returns>
+        [HttpPatch("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> PatchLocation(string id, [FromBody] PATCHLocation request)
+        {
+            var location = await _context.Locations.Where(l => l.Id == id).FirstOrDefaultAsync();
+            if (location is null)
+            {
+                return NotFound("Location not found");
+            }
+
+            _mapper.Map(request, location);
+            location.LastModifiedDate = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Delete a location.
+        /// </summary>
+        /// <param name="id">The ID of the location</param>
+        /// <returns>No content.</returns>
+        [HttpDelete("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeleteLocation(string id)
+        {
+            var location = await _context.Locations.Where(l => l.Id == id).FirstOrDefaultAsync();
+            if (location is null)
+            {
+                return NotFound("Location not found");
+            }
+
+            _context.Remove(location);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

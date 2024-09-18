@@ -15,7 +15,6 @@ namespace PCMS.API.Models
         /// Gets or sets the Case Id. Defaults to <see cref="Guid.NewGuid()"
         /// </summary>
         [Key]
-        [Required(ErrorMessage = "ID is required")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
