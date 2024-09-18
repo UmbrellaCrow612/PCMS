@@ -62,6 +62,11 @@ namespace PCMS.API.Mapper
             CreateMap<ApplicationUserCase, GETApplicationUserCase>();
             CreateMap<GETApplicationUserCase, ApplicationUserCase>();
 
+            // Locations
+            CreateMap<Location, GETLocation>();
+            CreateMap<GETLocation, Location>();
+            CreateMap<Location, POSTLocation>();
+            CreateMap<POSTLocation, Location>();
         }
     }
 }
