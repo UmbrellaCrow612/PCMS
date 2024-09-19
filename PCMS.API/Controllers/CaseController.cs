@@ -70,12 +70,13 @@ namespace PCMS.API.Controllers
         public async Task<ActionResult<GETCase>> GetCase(string id)
         {
             var caseEntity = await _context.Cases
+                .Where(c => c.Id == id)
                 .Include(c => c.CaseActions)
                 .Include(c => c.Reports)
                 .Include(c => c.Evidences)
                 .Include(c => c.PersonsInvolved)
                 .Include(c => c.AssignedUsers)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .FirstOrDefaultAsync();
 
             if (caseEntity is null)
             {
@@ -134,11 +135,7 @@ namespace PCMS.API.Controllers
                 return NotFound("Case not found.");
             }
 
-            existingCase.Title = request.Title;
-            existingCase.Description = request.Description;
-            existingCase.Status = request.Status;
-            existingCase.Priority = request.Priority;
-            existingCase.Type = request.Type;
+            _mapper.Map(request, existingCase);
             existingCase.LastEditedById = userId;
             existingCase.LastModifiedDate = DateTime.UtcNow;
 
