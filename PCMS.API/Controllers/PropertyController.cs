@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS.GET;
 using PCMS.API.DTOS.POST;
 using PCMS.API.Models;
-using Microsoft.AspNetCore.Http;
+using PCMS.API.DTOS.PATCH;
 
 namespace PCMS.API.Controllers
 {
@@ -36,7 +36,7 @@ namespace PCMS.API.Controllers
         public async Task<ActionResult<GETProperty>> CreateProperty([FromBody] POSTProperty request)
         {
             var location = await _context.Locations.Where(l => l.Id == request.LocationId).FirstOrDefaultAsync();
-            if (location == null)
+            if (location is null)
             {
                 return NotFound("Location not found");
             }
@@ -53,6 +53,77 @@ namespace PCMS.API.Controllers
             var returnProperty = _mapper.Map<GETProperty>(_property);
 
             return CreatedAtAction(nameof(CreateProperty), new { id = returnProperty.Id }, returnProperty);
+        }
+
+        /// <summary>
+        /// Get a property.
+        /// </summary>
+        /// <param name="id">The ID of the property.</param>
+        /// <returns>The property details.</returns>
+        [HttpGet("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<GETProperty>> GetProperty(string id)
+        {
+            var property = await _context.Properties.Where(p => p.Id == id).Include(p => p.Location).FirstOrDefaultAsync();
+            if(property is null)
+            {
+                return NotFound("Property not found");
+            }
+
+            var returnProperty = _mapper.Map<GETProperty>(property);
+            return Ok(returnProperty);
+        }
+
+        /// <summary>
+        /// Patch a property.
+        /// </summary>
+        /// <param name="id">The ID of the property.</param>
+        /// <returns>No content.</returns>
+        [HttpPatch("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> PatchProperty(string id, [FromBody] PATCHProperty request)
+        {
+            var property = await _context.Properties.Where(p => p.Id == id).FirstOrDefaultAsync();
+            if (property is null)
+            {
+                return NotFound("Property not found.");
+            }
+
+            var location = await _context.Locations.Where(l => l.Id == request.LocationId).FirstOrDefaultAsync();
+            if (location is null)
+            {
+                return NotFound("Location not found");
+            }
+
+            _mapper.Map(request, property);
+            property.LastModifiedDate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Delete a property.
+        /// </summary>
+        /// <param name="id">The ID of the property.</param>
+        /// <returns>No content.</returns>
+        [HttpDelete("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeleteProperty(string id)
+        {
+            var property = await _context.Properties.Where(p => p.Id == id).FirstOrDefaultAsync();
+            if (property is null)
+            {
+                return NotFound("Property not found.");
+            }
+
+            _context.Remove(property);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
