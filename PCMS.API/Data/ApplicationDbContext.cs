@@ -28,6 +28,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<Department> Departments { get; set; }
 
+    public DbSet<CaseNote> CaseNotes { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -121,5 +123,15 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
              .WithOne(e => e.Department)
              .HasForeignKey(e => e.DepartmentId)
              .IsRequired(false);
+
+
+        // Case Notes
+
+        modelBuilder.Entity<CaseNote>().HasKey(x => x.Id);
+
+        modelBuilder.Entity<Case>()
+             .HasMany(e => e.CaseNotes)
+             .WithOne(e => e.Case)
+             .HasForeignKey(e => e.CaseId);
     }
 }

@@ -112,6 +112,11 @@ namespace PCMS.API.Models
         /// A case can have many users assigned to it.
         /// </summary>
         public List<ApplicationUserCase> AssignedUsers { get; set; } = [];
+
+        /// <summary>
+        /// Navigation ef core
+        /// </summary>
+        public ICollection<CaseNote> CaseNotes { get; set; } = [];
     }
 
 

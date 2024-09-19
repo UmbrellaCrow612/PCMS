@@ -141,6 +141,29 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CaseNotes",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedById = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CaseNotes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CaseNotes_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Evidences",
                 columns: table => new
                 {
@@ -451,6 +474,17 @@ namespace PCMS.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CaseNotes_CaseId",
+                table: "CaseNotes",
+                column: "CaseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CaseNotes_Id",
+                table: "CaseNotes",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CasePersons_Id",
                 table: "CasePersons",
                 column: "Id",
@@ -548,6 +582,9 @@ namespace PCMS.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "CaseActions");
+
+            migrationBuilder.DropTable(
+                name: "CaseNotes");
 
             migrationBuilder.DropTable(
                 name: "CasePersons");

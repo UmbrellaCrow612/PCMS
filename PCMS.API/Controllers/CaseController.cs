@@ -268,7 +268,7 @@ namespace PCMS.API.Controllers
         /// <param name="personId">The ID of the person.</param>
         /// <param name="linkdId">The ID of the person case</param>
         /// <returns>No content.</returns>
-        [HttpDelete("{id}/persons/{personId}/link/{linkId}")]
+        [HttpDelete("{id}/persons/{personId}/links/{linkId}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteCasePerson(string id, string personId, string linkId)

@@ -347,6 +347,43 @@ namespace PCMS.API.Migrations
                     b.ToTable("CaseActions");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.CaseNote", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CaseId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedById")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CaseId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("CaseNotes");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.CasePerson", b =>
                 {
                     b.Property<string>("CaseId")
@@ -714,6 +751,17 @@ namespace PCMS.API.Migrations
                     b.Navigation("Case");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.CaseNote", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Case", "Case")
+                        .WithMany("CaseNotes")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.CasePerson", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
@@ -776,6 +824,8 @@ namespace PCMS.API.Migrations
                     b.Navigation("AssignedUsers");
 
                     b.Navigation("CaseActions");
+
+                    b.Navigation("CaseNotes");
 
                     b.Navigation("Evidences");
 
