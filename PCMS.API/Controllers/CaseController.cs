@@ -229,7 +229,7 @@ namespace PCMS.API.Controllers
         /// <param name="personId">The ID of the person.</param>
         /// <param name="request">The DTO of the POST data for linking a person.</param>
         /// <returns>No content.</returns>
-        [HttpPost("{id}/persons/{personId}/link")]
+        [HttpPost("{id}/persons/{personId}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> CreateCasePerson(string id, string personId, POSTCasePerson request)
@@ -294,7 +294,7 @@ namespace PCMS.API.Controllers
         /// <param name="id">The ID of the case.</param>
         /// <param name="userId">The ID of the app user i.e officer NOT a person.</param>
         /// <returns>No content</returns>
-        [HttpPost("{id}/users/{userId}/assign")]
+        [HttpPost("{id}/users/{userId}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> CreateUserCase(string id, string userId)
@@ -336,7 +336,7 @@ namespace PCMS.API.Controllers
         /// <param name="id">The ID of the case.</param>
         /// <param name="userId">The ID of the app user i.e officer NOT a person.</param>
         /// <returns>No content</returns>
-        [HttpDelete("{id}/users/{userId}/assign")]
+        [HttpDelete("{id}/users/{userId}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteUserCase(string id, string userId)
