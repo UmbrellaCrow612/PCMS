@@ -107,5 +107,62 @@ namespace PCMS.API.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Gets all users in a department by ID.
+        /// </summary>
+        /// <param name="id">The ID of the department.</param>
+        /// <returns>List of users.</returns>
+        [HttpGet("{id}/users")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<GETApplicationUser>>> GetDepartmentUsers(string id)
+        {
+            var department = await _context.Departments.AnyAsync(d => d.Id == id);
+            if (!department)
+            {
+                return NotFound("Department not found");
+            }
+
+            var users = await _context.Users.Where(u => u.DepartmentId == id).ToListAsync();
+
+            var returnUsers = _mapper.Map<List<GETApplicationUser>>(users);
+            return Ok(returnUsers);
+        }
+
+        /// <summary>
+        /// Assign a user to a department.
+        /// </summary>
+        /// <param name="id">The ID of the department.</param>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>No content.</returns>
+        [HttpPost("{id}/users/{userId}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> AssignUser(string id, string userId)
+        {
+            var department = await _context.Departments.Where(d => d.Id == id).Include(d => d.AssignedUsers).FirstOrDefaultAsync();
+            if (department is null)
+            {
+                return NotFound("Department not found");
+            }
+
+            var user = await _context.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+            if (user is null)
+            {
+                return NotFound("User not found.");
+            }
+
+            if (department.AssignedUsers.Any(u => u.Id == userId))
+            {
+                return BadRequest("User is already assigned to this department.");
+            }
+
+            department.AssignedUsers.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }
