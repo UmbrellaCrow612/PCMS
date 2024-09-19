@@ -46,7 +46,7 @@ namespace PCMS.API.Models
         /// <summary>
         /// Department ID
         /// </summary>
-        public string DepartmentId { get; set; }
+        public string? DepartmentId { get; set; }
 
         /// <summary>
         /// EF Core

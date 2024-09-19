@@ -119,6 +119,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<Department>()
              .HasMany(e => e.AssignedUsers)
              .WithOne(e => e.Department)
-             .HasForeignKey(e => e.DepartmentId);
+             .HasForeignKey(e => e.DepartmentId)
+             .IsRequired(false);
     }
 }

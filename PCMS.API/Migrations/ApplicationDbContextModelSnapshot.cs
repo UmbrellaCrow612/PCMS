@@ -164,7 +164,6 @@ namespace PCMS.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DepartmentId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -680,9 +679,7 @@ namespace PCMS.API.Migrations
                 {
                     b.HasOne("PCMS.API.Models.Department", "Department")
                         .WithMany("AssignedUsers")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DepartmentId");
 
                     b.Navigation("Department");
                 });

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240919132213_InitialCreate")]
+    [Migration("20240919132737_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -167,7 +167,6 @@ namespace PCMS.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DepartmentId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -683,9 +682,7 @@ namespace PCMS.API.Migrations
                 {
                     b.HasOne("PCMS.API.Models.Department", "Department")
                         .WithMany("AssignedUsers")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DepartmentId");
 
                     b.Navigation("Department");
                 });
