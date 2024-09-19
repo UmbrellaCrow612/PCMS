@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using PCMS.API.DTOS.POST;
 using PCMS.API.DTOS.PATCH;
 using PCMS.API.DTOS.GET;
+using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.Controllers
 {
@@ -169,12 +170,38 @@ namespace PCMS.API.Controllers
         /// Get all persons linked to a case through case person.
         /// </summary>
         /// <param name="id">The ID of the case.</param>
+        /// <param name="role">The role <see cref="CaseRole"/> of the type of link a person has to this case</param>
         /// <returns>List of people linked to the case through case person.</returns>
         [HttpGet("{id}/persons")]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<List<GETPerson>>> GetCasePersons(string id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<GETPerson>>> GetCasePersons(string id, [FromQuery][EnumDataType(typeof(CaseRole))] CaseRole? role = null)
         {
-            return Ok();
+            var caseExists = await _context.Cases.AnyAsync(c => c.Id == id);
+            if (!caseExists)
+            {
+                return NotFound("Case not found.");
+            }
+
+            if (role is null)
+            {
+                var query = await _context.CasePersons
+                    .Where(cp => cp.CaseId == id)
+                    .Select(p => p.Person)
+                    .ToListAsync();
+
+                var returnRes = _mapper.Map<List<GETPerson>>(query);
+                return Ok(returnRes);
+            }
+
+            var persons = await _context.CasePersons
+                .Where(cp => cp.CaseId == id && cp.Role == role)
+                .Select(p => p.Person)
+                .ToListAsync();
+
+            var returnPersons = _mapper.Map<List<GETPerson>>(persons);
+
+            return Ok(returnPersons);
         }
 
         /// <summary>
@@ -186,6 +213,11 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<List<GETApplicationUser>>> GetUserCases(string id)
         {
+            var users = await _context.ApplicationUserCases.Where(ap => ap.CaseId == id)
+                .Select(u => u.ApplicationUser)
+                .ToListAsync();
+
+            var returnUsers = _mapper.Map<List<GETApplicationUser>>(users);
             return Ok();
         }
 
