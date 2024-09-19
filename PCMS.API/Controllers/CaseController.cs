@@ -71,11 +71,6 @@ namespace PCMS.API.Controllers
         {
             var caseEntity = await _context.Cases
                 .Where(c => c.Id == id)
-                .Include(c => c.CaseActions)
-                .Include(c => c.Reports)
-                .Include(c => c.Evidences)
-                .Include(c => c.PersonsInvolved)
-                .Include(c => c.AssignedUsers)
                 .FirstOrDefaultAsync();
 
             if (caseEntity is null)
@@ -168,6 +163,30 @@ namespace PCMS.API.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Get all persons linked to a case through case person.
+        /// </summary>
+        /// <param name="id">The ID of the case.</param>
+        /// <returns>List of people linked to the case through case person.</returns>
+        [HttpGet("{id}/persons")]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<List<GETPerson>>> GetCasePersons(string id)
+        {
+            return Ok();
+        }
+
+        /// <summary>
+        /// Get all users linked to a case through app user case.
+        /// </summary>
+        /// <param name="id">The ID of the case.</param>
+        /// <returns>List of users linked to the case through app user case.</returns>
+        [HttpGet("{id}/users")]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<List<GETApplicationUser>>> GetUserCases(string id)
+        {
+            return Ok();
         }
 
         /// <summary>

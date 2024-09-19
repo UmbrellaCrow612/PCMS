@@ -67,24 +67,5 @@ namespace PCMS.API.DTOS.GET
         /// </summary>
         public required string LastEditedById { get; set; }
 
-        /// <summary>
-        /// Gets or sets the case actions, list of CaseAction.
-        /// </summary>
-        public required List<GETCaseAction> CaseActions { get; set; } = [];
-
-        /// <summary>
-        /// Gets or sets the case reports, list of Report.
-        /// </summary>
-        public required List<GETReport> Reports { get; set; } = [];
-
-        /// <summary>
-        /// Gets or sets the case evidences, list of Evidence.
-        /// </summary>
-        public required List<GETEvidence> Evidences { get; set; } = [];
-
-        public required List<GETCasePerson> PersonsInvolved { get; set; } = [];
-
-        public List<GETApplicationUserCase> AssignedUsers { get; set; } = [];
-
     }
 }
