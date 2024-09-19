@@ -211,6 +211,7 @@ namespace PCMS.API.Controllers
         /// <returns>List of users linked to the case through app user case.</returns>
         [HttpGet("{id}/users")]
         [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GETApplicationUser>>> GetUserCases(string id)
         {
             var users = await _context.ApplicationUserCases.Where(ap => ap.CaseId == id)
@@ -218,7 +219,7 @@ namespace PCMS.API.Controllers
                 .ToListAsync();
 
             var returnUsers = _mapper.Map<List<GETApplicationUser>>(users);
-            return Ok();
+            return Ok(returnUsers);
         }
 
         /// <summary>
