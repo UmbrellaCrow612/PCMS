@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using PCMS.API.Dtos.GET;
+using PCMS.API.Dtos.PATCH;
+using PCMS.API.Dtos.POST;
 using PCMS.API.DTOS.GET;
 using PCMS.API.DTOS.PATCH;
 using PCMS.API.DTOS.POST;
@@ -79,6 +82,14 @@ namespace PCMS.API.Mapper
             CreateMap<GETProperty, Property>();
             CreateMap<Property, PATCHProperty>();
             CreateMap<PATCHProperty, Property>();
+
+            // Departments
+            CreateMap<Department, POSTDepartment>();
+            CreateMap<POSTDepartment, Department>();
+            CreateMap<Department, GETDepartment>();
+            CreateMap<GETDepartment, Department>();
+            CreateMap<Department, PATCHDepartment>();
+            CreateMap<PATCHDepartment, Department>();
         }
     }
 }
