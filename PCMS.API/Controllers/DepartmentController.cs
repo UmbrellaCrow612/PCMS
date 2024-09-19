@@ -139,7 +139,7 @@ namespace PCMS.API.Controllers
         [HttpPost("{id}/users/{userId}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> AssignUser(string id, string userId)
         {
             var department = await _context.Departments.Where(d => d.Id == id).Include(d => d.AssignedUsers).FirstOrDefaultAsync();
@@ -162,7 +162,42 @@ namespace PCMS.API.Controllers
             department.AssignedUsers.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Un-assign a user to a department.
+        /// </summary>
+        /// <param name="id">The ID of the department.</param>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>No content.</returns>
+        [HttpDelete("{id}/users/{userId}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> UnassignUser(string id, string userId)
+        {
+            var department = await _context.Departments.Where(d => d.Id == id).Include(d => d.AssignedUsers).FirstOrDefaultAsync();
+            if (department is null)
+            {
+                return NotFound("Department not found");
+            }
+
+            var user = await _context.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+            if (user is null)
+            {
+                return NotFound("User not found.");
+            }
+
+            if (!department.AssignedUsers.Any(u => u.Id == userId))
+            {
+                return BadRequest("User is not assigned to this user already.");
+            }
+
+            department.AssignedUsers.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
