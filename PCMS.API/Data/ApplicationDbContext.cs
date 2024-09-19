@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using PCMS.API.Models;
 
 
@@ -24,6 +25,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Property> Properties { get; set; }
 
     public DbSet<ApplicationUserCase> ApplicationUserCases { get; set; }
+
+    public DbSet<Department> Departments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -108,5 +111,14 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         // Properties
 
         modelBuilder.Entity<Property>().HasKey(x => x.Id);
+
+        // Departments
+
+        modelBuilder.Entity<Department>().HasKey(x => x.Id);
+
+        modelBuilder.Entity<Department>()
+             .HasMany(e => e.AssignedUsers)
+             .WithOne(e => e.Department)
+             .HasForeignKey(e => e.DepartmentId);
     }
 }

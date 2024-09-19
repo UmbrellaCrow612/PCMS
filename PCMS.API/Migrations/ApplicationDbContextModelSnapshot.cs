@@ -163,6 +163,10 @@ namespace PCMS.API.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DepartmentId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -216,6 +220,8 @@ namespace PCMS.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -364,6 +370,34 @@ namespace PCMS.API.Migrations
                     b.HasIndex("PersonId");
 
                     b.ToTable("CasePersons");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Department", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ShortCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Evidence", b =>
@@ -642,6 +676,17 @@ namespace PCMS.API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Department", "Department")
+                        .WithMany("AssignedUsers")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.ApplicationUserCase", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
@@ -740,6 +785,11 @@ namespace PCMS.API.Migrations
                     b.Navigation("PersonsInvolved");
 
                     b.Navigation("Reports");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Department", b =>
+                {
+                    b.Navigation("AssignedUsers");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Location", b =>

@@ -14,5 +14,31 @@ namespace PCMS.API.Models
         /// </summary>
         [Key]
         public string Id = Guid.NewGuid().ToString();
+
+        /// <summary>
+        /// Gets or sets the Name of the Department.
+        /// </summary>
+        [Required(ErrorMessage = "Name is required")]
+        [StringLength(50, ErrorMessage = "Name cannot be longer than 100 characters")]
+        public required string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Description of the Department.
+        /// </summary>
+        [Required(ErrorMessage = "Description is required")]
+        [StringLength(250, ErrorMessage = "Description cannot be longer than 250 characters")]
+        public required string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ShortCode of the Department.
+        /// </summary>
+        [Required(ErrorMessage = "ShortCode is required")]
+        [StringLength(20, ErrorMessage = "ShortCode cannot be longer than 20 characters")]
+        public required string ShortCode { get; set; }
+
+        /// <summary>
+        /// Ef core.
+        /// </summary>
+        public ICollection<ApplicationUser> AssignedUsers { get; } = [];
     }
 }
