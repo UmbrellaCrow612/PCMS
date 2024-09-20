@@ -44,9 +44,8 @@ namespace PCMS.API.Models
         /// <summary>
         /// Gets or sets the case action last modified at, defaults to <see cref="DateTime.UtcNow"/>.
         /// </summary>
-        [Required(ErrorMessage = "LastModifiedDate is required")]
         [DataType(DataType.DateTime)]
-        public DateTime LastModifiedDate { get; set; } = DateTime.UtcNow;
+        public DateTime? LastModifiedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the case action created by Id.
@@ -55,10 +54,19 @@ namespace PCMS.API.Models
         public required string CreatedById { get; set; }
 
         /// <summary>
+        /// EF Core <see cref="CreatedById"/>.
+        /// </summary>
+        public required ApplicationUser Creator { get; set; }
+
+        /// <summary>
         /// Gets or sets the case action last edited by Id.
         /// </summary>
-        [Required(ErrorMessage = "LastEditedById is required")]
-        public required string LastEditedById { get; set; }
+        public string? LastEditedById { get; set; }
+
+        /// <summary>
+        /// EF Core <see cref="LastEditedById"/>.
+        /// </summary>
+        public ApplicationUser? LastEditor { get; set; }
 
         /// <summary>
         /// Gets or sets the specific case Id this case action is linked to, required.

@@ -1,4 +1,6 @@
-﻿namespace PCMS.API.DTOS.GET
+﻿using PCMS.API.Models;
+
+namespace PCMS.API.DTOS.GET
 {
     /// <summary>
     /// DTO for GET a case action
@@ -33,17 +35,17 @@
         /// <summary>
         /// Gets or sets the case action last modified at.
         /// </summary>
-        public required DateTime LastModifiedDate { get; set; }
+        public DateTime? LastModifiedDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the case action created by Id.
+        /// Gets or sets the case action creator.
         /// </summary>
-        public required string CreatedById { get; set; } = string.Empty;
+        public required GETApplicationUser Creator { get; set; }
 
         /// <summary>
-        /// Gets or sets the case action last edited by Id.
+        /// Gets or sets the case action last edited by user.
         /// </summary>
-        public required string LastEditedById { get; set; } = string.Empty;
+        public GETApplicationUser? LastEditor { get; set; }
 
         /// <summary>
         /// Gets or sets the case action CaseId.

@@ -61,7 +61,17 @@ namespace PCMS.API.Models
         /// <summary>
         /// EF Core
         /// </summary>
-        public Case? LastEditedCase { get; set; }
+        public ICollection<Case> EditedCases { get; set; }
+
+        /// <summary>
+        /// EF Core
+        /// </summary>
+        public ICollection<CaseAction> CreatedCaseActions { get; set; } = [];
+
+        /// <summary>
+        /// EF Core
+        /// </summary>
+        public ICollection<CaseAction> EditedCaseActions { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the ApplicationUser class.

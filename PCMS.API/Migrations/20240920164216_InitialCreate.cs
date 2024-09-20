@@ -315,14 +315,25 @@ namespace PCMS.API.Migrations
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Type = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    LastEditedById = table.Column<string>(type: "TEXT", nullable: false),
+                    LastEditedById = table.Column<string>(type: "TEXT", nullable: true),
                     CaseId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CaseActions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CaseActions_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CaseActions_AspNetUsers_LastEditedById",
+                        column: x => x.LastEditedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CaseActions_Cases_CaseId",
                         column: x => x.CaseId,
@@ -485,10 +496,20 @@ namespace PCMS.API.Migrations
                 column: "CaseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CaseActions_CreatedById",
+                table: "CaseActions",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CaseActions_Id",
                 table: "CaseActions",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CaseActions_LastEditedById",
+                table: "CaseActions",
+                column: "LastEditedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CaseNotes_CaseId",
@@ -537,8 +558,7 @@ namespace PCMS.API.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Cases_LastEditedById",
                 table: "Cases",
-                column: "LastEditedById",
-                unique: true);
+                column: "LastEditedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Departments_Id",

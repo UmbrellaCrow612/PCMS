@@ -54,12 +54,17 @@ namespace PCMS.API.Controllers
             var caseAction = _mapper.Map<CaseAction>(request);
             caseAction.CaseId = caseId;
             caseAction.CreatedById = userId;
-            caseAction.LastEditedById = userId;
 
             await _context.CaseActions.AddAsync(caseAction);
             await _context.SaveChangesAsync();
 
-            var returnCaseAction = _mapper.Map<GETCaseAction>(caseAction);
+            var createdCaseAction = await _context.CaseActions
+                .Where(ca => ca.Id == caseAction.Id)
+                .Include(ca => ca.Creator)
+                .Include(ca => ca.LastEditor)
+                .FirstOrDefaultAsync() ?? throw new Exception("Failed to get created case action");
+
+            var returnCaseAction = _mapper.Map<GETCaseAction>(createdCaseAction);
 
             return CreatedAtAction(nameof(CreateAction), new { caseId, id = returnCaseAction.Id }, returnCaseAction);
 

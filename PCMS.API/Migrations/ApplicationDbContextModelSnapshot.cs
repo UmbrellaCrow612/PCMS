@@ -305,8 +305,7 @@ namespace PCMS.API.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("LastEditedById")
-                        .IsUnique();
+                    b.HasIndex("LastEditedById");
 
                     b.ToTable("Cases");
                 });
@@ -332,10 +331,9 @@ namespace PCMS.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastEditedById")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("LastModifiedDate")
+                    b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -350,8 +348,12 @@ namespace PCMS.API.Migrations
 
                     b.HasIndex("CaseId");
 
+                    b.HasIndex("CreatedById");
+
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("LastEditedById");
 
                     b.ToTable("CaseActions");
                 });
@@ -762,8 +764,8 @@ namespace PCMS.API.Migrations
                         .HasForeignKey("DepartmentId");
 
                     b.HasOne("PCMS.API.Models.ApplicationUser", "LastEditor")
-                        .WithOne("LastEditedCase")
-                        .HasForeignKey("PCMS.API.Models.Case", "LastEditedById");
+                        .WithMany("EditedCases")
+                        .HasForeignKey("LastEditedById");
 
                     b.Navigation("Creator");
 
@@ -780,7 +782,21 @@ namespace PCMS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "Creator")
+                        .WithMany("CreatedCaseActions")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "LastEditor")
+                        .WithMany("EditedCaseActions")
+                        .HasForeignKey("LastEditedById");
+
                     b.Navigation("Case");
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("LastEditor");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.CaseNote", b =>
@@ -850,9 +866,13 @@ namespace PCMS.API.Migrations
                 {
                     b.Navigation("AssignedCases");
 
+                    b.Navigation("CreatedCaseActions");
+
                     b.Navigation("CreatedCases");
 
-                    b.Navigation("LastEditedCase");
+                    b.Navigation("EditedCaseActions");
+
+                    b.Navigation("EditedCases");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Case", b =>
