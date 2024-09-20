@@ -58,9 +58,8 @@ namespace PCMS.API.Models
         /// <summary>
         /// Gets or sets the date and time when the case was last modified, defaults to <see cref="DateTime.UtcNow;"/>.
         /// </summary>
-        [Required(ErrorMessage = "LastModifiedDate is required")]
         [DataType(DataType.DateTime)]
-        public DateTime LastModifiedDate { get; set; } = DateTime.UtcNow;
+        public DateTime? LastModifiedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the case priority based on the <see cref="CasePriority"/> enum.
@@ -82,10 +81,19 @@ namespace PCMS.API.Models
         public required string CreatedById { get; set; }
 
         /// <summary>
+        /// EF core nav for <see cref="CreatedById"/>
+        /// </summary>
+        public ApplicationUser? Creator { get; set; } = null!;
+
+        /// <summary>
         /// Gets or sets the user Id who last modified the case.
         /// </summary>
-        [Required(ErrorMessage = "LastEditedById is required")]
-        public required string LastEditedById { get; set; }
+        public string? LastEditedById { get; set; }
+
+        /// <summary>
+        /// EF core nav for <see cref="LastEditedById"/>
+        /// </summary>
+        public ApplicationUser? LastEditor { get; set; } = null!;
 
         /// <summary>
         /// Get or set the department for this case

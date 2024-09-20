@@ -130,34 +130,6 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cases",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    CaseNumber = table.Column<string>(type: "TEXT", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    DateOpened = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    DateClosed = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Priority = table.Column<int>(type: "INTEGER", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    LastEditedById = table.Column<string>(type: "TEXT", nullable: false),
-                    DepartmentId = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cases", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Cases_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Properties",
                 columns: table => new
                 {
@@ -269,6 +241,45 @@ namespace PCMS.API.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cases",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    CaseNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    DateOpened = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateClosed = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Priority = table.Column<int>(type: "INTEGER", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    LastEditedById = table.Column<string>(type: "TEXT", nullable: true),
+                    DepartmentId = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cases_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Cases_AspNetUsers_LastEditedById",
+                        column: x => x.LastEditedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Cases_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -508,6 +519,11 @@ namespace PCMS.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cases_CreatedById",
+                table: "Cases",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cases_DepartmentId",
                 table: "Cases",
                 column: "DepartmentId");
@@ -516,6 +532,12 @@ namespace PCMS.API.Migrations
                 name: "IX_Cases_Id",
                 table: "Cases",
                 column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cases_LastEditedById",
+                table: "Cases",
+                column: "LastEditedById",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -613,9 +635,6 @@ namespace PCMS.API.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Persons");
 
             migrationBuilder.DropTable(
@@ -623,6 +642,9 @@ namespace PCMS.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cases");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Departments");

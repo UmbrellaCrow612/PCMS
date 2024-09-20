@@ -54,6 +54,16 @@ namespace PCMS.API.Models
         public Department? Department { get; set; } = null!;
 
         /// <summary>
+        /// EF Core
+        /// </summary>
+        public ICollection<Case> CreatedCases { get; set; } = [];
+
+        /// <summary>
+        /// EF Core
+        /// </summary>
+        public Case? LastEditedCase { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the ApplicationUser class.
         /// </summary>
         public ApplicationUser() : base()

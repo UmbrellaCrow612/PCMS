@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240920160528_InitialCreate")]
+    [Migration("20240920161826_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -277,10 +277,9 @@ namespace PCMS.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastEditedById")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("LastModifiedDate")
+                    b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Priority")
@@ -302,9 +301,14 @@ namespace PCMS.API.Migrations
                     b.HasIndex("CaseNumber")
                         .IsUnique();
 
+                    b.HasIndex("CreatedById");
+
                     b.HasIndex("DepartmentId");
 
                     b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("LastEditedById")
                         .IsUnique();
 
                     b.ToTable("Cases");
@@ -750,11 +754,25 @@ namespace PCMS.API.Migrations
 
             modelBuilder.Entity("PCMS.API.Models.Case", b =>
                 {
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "Creator")
+                        .WithMany("CreatedCases")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PCMS.API.Models.Department", "Department")
                         .WithMany("AssignedCases")
                         .HasForeignKey("DepartmentId");
 
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "LastEditor")
+                        .WithOne("LastEditedCase")
+                        .HasForeignKey("PCMS.API.Models.Case", "LastEditedById");
+
+                    b.Navigation("Creator");
+
                     b.Navigation("Department");
+
+                    b.Navigation("LastEditor");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.CaseAction", b =>
@@ -834,6 +852,10 @@ namespace PCMS.API.Migrations
             modelBuilder.Entity("PCMS.API.Models.ApplicationUser", b =>
                 {
                     b.Navigation("AssignedCases");
+
+                    b.Navigation("CreatedCases");
+
+                    b.Navigation("LastEditedCase");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Case", b =>

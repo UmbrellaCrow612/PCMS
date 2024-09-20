@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using PCMS.API.Models;
+using System.Reflection.Metadata;
 
 
 // Use fluent API
@@ -33,6 +34,21 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        // app user
+
+        modelBuilder.Entity<ApplicationUser>().HasKey(x => x.Id);
+
+        modelBuilder.Entity<ApplicationUser>()
+               .HasMany(c => c.CreatedCases)
+               .WithOne(ca => ca.Creator)
+               .HasForeignKey(ca => ca.CreatedById);
+
+        modelBuilder.Entity<ApplicationUser>()
+               .HasOne(e => e.LastEditedCase)
+                .WithOne(e => e.LastEditor)
+               .HasForeignKey<Case>(e => e.LastEditedById)
+               .IsRequired(false);
 
         // Cases
 

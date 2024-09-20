@@ -45,7 +45,7 @@ namespace PCMS.API.DTOS.GET
         /// <summary>
         /// Gets or sets the date and time when the case was last modified.
         /// </summary>
-        public required DateTime LastModifiedDate { get; set; }
+        public DateTime? LastModifiedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the case priority based on the <see cref="CasePriority"/> enum.
@@ -60,12 +60,12 @@ namespace PCMS.API.DTOS.GET
         /// <summary>
         /// Gets or sets the user Id Who created the case.
         /// </summary>
-        public required string CreatedById { get; set; }
+        public required GETApplicationUser Creator { get; set; }
 
         /// <summary>
         /// Gets or sets the user Id who last modified the case.
         /// </summary>
-        public required string LastEditedById { get; set; }
+        public GETApplicationUser? LastEditor { get; set; }
 
     }
 }

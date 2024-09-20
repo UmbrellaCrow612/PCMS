@@ -44,7 +44,6 @@ namespace PCMS.API.Controllers
 
             var newCase = _mapper.Map<Case>(request);
             newCase.CreatedById = userId;
-            newCase.LastEditedById = userId;
 
             await _context.Cases.AddAsync(newCase);
             await _context.SaveChangesAsync();
@@ -72,6 +71,8 @@ namespace PCMS.API.Controllers
         {
             var caseEntity = await _context.Cases
                 .Where(c => c.Id == id)
+                .Include(c => c.Creator)
+                .Include(c => c.LastEditor)
                 .FirstOrDefaultAsync();
 
             if (caseEntity is null)
