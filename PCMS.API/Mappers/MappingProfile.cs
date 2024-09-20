@@ -90,6 +90,14 @@ namespace PCMS.API.Mapper
             CreateMap<GETDepartment, Department>();
             CreateMap<Department, PATCHDepartment>();
             CreateMap<PATCHDepartment, Department>();
+
+            // Case Note
+            CreateMap<CaseNote, POSTCaseNote>();
+            CreateMap<POSTCaseNote, CaseNote>();
+            CreateMap<CaseNote, GETCaseNote>();
+            CreateMap<GETCaseNote, CaseNote>();
+            CreateMap<CaseNote, PATCHCaseNote>();
+            CreateMap<PATCHCaseNote, CaseNote>();
         }
     }
 }

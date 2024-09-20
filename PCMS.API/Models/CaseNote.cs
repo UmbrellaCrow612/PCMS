@@ -33,6 +33,7 @@ namespace PCMS.API.Models
         /// <summary>
         /// Gets or sets the CaseNote CreatedAt.
         /// </summary>
+        [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
@@ -43,6 +44,7 @@ namespace PCMS.API.Models
         /// <summary>
         /// Gets or sets the last update time of the CaseNote.
         /// </summary>
+        [DataType(DataType.DateTime)]
         public DateTime? LastModifiedDate { get; set; }
 
         /// <summary>
