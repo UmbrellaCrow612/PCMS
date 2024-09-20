@@ -52,13 +52,18 @@ namespace PCMS.API.Controllers
 
             var report = _mapper.Map<Report>(request);
             report.CreatedById = userId;
-            report.LastEditedById = userId;
             report.CaseId = caseId;
 
             await _context.Reports.AddAsync(report);
             await _context.SaveChangesAsync();
 
-            var returnReport = _mapper.Map<GETReport>(report);
+            var createdReport = await _context.Reports
+                .Where(r => r.Id == report.Id)
+                .Include(r => r.Creator)
+                .Include(r => r.LastEditor)
+                .FirstOrDefaultAsync() ?? throw new Exception("Failed to get created report");
+
+            var returnReport = _mapper.Map<GETReport>(createdReport);
 
             return CreatedAtAction(nameof(CreateReport), new { caseId, id = returnReport.Id }, returnReport);
         }
@@ -79,7 +84,10 @@ namespace PCMS.API.Controllers
                 return NotFound("Case not found");
             }
 
-            var existingReports = await _context.Reports.Where(r => r.CaseId == caseId).ToListAsync();
+            var existingReports = await _context.Reports.Where(r => r.CaseId == caseId)
+                .Include(r => r.Creator)
+                .Include(r => r.LastEditor)
+                .ToListAsync();
 
             if (existingReports.Count is 0)
             {
@@ -116,7 +124,10 @@ namespace PCMS.API.Controllers
                 return NotFound("Report not found");
             }
 
-            var report = await _context.Reports.FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
+            var report = await _context.Reports
+                .Include(r => r.Creator)
+                .Include(r => r.LastEditor)
+                .FirstOrDefaultAsync(r => r.Id == id && r.CaseId == caseId);
 
             if (report is null)
             {

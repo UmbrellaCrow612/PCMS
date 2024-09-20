@@ -426,15 +426,26 @@ namespace PCMS.API.Migrations
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    LastEditedById = table.Column<string>(type: "TEXT", nullable: false),
+                    LastEditedById = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Details = table.Column<string>(type: "TEXT", nullable: false),
                     CaseId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reports_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reports_AspNetUsers_LastEditedById",
+                        column: x => x.LastEditedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Reports_Cases_CaseId",
                         column: x => x.CaseId,
@@ -606,10 +617,20 @@ namespace PCMS.API.Migrations
                 column: "CaseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reports_CreatedById",
+                table: "Reports",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reports_Id",
                 table: "Reports",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reports_LastEditedById",
+                table: "Reports",
+                column: "LastEditedById");
         }
 
         /// <inheritdoc />

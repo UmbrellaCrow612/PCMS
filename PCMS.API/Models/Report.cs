@@ -29,10 +29,19 @@ namespace PCMS.API.Models
         public required string CreatedById { get; set; }
 
         /// <summary>
+        /// EF Core <see cref="CreatedById"/>
+        /// </summary>
+        public required ApplicationUser Creator { get; set; }
+
+        /// <summary>
         /// Gets or sets the report LastEditedBy.
         /// </summary>
-        [Required(ErrorMessage = "LastEditedById is required")]
-        public required string LastEditedById { get; set; }
+        public string? LastEditedById { get; set; }
+
+        /// <summary>
+        /// EF Core <see cref="LastEditedById"/>
+        /// </summary>
+        public ApplicationUser? LastEditor { get; set; }
 
         /// <summary>
         /// Gets or sets the report CreatedAt defaults to <see cref="DateTime.UtcNow"/>.
@@ -44,9 +53,8 @@ namespace PCMS.API.Models
         /// <summary>
         /// Gets or sets the report LastModifiedDate, defaults to <see cref="DateTime.UtcNow"/>.
         /// </summary>
-        [Required(ErrorMessage = "LastModifiedDate is required")]
         [DataType(DataType.DateTime)]
-        public required DateTime LastModifiedDate { get; set; } = DateTime.UtcNow;
+        public DateTime? LastModifiedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the report Details.

@@ -652,10 +652,9 @@ namespace PCMS.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastEditedById")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("LastModifiedDate")
+                    b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -666,8 +665,12 @@ namespace PCMS.API.Migrations
 
                     b.HasIndex("CaseId");
 
+                    b.HasIndex("CreatedById");
+
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("LastEditedById");
 
                     b.ToTable("Reports");
                 });
@@ -859,7 +862,21 @@ namespace PCMS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "Creator")
+                        .WithMany("CreatedReports")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "LastEditor")
+                        .WithMany("EditedReports")
+                        .HasForeignKey("LastEditedById");
+
                     b.Navigation("Case");
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("LastEditor");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.ApplicationUser", b =>
@@ -870,9 +887,13 @@ namespace PCMS.API.Migrations
 
                     b.Navigation("CreatedCases");
 
+                    b.Navigation("CreatedReports");
+
                     b.Navigation("EditedCaseActions");
 
                     b.Navigation("EditedCases");
+
+                    b.Navigation("EditedReports");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Case", b =>

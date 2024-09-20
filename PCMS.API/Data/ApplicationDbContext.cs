@@ -61,6 +61,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                .HasForeignKey(ca => ca.LastEditedById)
                .IsRequired(false);
 
+        modelBuilder.Entity<ApplicationUser>()
+             .HasMany(c => c.CreatedReports)
+             .WithOne(ca => ca.Creator)
+             .HasForeignKey(ca => ca.CreatedById);
+
+        modelBuilder.Entity<ApplicationUser>()
+              .HasMany(c => c.EditedReports)
+              .WithOne(ca => ca.LastEditor)
+              .HasForeignKey(ca => ca.LastEditedById)
+              .IsRequired(false);
+
         // Cases
 
         modelBuilder.Entity<Case>().HasKey(x => x.Id);

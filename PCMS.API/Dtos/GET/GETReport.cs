@@ -1,4 +1,6 @@
-﻿namespace PCMS.API.DTOS.GET
+﻿using PCMS.API.Models;
+
+namespace PCMS.API.DTOS.GET
 {
     /// <summary>
     /// DTO for GET a report
@@ -18,12 +20,12 @@
         /// <summary>
         /// Gets or sets the report CreatedById.
         /// </summary>
-        public required string CreatedById { get; set; } = string.Empty;
+        public required GETApplicationUser Creator { get; set; }
 
         /// <summary>
         /// Gets or sets the report LastEditedBy.
         /// </summary>
-        public required string LastEditedById { get; set; } = string.Empty;
+        public GETApplicationUser? LastEditor { get; set; }
 
         /// <summary>
         /// Gets or sets the report CreatedAt.
@@ -33,12 +35,12 @@
         /// <summary>
         /// Gets or sets the report LastModifiedDate.
         /// </summary>
-        public required DateTime LastModifiedDate { get; set; }
+        public DateTime? LastModifiedDate { get; set; }
 
         /// <summary>
         /// Gets or sets the report Details.
         /// </summary>
-        public required string Details { get; set; } = string.Empty;
+        public required string Details { get; set; }
 
         /// <summary>
         /// Gets or sets the report CaseId it is linked to.
