@@ -8,6 +8,7 @@ using PCMS.API.Models;
 using Microsoft.AspNetCore.Http;
 using PCMS.API.Filters;
 using System.Security.Claims;
+using PCMS.API.Dtos.PATCH;
 
 namespace PCMS.API.Controllers
 {
@@ -31,7 +32,7 @@ namespace PCMS.API.Controllers
         /// <param name="caseId">The ID of the case.</param>
         /// <returns>The created case note details.</returns>
         [HttpPost]
-        [ServiceFilter(typeof(UserAuthorizationFilter))]
+        [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<GETCaseNote>> CreateCaseNote(string caseId, [FromBody] POSTCaseNote request)
@@ -105,6 +106,13 @@ namespace PCMS.API.Controllers
             var returnCaseNote = _mapper.Map<GETCaseNote>(caseNote);
 
             return Ok(returnCaseNote);
+        }
+
+        [HttpPatch("{id}")]
+        [ServiceFilter(typeof(UserValidationFilter))]
+        public async Task<ActionResult> PatchCaseNote(string caseId, string id, [FromBody] PATCHCaseNote request)
+        {
+            return Ok();
         }
     }
 }

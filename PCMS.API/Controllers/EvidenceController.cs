@@ -36,7 +36,7 @@ namespace PCMS.API.Controllers
         /// <param name="request">The DTO containing POST evidence information.</param>
         /// <returns>The created evidence item.</returns>
         [HttpPost]
-        [ServiceFilter(typeof(UserAuthorizationFilter))]
+        [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
@@ -125,7 +125,7 @@ namespace PCMS.API.Controllers
         /// <param name="request">The DTO PATCH data for the evidence item.</param>
         /// <returns>No Content.</returns>
         [HttpPatch("{id}")]
-        [ServiceFilter(typeof(UserAuthorizationFilter))]
+        [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> PatchEvidence(string caseId, string id, [FromBody] PATCHEvidence request)

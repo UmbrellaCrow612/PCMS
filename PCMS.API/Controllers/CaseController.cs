@@ -35,7 +35,7 @@ namespace PCMS.API.Controllers
         /// <param name="request">The DTO containing POST case information.</param>
         /// <returns>The created case details.</returns>
         [HttpPost]
-        [ServiceFilter(typeof(UserAuthorizationFilter))]
+        [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<GETCase>> CreateCase([FromBody] POSTCase request)
@@ -120,7 +120,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        [ServiceFilter(typeof(UserAuthorizationFilter))]
+        [ServiceFilter(typeof(UserValidationFilter))]
         public async Task<ActionResult> PatchCase(string id, [FromBody] PATCHCase request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;

@@ -40,7 +40,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        [ServiceFilter(typeof(UserAuthorizationFilter))]
+        [ServiceFilter(typeof(UserValidationFilter))]
         public async Task<ActionResult<GETCaseAction>> CreateAction(string caseId, [FromBody] POSTCaseAction request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -135,7 +135,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        [ServiceFilter(typeof(UserAuthorizationFilter))]
+        [ServiceFilter(typeof(UserValidationFilter))]
         public async Task<IActionResult> PatchCaseAction(string caseId, string id, [FromBody] PATCHCaseAction request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;

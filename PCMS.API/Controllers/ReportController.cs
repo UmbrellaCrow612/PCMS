@@ -39,7 +39,7 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ServiceFilter(typeof(UserAuthorizationFilter))]
+        [ServiceFilter(typeof(UserValidationFilter))]
         public async Task<ActionResult<GETReport>> CreateReport(string caseId, [FromBody] POSTReport request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -139,7 +139,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ServiceFilter(typeof(UserAuthorizationFilter))]
+        [ServiceFilter(typeof(UserValidationFilter))]
         public async Task<ActionResult> PatchReport(string caseId, string id, [FromBody] PATCHReport request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
