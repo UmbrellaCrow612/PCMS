@@ -78,5 +78,33 @@ namespace PCMS.API.Controllers
 
             return Ok(returnCaseNotes);
         }
+
+        /// <summary>
+        /// Gets a of case note.
+        /// </summary>
+        /// <param name="caseId">The ID of the case.</param>
+        /// <param name="id">The ID of the case note.</param>
+        /// <returns>The of case note details.</returns>
+        [HttpGet("{id}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<GETCaseNote>> GetCaseNote(string caseId, string id)
+        {
+            var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
+            if (!caseExists)
+            {
+                return NotFound("Case not found.");
+            }
+
+            var caseNote = await _context.CaseNotes.Where(cn => cn.CaseId == caseId && cn.Id == id).FirstOrDefaultAsync();
+            if (caseNote is null)
+            {
+                return NotFound("Case note not found or is linked to this case.");
+            }
+
+            var returnCaseNote = _mapper.Map<GETCaseNote>(caseNote);
+
+            return Ok(returnCaseNote);
+        }
     }
 }
