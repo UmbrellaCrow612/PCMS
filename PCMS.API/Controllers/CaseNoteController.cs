@@ -108,11 +108,71 @@ namespace PCMS.API.Controllers
             return Ok(returnCaseNote);
         }
 
+        /// <summary>
+        /// Patch a of case note.
+        /// </summary>
+        /// <param name="caseId">The ID of the case.</param>
+        /// <param name="id">The ID of the case note.</param>
+        /// <param name="request">The new case note data.</param>
+        /// <returns>No Content.</returns>
         [HttpPatch("{id}")]
         [ServiceFilter(typeof(UserValidationFilter))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> PatchCaseNote(string caseId, string id, [FromBody] PATCHCaseNote request)
         {
-            return Ok();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            var caseExists = await _context.Cases.AnyAsync(_ => _.Id == caseId);
+            if (!caseExists)
+            {
+                return NotFound("Case not found");
+            }
+
+            var caseNote = await _context.CaseNotes.Where(cn => cn.CaseId == caseId && cn.Id == id).FirstOrDefaultAsync();
+            if (caseNote is null)
+            {
+                return NotFound("Case note not found or is linked to this case");
+            }
+
+            _mapper.Map(request, caseNote);
+            caseNote.LastModifiedDate = DateTime.UtcNow;
+            caseNote.UpdatedById = userId;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Delete a case note.
+        /// </summary>
+        /// <param name="caseId">The ID of the case.</param>
+        /// <param name="id">The ID of the case note.</param>
+        /// <returns>No Content.</returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeleteCaseNote(string caseId, string id)
+        {
+            var caseExists = await _context.Cases.AnyAsync(_ => _.Id == caseId);
+            if (!caseExists)
+            {
+                return NotFound("Case not found");
+            }
+
+            var caseNote = await _context.CaseNotes.Where(cn => cn.CaseId == caseId && cn.Id == id).FirstOrDefaultAsync();
+            if (caseNote is null)
+            {
+                return NotFound("Case note not found or is linked to this case");
+            }
+
+            _context.Remove(caseNote);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
