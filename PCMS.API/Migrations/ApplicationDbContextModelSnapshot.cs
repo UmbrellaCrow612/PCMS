@@ -266,6 +266,9 @@ namespace PCMS.API.Migrations
                     b.Property<DateTime>("DateOpened")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DepartmentId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -295,6 +298,8 @@ namespace PCMS.API.Migrations
 
                     b.HasIndex("CaseNumber")
                         .IsUnique();
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("Id")
                         .IsUnique();
@@ -740,6 +745,15 @@ namespace PCMS.API.Migrations
                     b.Navigation("Case");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.Case", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Department", "Department")
+                        .WithMany("AssignedCases")
+                        .HasForeignKey("DepartmentId");
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.CaseAction", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
@@ -836,6 +850,8 @@ namespace PCMS.API.Migrations
 
             modelBuilder.Entity("PCMS.API.Models.Department", b =>
                 {
+                    b.Navigation("AssignedCases");
+
                     b.Navigation("AssignedUsers");
                 });
 

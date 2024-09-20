@@ -169,7 +169,7 @@ namespace PCMS.API.Controllers
                 return NotFound("Case note not found or is linked to this case");
             }
 
-            _context.Remove(caseNote);
+            _context.CaseNotes.Remove(caseNote);
             await _context.SaveChangesAsync();
 
             return NoContent();

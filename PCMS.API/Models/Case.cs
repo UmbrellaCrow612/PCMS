@@ -88,6 +88,16 @@ namespace PCMS.API.Models
         public required string LastEditedById { get; set; }
 
         /// <summary>
+        /// Get or set the department for this case
+        /// </summary>
+        public string? DepartmentId { get; set; }
+
+        /// <summary>
+        /// Ef core
+        /// </summary>
+        public Department? Department { get; set; } = null!;
+
+        /// <summary>
         /// Gets or sets the case actions, list of <see cref="CaseAction"/>.
         /// </summary>
         public List<CaseAction> CaseActions { get; set; } = [];
@@ -117,6 +127,8 @@ namespace PCMS.API.Models
         /// Navigation ef core
         /// </summary>
         public ICollection<CaseNote> CaseNotes { get; set; } = [];
+
+       
     }
 
 

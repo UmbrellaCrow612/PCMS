@@ -40,5 +40,10 @@ namespace PCMS.API.Models
         /// Ef core.
         /// </summary>
         public ICollection<ApplicationUser> AssignedUsers { get; } = [];
+
+        /// <summary>
+        /// Ef core.
+        /// </summary>
+        public ICollection<Case> AssignedCases { get; } = [];
     }
 }

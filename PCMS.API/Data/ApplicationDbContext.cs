@@ -124,6 +124,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
              .HasForeignKey(e => e.DepartmentId)
              .IsRequired(false);
 
+        modelBuilder.Entity<Department>()
+           .HasMany(e => e.AssignedCases)
+           .WithOne(e => e.Department)
+           .HasForeignKey(e => e.DepartmentId)
+           .IsRequired(false);
+
 
         // Case Notes
 
