@@ -10,6 +10,7 @@ using PCMS.API.DTOS.POST;
 using PCMS.API.DTOS.PATCH;
 using PCMS.API.DTOS.GET;
 using System.ComponentModel.DataAnnotations;
+using PCMS.API.Dtos.GET;
 
 namespace PCMS.API.Controllers
 {
@@ -96,6 +97,8 @@ namespace PCMS.API.Controllers
         public async Task<ActionResult<List<GETCase>>> GetCases()
         {
             var cases = await _context.Cases
+                .Include(c => c.Creator)
+                .Include(c => c.LastEditor)
                 .ToListAsync();
 
             if (cases.Count is 0)
@@ -132,7 +135,7 @@ namespace PCMS.API.Controllers
                 return NotFound("Case not found.");
             }
 
-            var caseEdit = mapper.Map<CaseEdit>(existingCase);
+            var caseEdit = _mapper.Map<CaseEdit>(existingCase);
             caseEdit.UserId = userId;
             caseEdit.CaseId = id;
 
@@ -361,6 +364,25 @@ namespace PCMS.API.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+
+        [HttpGet("{id}/edits")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<GETCaseEdit>>> GetCaseEdits(string id)
+        {
+            var caseExists = await _context.Cases.AnyAsync(c => c.Id == id);
+            if (!caseExists)
+            {
+                return NotFound("Case not found.");
+            }
+
+            var caseEdits = await _context.CaseEdits.Where(ce => ce.CaseId == id).Include(ce => ce.User).ToListAsync();
+
+            var returnCaseEdits = _mapper.Map<List<GETCaseEdit>>(caseEdits);
+            return Ok(returnCaseEdits);
         }
     }
 }
