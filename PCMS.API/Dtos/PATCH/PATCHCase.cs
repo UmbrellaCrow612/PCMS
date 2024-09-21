@@ -39,5 +39,9 @@ namespace PCMS.API.DTOS.PATCH
         /// </summary>
         [Required(ErrorMessage = "Type is required")]
         public string Type { get; set; } = string.Empty;
+
+        [Required]
+        [EnumDataType(typeof(CaseComplexity))]
+        public required CaseComplexity Complexity { get; set; }
     }
 }

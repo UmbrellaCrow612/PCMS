@@ -67,5 +67,6 @@ namespace PCMS.API.DTOS.GET
         /// </summary>
         public GETApplicationUser? LastEditor { get; set; }
 
+        public required CaseComplexity Complexity { get; set; }
     }
 }

@@ -256,6 +256,9 @@ namespace PCMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Complexity")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("CreatedById")
                         .IsRequired()
                         .HasColumnType("TEXT");

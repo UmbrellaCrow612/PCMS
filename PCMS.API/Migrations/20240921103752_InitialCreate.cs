@@ -252,6 +252,7 @@ namespace PCMS.API.Migrations
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    Complexity = table.Column<int>(type: "INTEGER", nullable: false),
                     DateOpened = table.Column<DateTime>(type: "TEXT", nullable: false),
                     DateClosed = table.Column<DateTime>(type: "TEXT", nullable: true),
                     LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true),

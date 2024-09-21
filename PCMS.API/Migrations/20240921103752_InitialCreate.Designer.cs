@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240921094346_InitialCreate")]
+    [Migration("20240921103752_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -258,6 +258,9 @@ namespace PCMS.API.Migrations
                     b.Property<string>("CaseNumber")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Complexity")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("CreatedById")
                         .IsRequired()

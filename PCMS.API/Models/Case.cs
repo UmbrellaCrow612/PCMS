@@ -43,6 +43,13 @@ namespace PCMS.API.Models
         public CaseStatus Status { get; set; } = CaseStatus.Open;
 
         /// <summary>
+        /// Gets or sets the Case Complexity.>.
+        /// </summary>
+        [Required]
+        [EnumDataType(typeof(CaseComplexity))]
+        public required CaseComplexity Complexity { get; set; }
+
+        /// <summary>
         /// Gets or sets the time the case was opened defaults to <see cref="DateTime.UtcNow"/>.
         /// </summary>
         [Required(ErrorMessage = "DateOpened is required")]
@@ -166,6 +173,16 @@ namespace PCMS.API.Models
         Medium,
         High,
         Critical
+    }
+
+    /// <summary>
+    /// Represents Complexity of case..
+    /// </summary>
+    public enum CaseComplexity
+    {
+        Simple = 0,
+        Moderate,
+        Complex
     }
 
     /// <summary>
