@@ -109,6 +109,14 @@ namespace PCMS.API.Mapper
                         .ForMember(dest => dest.PreviousType, opt => opt.MapFrom(src => src.Type));
 
             CreateMap<CaseEdit, GETCaseEdit>();
+
+            // tags
+            CreateMap<Tag, POSTTag>();
+            CreateMap<POSTTag, Tag>();
+            CreateMap<Tag, GETTag>();
+            CreateMap<GETTag, Tag>();
+            CreateMap<Tag, PATCHTag>();
+            CreateMap<PATCHTag, Tag>();
         }
     }
 }
