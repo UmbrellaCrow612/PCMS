@@ -441,5 +441,91 @@ namespace PCMS.API.Controllers
             var returnCaseEdits = _mapper.Map<List<GETCaseEdit>>(caseEdits);
             return Ok(returnCaseEdits);
         }
+
+        [HttpGet("{id}/tags")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<GETTag>>> GetCaseTags(string id)
+        {
+            var caseExists = await _context.Cases.AnyAsync(c => c.Id == id);
+            if (!caseExists)
+            {
+                return NotFound("Case not found.");
+            }
+
+            var tags = await _context.CaseTags.Where(ct => ct.CaseId == id).Include(ct => ct.Tag).Select(ct => ct.Tag).ToListAsync();
+
+            var returnTags = _mapper.Map<List<GETTag>>(tags);
+
+            return Ok(returnTags);
+
+        }
+
+        [HttpPost("{id}/tags/{tagId}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> CreateCaseTags(string id, string tagId)
+        {
+            var caseExists = await _context.Cases.AnyAsync(c => c.Id == id);
+            if (!caseExists)
+            {
+                return NotFound("Case not found.");
+            }
+
+            var tagExists = await _context.Tags.AnyAsync(t => t.Id == tagId);
+            if (!tagExists)
+            {
+                return NotFound("Tag not found.");
+            }
+
+            var caseTagExists = await _context.CaseTags.AnyAsync(_ => _.CaseId == id && _.TagId == tagId);
+            if (caseTagExists)
+            {
+                return BadRequest("Tag is already linked to this case");
+            }
+
+            var caseTag = new CaseTag
+            {
+                CaseId = id,
+                TagId = tagId
+            };
+
+            await _context.CaseTags.AddAsync(caseTag);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}/tags/{tagId}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeleteCaseTag(string id, string tagId)
+        {
+            var caseExists = await _context.Cases.AnyAsync(c => c.Id == id);
+            if (!caseExists)
+            {
+                return NotFound("Case not found.");
+            }
+
+            var tagExists = await _context.Tags.AnyAsync(t => t.Id == tagId);
+            if (!tagExists)
+            {
+                return NotFound("Tag not found.");
+            }
+
+            var caseTag = await _context.CaseTags.Where(ct => ct.CaseId == id && ct.TagId == tagId).FirstOrDefaultAsync();
+            if (caseTag is null)
+            {
+                return BadRequest("Case tag dose not exist.");
+            }
+
+            _context.CaseTags.Remove(caseTag);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
