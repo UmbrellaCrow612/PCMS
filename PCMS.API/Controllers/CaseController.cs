@@ -132,9 +132,15 @@ namespace PCMS.API.Controllers
                 return NotFound("Case not found.");
             }
 
+            var caseEdit = mapper.Map<CaseEdit>(existingCase);
+            caseEdit.UserId = userId;
+            caseEdit.CaseId = id;
+
             _mapper.Map(request, existingCase);
             existingCase.LastEditedById = userId;
             existingCase.LastModifiedDate = DateTime.UtcNow;
+
+            await _context.CaseEdits.AddAsync(caseEdit);
 
             await _context.SaveChangesAsync();
 

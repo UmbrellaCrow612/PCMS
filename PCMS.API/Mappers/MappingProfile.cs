@@ -98,6 +98,14 @@ namespace PCMS.API.Mapper
             CreateMap<GETCaseNote, CaseNote>();
             CreateMap<CaseNote, PATCHCaseNote>();
             CreateMap<PATCHCaseNote, CaseNote>();
+
+            // Case edit
+            CreateMap<Case, CaseEdit>()
+                        .ForMember(dest => dest.PreviousTitle, opt => opt.MapFrom(src => src.Title))
+                        .ForMember(dest => dest.PreviousDescription, opt => opt.MapFrom(src => src.Description))
+                        .ForMember(dest => dest.PreviousStatus, opt => opt.MapFrom(src => src.Status))
+                        .ForMember(dest => dest.PreviousPriority, opt => opt.MapFrom(src => src.Priority))
+                        .ForMember(dest => dest.PreviousType, opt => opt.MapFrom(src => src.Type));
         }
     }
 }
