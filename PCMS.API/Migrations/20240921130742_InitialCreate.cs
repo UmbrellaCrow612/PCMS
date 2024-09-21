@@ -355,6 +355,7 @@ namespace PCMS.API.Migrations
                     PreviousStatus = table.Column<int>(type: "INTEGER", nullable: false),
                     PreviousPriority = table.Column<int>(type: "INTEGER", nullable: false),
                     PreviousType = table.Column<string>(type: "TEXT", nullable: false),
+                    PreviousComplexity = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

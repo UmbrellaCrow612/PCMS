@@ -37,6 +37,8 @@ namespace PCMS.API.Models
         [Required]
         public required string PreviousType { get; set; }
 
+        public required CaseComplexity PreviousComplexity { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     }

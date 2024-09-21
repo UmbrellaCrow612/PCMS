@@ -95,8 +95,6 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult<List<GETCase>>> GetCases(
-                [FromQuery] string? title,
-                [FromQuery] string? description,
                 [FromQuery][EnumDataType(typeof(CaseStatus))] CaseStatus? status,
                 [FromQuery][EnumDataType(typeof(CaseComplexity))] CaseComplexity? complexity,
                 [FromQuery] DateTime? startDate,
@@ -111,16 +109,6 @@ namespace PCMS.API.Controllers
         {
 
             var query = _context.Cases.AsQueryable();
-
-            if (!string.IsNullOrEmpty(title))
-            {
-                query = query.Where(c => c.Title.Contains(title));
-            }
-
-            if (!string.IsNullOrEmpty(description))
-            {
-                query = query.Where(c => c.Description.Contains(description));
-            }
 
             if (status.HasValue)
             {
