@@ -94,21 +94,86 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<List<GETCase>>> GetCases()
+        public async Task<ActionResult<List<GETCase>>> GetCases(
+                [FromQuery] string? title,
+                [FromQuery] string? description,
+                [FromQuery][EnumDataType(typeof(CaseStatus))] CaseStatus? status,
+                [FromQuery][EnumDataType(typeof(CaseComplexity))] CaseComplexity? complexity,
+                [FromQuery] DateTime? startDate,
+                [FromQuery] DateTime? endDate,
+                [FromQuery][EnumDataType(typeof(CasePriority))] CasePriority? priority,
+                [FromQuery] string? type,
+                [FromQuery] string? createdBy,
+                [FromQuery] string? department,
+                [FromQuery] int page = 1,
+                [FromQuery] int pageSize = 10
+            )
         {
-            var cases = await _context.Cases
-                .Include(c => c.Creator)
-                .Include(c => c.LastEditor)
-                .ToListAsync();
 
-            if (cases.Count is 0)
+            var query = _context.Cases.AsQueryable();
+
+            if (!string.IsNullOrEmpty(title))
             {
-                return Ok(new List<GETCase>());
+                query = query.Where(c => c.Title.Contains(title));
             }
 
-            var returnCases = _mapper.Map<List<GETCase>>(cases);
+            if (!string.IsNullOrEmpty(description))
+            {
+                query = query.Where(c => c.Description.Contains(description));
+            }
 
-            return Ok(returnCases);
+            if (status.HasValue)
+            {
+                query = query.Where(c => c.Status == status.Value);
+            }
+
+            if (complexity.HasValue)
+            {
+                query = query.Where(c => c.Complexity == complexity.Value);
+            }
+
+            if (startDate.HasValue)
+            {
+                query = query.Where(c => c.DateOpened >= startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                query = query.Where(c => c.DateOpened <= endDate.Value);
+            }
+
+            if (priority.HasValue)
+            {
+                query = query.Where(c => c.Priority == priority.Value);
+            }
+
+            if (!string.IsNullOrEmpty(type))
+                query = query.Where(c => c.Type == type);
+
+            if (!string.IsNullOrEmpty(createdBy))
+                query = query.Where(c => c.CreatedById == createdBy);
+
+            if (!string.IsNullOrEmpty(department))
+                query = query.Where(c => c.DepartmentId == department);
+
+            var totalCount = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            var cases = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+            var returnCases = _mapper.Map<List<GETCase>>(cases);
+            var response = new
+            {
+                Cases = returnCases,
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                CurrentPage = page
+            };
+
+            return Ok(response);
         }
 
         /// <summary>
@@ -366,7 +431,11 @@ namespace PCMS.API.Controllers
             return NoContent();
         }
 
-
+        /// <summary>
+        /// Gets the case edits made on a case with the user who made it.
+        /// </summary>
+        /// <param name="id">The ID of the case.</param>
+        /// <returns>List of case edits</returns>
         [HttpGet("{id}/edits")]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
