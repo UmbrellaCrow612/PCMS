@@ -73,7 +73,7 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tag",
+                name: "Tags",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
@@ -83,7 +83,7 @@ namespace PCMS.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tag", x => x.Id);
+                    table.PrimaryKey("PK_Tags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -455,9 +455,9 @@ namespace PCMS.API.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CaseTags_Tag_TagId",
+                        name: "FK_CaseTags_Tags_TagId",
                         column: x => x.TagId,
-                        principalTable: "Tag",
+                        principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -720,8 +720,8 @@ namespace PCMS.API.Migrations
                 column: "LastEditedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tag_Id",
-                table: "Tag",
+                name: "IX_Tags_Id",
+                table: "Tags",
                 column: "Id",
                 unique: true);
         }
@@ -778,7 +778,7 @@ namespace PCMS.API.Migrations
                 name: "Persons");
 
             migrationBuilder.DropTable(
-                name: "Tag");
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "Locations");

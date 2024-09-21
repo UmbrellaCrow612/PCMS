@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240921132849_InitialCreate")]
+    [Migration("20240921134226_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -763,7 +763,7 @@ namespace PCMS.API.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("Tag");
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

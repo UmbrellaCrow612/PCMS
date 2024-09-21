@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using PCMS.API.Models;
-using System.Reflection.Metadata;
 
 
 // Use fluent API
@@ -34,6 +32,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<CaseEdit> CaseEdits { get; set; }
 
     public DbSet<CaseTag> CaseTags { get; set; }
+     
+    public DbSet<Tag> Tags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -198,6 +198,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .WithMany(c => c.UserEdits)
             .HasForeignKey(uce => uce.CaseId);
 
+
+        // Tags
+
+        modelBuilder.Entity<Tag>().HasKey(x => x.Id);
 
         // Case tags
         modelBuilder.Entity<CaseTag>()

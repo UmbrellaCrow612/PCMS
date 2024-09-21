@@ -760,7 +760,7 @@ namespace PCMS.API.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("Tag");
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
