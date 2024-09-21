@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240921130742_InitialCreate")]
+    [Migration("20240921132849_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -470,6 +470,21 @@ namespace PCMS.API.Migrations
                     b.ToTable("CasePersons");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.CaseTag", b =>
+                {
+                    b.Property<string>("CaseId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TagId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CaseId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("CaseTags");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Department", b =>
                 {
                     b.Property<string>("Id")
@@ -726,6 +741,31 @@ namespace PCMS.API.Migrations
                     b.ToTable("Reports");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.Tag", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("Tag");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -902,6 +942,25 @@ namespace PCMS.API.Migrations
                     b.Navigation("Person");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.CaseTag", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Case", "Case")
+                        .WithMany("CaseTags")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.Tag", "Tag")
+                        .WithMany("CaseTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Evidence", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
@@ -976,6 +1035,8 @@ namespace PCMS.API.Migrations
 
                     b.Navigation("CaseNotes");
 
+                    b.Navigation("CaseTags");
+
                     b.Navigation("Evidences");
 
                     b.Navigation("PersonsInvolved");
@@ -1000,6 +1061,11 @@ namespace PCMS.API.Migrations
             modelBuilder.Entity("PCMS.API.Models.Person", b =>
                 {
                     b.Navigation("CasesInvolved");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Tag", b =>
+                {
+                    b.Navigation("CaseTags");
                 });
 #pragma warning restore 612, 618
         }

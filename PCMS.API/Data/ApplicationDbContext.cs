@@ -33,6 +33,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<CaseEdit> CaseEdits { get; set; }
 
+    public DbSet<CaseTag> CaseTags { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -195,5 +197,20 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasOne(uce => uce.Case)
             .WithMany(c => c.UserEdits)
             .HasForeignKey(uce => uce.CaseId);
+
+
+        // Case tags
+        modelBuilder.Entity<CaseTag>()
+            .HasKey(ct => new { ct.CaseId, ct.TagId });
+
+        modelBuilder.Entity<CaseTag>()
+            .HasOne(ct => ct.Case)
+            .WithMany(c => c.CaseTags)
+            .HasForeignKey(ct => ct.CaseId);
+
+        modelBuilder.Entity<CaseTag>()
+            .HasOne(ct => ct.Tag)
+            .WithMany(t => t.CaseTags)
+            .HasForeignKey(ct => ct.TagId);
     }
 }

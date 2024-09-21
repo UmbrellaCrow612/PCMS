@@ -73,6 +73,20 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tag",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tag", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -425,6 +439,30 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CaseTags",
+                columns: table => new
+                {
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    TagId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CaseTags", x => new { x.CaseId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_CaseTags_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CaseTags_Tag_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tag",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Evidences",
                 columns: table => new
                 {
@@ -616,6 +654,11 @@ namespace PCMS.API.Migrations
                 column: "LastEditedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CaseTags_TagId",
+                table: "CaseTags",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Departments_Id",
                 table: "Departments",
                 column: "Id",
@@ -675,6 +718,12 @@ namespace PCMS.API.Migrations
                 name: "IX_Reports_LastEditedById",
                 table: "Reports",
                 column: "LastEditedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tag_Id",
+                table: "Tag",
+                column: "Id",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -711,6 +760,9 @@ namespace PCMS.API.Migrations
                 name: "CasePersons");
 
             migrationBuilder.DropTable(
+                name: "CaseTags");
+
+            migrationBuilder.DropTable(
                 name: "Evidences");
 
             migrationBuilder.DropTable(
@@ -724,6 +776,9 @@ namespace PCMS.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Persons");
+
+            migrationBuilder.DropTable(
+                name: "Tag");
 
             migrationBuilder.DropTable(
                 name: "Locations");

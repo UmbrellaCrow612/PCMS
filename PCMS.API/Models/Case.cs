@@ -148,7 +148,10 @@ namespace PCMS.API.Models
         /// </summary>
         public ICollection<CaseEdit> UserEdits { get; set; } = [];
 
-
+        /// <summary>
+        /// Navigation ef core
+        /// </summary>
+        public ICollection<CaseTag> CaseTags { get; set; } = [];
     }
 
 
