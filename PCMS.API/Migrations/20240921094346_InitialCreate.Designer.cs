@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240920181514_InitialCreate")]
+    [Migration("20240921094346_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -359,6 +359,48 @@ namespace PCMS.API.Migrations
                     b.HasIndex("LastEditedById");
 
                     b.ToTable("CaseActions");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.CaseEdit", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CaseId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PreviousDescription")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PreviousPriority")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PreviousStatus")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PreviousTitle")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PreviousType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId", "CaseId");
+
+                    b.HasIndex("CaseId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("CaseEdits");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.CaseNote", b =>
@@ -805,6 +847,25 @@ namespace PCMS.API.Migrations
                     b.Navigation("LastEditor");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.CaseEdit", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Case", "Case")
+                        .WithMany("UserEdits")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
+                        .WithMany("CaseEdits")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.CaseNote", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
@@ -886,6 +947,8 @@ namespace PCMS.API.Migrations
                 {
                     b.Navigation("AssignedCases");
 
+                    b.Navigation("CaseEdits");
+
                     b.Navigation("CreatedCaseActions");
 
                     b.Navigation("CreatedCases");
@@ -912,6 +975,8 @@ namespace PCMS.API.Migrations
                     b.Navigation("PersonsInvolved");
 
                     b.Navigation("Reports");
+
+                    b.Navigation("UserEdits");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Department", b =>

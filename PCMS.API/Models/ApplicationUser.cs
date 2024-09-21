@@ -84,6 +84,11 @@ namespace PCMS.API.Models
         public ICollection<Report> EditedReports { get; set; }
 
         /// <summary>
+        /// Navigation ef core
+        /// </summary>
+        public ICollection<CaseEdit> CaseEdits { get; set; } = [];
+
+        /// <summary>
         /// Initializes a new instance of the ApplicationUser class.
         /// </summary>
         public ApplicationUser() : base()
