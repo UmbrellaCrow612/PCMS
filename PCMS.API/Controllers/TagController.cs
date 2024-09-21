@@ -23,7 +23,8 @@ namespace PCMS.API.Controllers
             await _context.Tags.AddAsync(tag);
             await _context.SaveChangesAsync();
 
-            return Ok(_mapper.Map<GETTag>(tag));
+            var returnTag = _mapper.Map<GETTag>(tag);
+            return Ok(returnTag);
         }
     }
 }
