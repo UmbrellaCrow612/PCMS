@@ -250,21 +250,30 @@ namespace PCMS.API.Controllers
             {
                 var query = await _context.CasePersons
                     .Where(cp => cp.CaseId == id)
-                    .Select(p => p.Person)
+                    .Select(cp => new GETCasePerson
+                    {
+                        Id = cp.Id,
+                        Person = _mapper.Map<GETPerson>(cp.Person),
+                        Role = cp.Role,
+                        CaseId = id
+                    })
                     .ToListAsync();
 
-                var returnRes = _mapper.Map<List<GETPerson>>(query);
-                return Ok(returnRes);
+                return Ok(query);
             }
 
             var persons = await _context.CasePersons
                 .Where(cp => cp.CaseId == id && cp.Role == role)
-                .Select(p => p.Person)
-                .ToListAsync();
+                .Select(cp => new GETCasePerson
+                    {
+                        Id = cp.Id,
+                        Person = _mapper.Map<GETPerson>(cp.Person),
+                        Role = cp.Role,
+                        CaseId = id
+                })
+                    .ToListAsync();
 
-            var returnPersons = _mapper.Map<List<GETPerson>>(persons);
-
-            return Ok(returnPersons);
+            return Ok(persons);
         }
 
         /// <summary>

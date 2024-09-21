@@ -8,11 +8,8 @@ namespace PCMS.API.DTOS.GET
     public class GETCasePerson
     {
         public required string Id { get; set; }
-
         public required string CaseId { get; set; }
-
-        public required string PersonId { get; set; }
-
+        public required GETPerson Person { get; set; }
         public required CaseRole Role { get; set; }
     }
 }
