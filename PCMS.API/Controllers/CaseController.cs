@@ -90,7 +90,7 @@ namespace PCMS.API.Controllers
         /// Retrieves all cases.
         /// </summary>
         /// <returns>A list of all cases.</returns>
-        [HttpGet]
+        [HttpGet("search")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
