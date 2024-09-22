@@ -199,5 +199,75 @@ namespace PCMS.API.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("{id}/cases")]
+        public async Task<ActionResult> GetCases(string id)
+        {
+            var cases = await _context.Cases
+                .Where(c => c.DepartmentId == id)
+                .Include(c => c.Creator)
+                .Include(c => c.LastEditor).ToListAsync();
+
+            var returnCases = _mapper.Map<List<GETCase>>(cases);
+            return Ok(returnCases);
+        }
+
+        [HttpPost("{id}/cases/{caseId}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> LinkCaseToDepartment(string id, string caseId)
+        {
+            var departmentExists = await _context.Departments.AnyAsync(d => d.Id == id);
+            if (!departmentExists)
+            {
+                return NotFound("Department dose not exist.");
+            }
+
+            var case_ = await _context.Cases.FindAsync(caseId);
+            if (case_ is null)
+            {
+                return NotFound("Case not found.");
+            }
+
+            if (case_.DepartmentId is not null)
+            {
+                return BadRequest("Case is already linked to a department.");
+            }
+
+            case_.DepartmentId = id;
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}/cases/{caseId}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> UnlinkCaseFromDepartment(string id, string caseId)
+        {
+            var departmentExists = await _context.Departments.AnyAsync(d => d.Id == id);
+            if (!departmentExists)
+            {
+                return NotFound("Department dose not exist.");
+            }
+
+            var case_ = await _context.Cases.FindAsync(caseId);
+            if (case_ is null)
+            {
+                return NotFound("Case not found.");
+            }
+
+            if (case_.DepartmentId != id)
+            {
+                return BadRequest("Case is not linked to the specified department.");
+            }
+
+            case_.DepartmentId = null;
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
