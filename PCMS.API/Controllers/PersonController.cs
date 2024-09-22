@@ -56,7 +56,7 @@ namespace PCMS.API.Controllers
         public async Task<ActionResult<GETPerson>> GetPerson(string id)
         {
             var person = await _context.Persons.Where(p => p.Id == id).FirstOrDefaultAsync();
-            if(person is null)
+            if (person is null)
             {
                 return NotFound("Person not found");
             }

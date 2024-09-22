@@ -32,7 +32,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<CaseEdit> CaseEdits { get; set; }
 
     public DbSet<CaseTag> CaseTags { get; set; }
-     
+
     public DbSet<Tag> Tags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -52,7 +52,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .HasMany(c => c.EditedCases)
                 .WithOne(ca => ca.LastEditor)
                 .HasForeignKey(ca => ca.LastEditedById)
-                .IsRequired(false); 
+                .IsRequired(false);
 
         modelBuilder.Entity<ApplicationUser>()
                 .HasMany(c => c.CreatedCaseActions)

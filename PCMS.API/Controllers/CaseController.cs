@@ -1,16 +1,16 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PCMS.API.Dtos.GET;
+using PCMS.API.DTOS.GET;
+using PCMS.API.DTOS.PATCH;
+using PCMS.API.DTOS.POST;
 using PCMS.API.Filters;
 using PCMS.API.Models;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using PCMS.API.DTOS.POST;
-using PCMS.API.DTOS.PATCH;
-using PCMS.API.DTOS.GET;
 using System.ComponentModel.DataAnnotations;
-using PCMS.API.Dtos.GET;
+using System.Security.Claims;
 
 namespace PCMS.API.Controllers
 {
@@ -265,11 +265,11 @@ namespace PCMS.API.Controllers
             var persons = await _context.CasePersons
                 .Where(cp => cp.CaseId == id && cp.Role == role)
                 .Select(cp => new GETCasePerson
-                    {
-                        Id = cp.Id,
-                        Person = _mapper.Map<GETPerson>(cp.Person),
-                        Role = cp.Role,
-                        CaseId = id
+                {
+                    Id = cp.Id,
+                    Person = _mapper.Map<GETPerson>(cp.Person),
+                    Role = cp.Role,
+                    CaseId = id
                 })
                     .ToListAsync();
 

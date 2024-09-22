@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.DTOS.GET;
+using PCMS.API.DTOS.PATCH;
 using PCMS.API.DTOS.POST;
 using PCMS.API.Models;
-using PCMS.API.DTOS.PATCH;
 
 namespace PCMS.API.Controllers
 {
@@ -41,7 +41,7 @@ namespace PCMS.API.Controllers
                 return NotFound("Location not found");
             }
 
-            var property =  _mapper.Map<Property>(request);
+            var property = _mapper.Map<Property>(request);
 
             await _context.Properties.AddAsync(property);
             await _context.SaveChangesAsync();
@@ -66,7 +66,7 @@ namespace PCMS.API.Controllers
         public async Task<ActionResult<GETProperty>> GetProperty(string id)
         {
             var property = await _context.Properties.Where(p => p.Id == id).Include(p => p.Location).FirstOrDefaultAsync();
-            if(property is null)
+            if (property is null)
             {
                 return NotFound("Property not found");
             }
