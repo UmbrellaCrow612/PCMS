@@ -327,8 +327,13 @@ namespace PCMS.API.Controllers
 
             await _context.CasePersons.AddAsync(casePerson);
             await _context.SaveChangesAsync();
+
+            var _casePerson = await _context.CasePersons
+                .Where(c => c.Id == casePerson.Id)
+                .Include(c => c.Person)
+                .FirstOrDefaultAsync() ?? throw new Exception("Failed to get created case person link.");
             
-            var returnCasePerson = _mapper.Map<GETCasePerson>(casePerson);
+            var returnCasePerson = _mapper.Map<GETCasePerson>(_casePerson);
 
             return Ok(returnCasePerson);
         }
