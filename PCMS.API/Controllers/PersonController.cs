@@ -112,5 +112,64 @@ namespace PCMS.API.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+
+        [HttpPost("{id}/cases/{caseId}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> CreateCasePerson(string id, string caseId, POSTCasePerson request)
+        {
+            var existingCase = await _context.Cases.AnyAsync(c => c.Id == caseId);
+            if (!existingCase)
+            {
+                return NotFound("Case not found");
+            }
+
+            var existingPerson = await _context.Persons.AnyAsync(p => p.Id == id);
+            if (!existingPerson)
+            {
+                return NotFound("Person not found.");
+            }
+
+            var casePerson = new CasePerson
+            {
+                CaseId = caseId,
+                PersonId = id,
+                Role = request.Role
+            };
+
+            await _context.CasePersons.AddAsync(casePerson);
+            await _context.SaveChangesAsync();
+
+            var _casePerson = await _context.CasePersons
+                .Where(c => c.Id == casePerson.Id)
+                .Include(c => c.Person)
+                .FirstOrDefaultAsync() ?? throw new Exception("Failed to get created case person link.");
+
+            var returnCasePerson = _mapper.Map<GETCasePerson>(_casePerson);
+
+            return Ok(returnCasePerson);
+        }
+
+
+        [HttpDelete("{id}/cases/{caseId}/links/{linkId}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeleteCasePerson(string id, string caseId, string linkId)
+        {
+            var casePerson = await _context.CasePersons
+                .Where(cp => cp.CaseId == caseId && cp.PersonId == id && cp.Id == linkId)
+                .FirstOrDefaultAsync();
+
+            if (casePerson is null)
+            {
+                return NotFound("Case person link not found");
+            }
+
+            _context.Remove(casePerson);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
