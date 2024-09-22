@@ -327,7 +327,7 @@ namespace PCMS.API.Controllers
 
             await _context.CasePersons.AddAsync(casePerson);
             await _context.SaveChangesAsync();
-
+            
             var returnCasePerson = _mapper.Map<GETCasePerson>(casePerson);
 
             return Ok(returnCasePerson);

@@ -445,19 +445,23 @@ namespace PCMS.API.Migrations
 
             modelBuilder.Entity("PCMS.API.Models.CasePerson", b =>
                 {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CaseId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PersonId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Id")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Role")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("CaseId", "PersonId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("CaseId");
 
                     b.HasIndex("Id")
                         .IsUnique();

@@ -115,7 +115,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         // Case Persons
 
         modelBuilder.Entity<CasePerson>()
-            .HasKey(cp => new { cp.CaseId, cp.PersonId });
+            .HasKey(cp => cp.Id);
 
         modelBuilder.Entity<CasePerson>()
           .HasOne(cp => cp.Case)

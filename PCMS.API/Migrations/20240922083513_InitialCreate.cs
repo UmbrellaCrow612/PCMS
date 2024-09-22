@@ -416,14 +416,14 @@ namespace PCMS.API.Migrations
                 name: "CasePersons",
                 columns: table => new
                 {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
                     CaseId = table.Column<string>(type: "TEXT", nullable: false),
                     PersonId = table.Column<string>(type: "TEXT", nullable: false),
-                    Id = table.Column<string>(type: "TEXT", nullable: true),
                     Role = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CasePersons", x => new { x.CaseId, x.PersonId });
+                    table.PrimaryKey("PK_CasePersons", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CasePersons_Cases_CaseId",
                         column: x => x.CaseId,
@@ -614,6 +614,11 @@ namespace PCMS.API.Migrations
                 table: "CaseNotes",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CasePersons_CaseId",
+                table: "CasePersons",
+                column: "CaseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CasePersons_Id",
