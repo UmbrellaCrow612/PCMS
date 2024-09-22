@@ -46,6 +46,19 @@ namespace PCMS.API.Controllers
             return Ok(returnTag);
         }
 
+        [HttpGet("search")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<IEnumerable<GETTag>>> SearchTags([FromQuery] string name)
+        {
+            var tags = await _context.Tags
+                .Where(t => t.Name.Contains(name))
+                .ToListAsync();
+
+            var returnTags = _mapper.Map<IEnumerable<GETTag>>(tags);
+            return Ok(returnTags);
+        }
+
         [HttpPatch("{id}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
