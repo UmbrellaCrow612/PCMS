@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -298,6 +298,28 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Releases",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    ReleaseDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ReleaseUserId = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    BookingId = table.Column<string>(type: "TEXT", nullable: false),
+                    ReleaseType = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Notes = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Releases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Releases_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ApplicationUserCases",
                 columns: table => new
                 {
@@ -525,6 +547,67 @@ namespace PCMS.API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Bookings",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    BookingDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    PersonId = table.Column<string>(type: "TEXT", nullable: false),
+                    ReleaseId = table.Column<string>(type: "TEXT", nullable: true),
+                    LocationId = table.Column<string>(type: "TEXT", nullable: false),
+                    Notes = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bookings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Locations_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "Locations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Persons_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Releases_ReleaseId",
+                        column: x => x.ReleaseId,
+                        principalTable: "Releases",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Charges",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Offense = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
+                    DateCharged = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
+                    BookingId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Charges", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Charges_Bookings_BookingId",
+                        column: x => x.BookingId,
+                        principalTable: "Bookings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ApplicationUserCases_CaseId",
                 table: "ApplicationUserCases",
@@ -571,6 +654,33 @@ namespace PCMS.API.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_Id",
+                table: "Bookings",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_LocationId",
+                table: "Bookings",
+                column: "LocationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_PersonId",
+                table: "Bookings",
+                column: "PersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_ReleaseId",
+                table: "Bookings",
+                column: "ReleaseId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_UserId",
+                table: "Bookings",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CaseActions_CaseId",
@@ -664,6 +774,17 @@ namespace PCMS.API.Migrations
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Charges_BookingId",
+                table: "Charges",
+                column: "BookingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Charges_Id",
+                table: "Charges",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Departments_Id",
                 table: "Departments",
                 column: "Id",
@@ -702,6 +823,17 @@ namespace PCMS.API.Migrations
                 name: "IX_Properties_LocationId",
                 table: "Properties",
                 column: "LocationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Releases_Id",
+                table: "Releases",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Releases_UserId",
+                table: "Releases",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reports_CaseId",
@@ -768,6 +900,9 @@ namespace PCMS.API.Migrations
                 name: "CaseTags");
 
             migrationBuilder.DropTable(
+                name: "Charges");
+
+            migrationBuilder.DropTable(
                 name: "Evidences");
 
             migrationBuilder.DropTable(
@@ -780,16 +915,22 @@ namespace PCMS.API.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Persons");
+                name: "Tags");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "Bookings");
+
+            migrationBuilder.DropTable(
+                name: "Cases");
 
             migrationBuilder.DropTable(
                 name: "Locations");
 
             migrationBuilder.DropTable(
-                name: "Cases");
+                name: "Persons");
+
+            migrationBuilder.DropTable(
+                name: "Releases");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

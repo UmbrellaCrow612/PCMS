@@ -74,5 +74,7 @@ namespace PCMS.API.Models
         /// EF Core nav
         /// </summary>
         public ICollection<Property> Properties { get; set; } = [];
+
+        public IEnumerable<Booking> Bookings { get; set; } = [];
     }
 }

@@ -38,5 +38,7 @@ namespace PCMS.API.Models
         /// Navigation ef core
         /// </summary>
         public List<CasePerson> CasesInvolved { get; set; } = [];
+
+        public IEnumerable<Booking> Bookings { get; set; } = [];
     }
 }

@@ -247,6 +247,51 @@ namespace PCMS.API.Migrations
                     b.ToTable("ApplicationUserCases");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.Booking", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LocationId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PersonId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReleaseId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("PersonId");
+
+                    b.HasIndex("ReleaseId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bookings");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Case", b =>
                 {
                     b.Property<string>("Id")
@@ -486,6 +531,38 @@ namespace PCMS.API.Migrations
                     b.ToTable("CaseTags");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.Charge", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BookingId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateCharged")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Offense")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("Charges");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Department", b =>
                 {
                     b.Property<string>("Id")
@@ -698,6 +775,45 @@ namespace PCMS.API.Migrations
                     b.ToTable("Properties");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.Release", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BookingId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReleaseType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReleaseUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Releases");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Report", b =>
                 {
                     b.Property<string>("Id")
@@ -846,6 +962,39 @@ namespace PCMS.API.Migrations
                     b.Navigation("Case");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.Booking", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Location", "Location")
+                        .WithMany("Bookings")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.Person", "Person")
+                        .WithMany("Bookings")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.Release", "Release")
+                        .WithOne("Booking")
+                        .HasForeignKey("PCMS.API.Models.Booking", "ReleaseId");
+
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
+                        .WithMany("Bookings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+
+                    b.Navigation("Person");
+
+                    b.Navigation("Release");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Case", b =>
                 {
                     b.HasOne("PCMS.API.Models.ApplicationUser", "Creator")
@@ -962,6 +1111,17 @@ namespace PCMS.API.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.Charge", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Booking", "Booking")
+                        .WithMany("Charges")
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Evidence", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
@@ -982,6 +1142,15 @@ namespace PCMS.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Release", b =>
+                {
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Report", b =>
@@ -1013,6 +1182,8 @@ namespace PCMS.API.Migrations
                 {
                     b.Navigation("AssignedCases");
 
+                    b.Navigation("Bookings");
+
                     b.Navigation("CaseEdits");
 
                     b.Navigation("CreatedCaseActions");
@@ -1026,6 +1197,11 @@ namespace PCMS.API.Migrations
                     b.Navigation("EditedCases");
 
                     b.Navigation("EditedReports");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Booking", b =>
+                {
+                    b.Navigation("Charges");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Case", b =>
@@ -1056,12 +1232,21 @@ namespace PCMS.API.Migrations
 
             modelBuilder.Entity("PCMS.API.Models.Location", b =>
                 {
+                    b.Navigation("Bookings");
+
                     b.Navigation("Properties");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Person", b =>
                 {
+                    b.Navigation("Bookings");
+
                     b.Navigation("CasesInvolved");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Release", b =>
+                {
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Tag", b =>

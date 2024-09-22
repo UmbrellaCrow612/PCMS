@@ -88,6 +88,8 @@ namespace PCMS.API.Models
         /// </summary>
         public ICollection<CaseEdit> CaseEdits { get; set; } = [];
 
+        public IEnumerable<Booking> Bookings { get; set; } = [];
+
         /// <summary>
         /// Initializes a new instance of the ApplicationUser class.
         /// </summary>

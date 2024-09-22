@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.Models;
+using System.Reflection.Metadata;
 
 
 // Use fluent API
@@ -34,6 +35,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<CaseTag> CaseTags { get; set; }
 
     public DbSet<Tag> Tags { get; set; }
+
+    public DbSet<Booking> Bookings { get; set; }
+
+    public DbSet<Charge> Charges { get; set; }
+
+    public DbSet<Release> Releases { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -216,5 +223,43 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasOne(ct => ct.Tag)
             .WithMany(t => t.CaseTags)
             .HasForeignKey(ct => ct.TagId);
+
+
+        // Bookings
+
+        modelBuilder.Entity<Booking>().HasKey(x => x.Id);
+
+        modelBuilder.Entity<ApplicationUser>()
+            .HasMany(e => e.Bookings)
+            .WithOne(e => e.User)
+            .HasForeignKey(e => e.UserId);
+
+        modelBuilder.Entity<Person>()
+              .HasMany(e => e.Bookings)
+              .WithOne(e => e.Person)
+              .HasForeignKey(e => e.PersonId);
+
+        modelBuilder.Entity<Booking>()
+              .HasMany(e => e.Charges)
+              .WithOne(e => e.Booking)
+              .HasForeignKey(e => e.BookingId);
+
+        modelBuilder.Entity<Booking>()
+                .HasOne(e => e.Release)
+                .WithOne(e => e.Booking)
+                .HasForeignKey<Booking>(e => e.ReleaseId)
+                .IsRequired(false);
+
+        modelBuilder.Entity<Location>()
+            .HasMany(e => e.Bookings)
+            .WithOne(e => e.Location)
+            .HasForeignKey(e => e.LocationId);
+
+        // Charge
+        modelBuilder.Entity<Charge>().HasKey(x => x.Id);
+
+        // Release
+        modelBuilder.Entity<Release>().HasKey(x => x.Id);
+
     }
 }
