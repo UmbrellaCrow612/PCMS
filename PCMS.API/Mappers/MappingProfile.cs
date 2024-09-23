@@ -117,6 +117,14 @@ namespace PCMS.API.Mapper
             CreateMap<GETTag, Tag>();
             CreateMap<Tag, PATCHTag>();
             CreateMap<PATCHTag, Tag>();
+
+            // Bookings
+            CreateMap<Booking, POSTBooking>();
+            CreateMap<POSTBooking, Booking>();
+            CreateMap<Booking, GETBooking>();
+            CreateMap<GETBooking, Booking>();
+            CreateMap<Booking, PATCHBooking>();
+            CreateMap<PATCHBooking, Booking>();
         }
     }
 }

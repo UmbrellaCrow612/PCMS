@@ -284,9 +284,6 @@ namespace PCMS.API.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.HasIndex("ReleaseId")
-                        .IsUnique();
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Bookings");
@@ -809,6 +806,9 @@ namespace PCMS.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BookingId")
+                        .IsUnique();
+
                     b.HasIndex("Id")
                         .IsUnique();
 
@@ -979,10 +979,6 @@ namespace PCMS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.Release", "Release")
-                        .WithOne("Booking")
-                        .HasForeignKey("PCMS.API.Models.Booking", "ReleaseId");
-
                     b.HasOne("PCMS.API.Models.ApplicationUser", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserId")
@@ -992,8 +988,6 @@ namespace PCMS.API.Migrations
                     b.Navigation("Location");
 
                     b.Navigation("Person");
-
-                    b.Navigation("Release");
 
                     b.Navigation("User");
                 });
@@ -1157,11 +1151,17 @@ namespace PCMS.API.Migrations
 
             modelBuilder.Entity("PCMS.API.Models.Release", b =>
                 {
+                    b.HasOne("PCMS.API.Models.Booking", "Booking")
+                        .WithOne("Release")
+                        .HasForeignKey("PCMS.API.Models.Release", "BookingId");
+
                     b.HasOne("PCMS.API.Models.ApplicationUser", "User")
                         .WithMany("Releases")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Booking");
 
                     b.Navigation("User");
                 });
@@ -1219,6 +1219,8 @@ namespace PCMS.API.Migrations
             modelBuilder.Entity("PCMS.API.Models.Booking", b =>
                 {
                     b.Navigation("Charges");
+
+                    b.Navigation("Release");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Case", b =>
@@ -1259,11 +1261,6 @@ namespace PCMS.API.Migrations
                     b.Navigation("Bookings");
 
                     b.Navigation("CasesInvolved");
-                });
-
-            modelBuilder.Entity("PCMS.API.Models.Release", b =>
-                {
-                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Tag", b =>

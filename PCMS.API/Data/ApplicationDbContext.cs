@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.Models;
+using Serilog;
 using System.Reflection.Metadata;
 
 
@@ -229,47 +230,25 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         modelBuilder.Entity<Booking>().HasKey(x => x.Id);
 
-        modelBuilder.Entity<ApplicationUser>()
-            .HasMany(e => e.Bookings)
-            .WithOne(e => e.User)
-            .HasForeignKey(e => e.UserId);
+        modelBuilder.Entity<Booking>().HasOne(b => b.User).WithMany(b => b.Bookings).HasForeignKey(b => b.UserId);
 
-        modelBuilder.Entity<Person>()
-              .HasMany(e => e.Bookings)
-              .WithOne(e => e.Person)
-              .HasForeignKey(e => e.PersonId);
+        modelBuilder.Entity<Booking>().HasOne(b => b.Person).WithMany(p => p.Bookings).HasForeignKey(b => b.PersonId);
 
-        modelBuilder.Entity<Booking>()
-              .HasMany(e => e.Charges)
-              .WithOne(e => e.Booking)
-              .HasForeignKey(e => e.BookingId);
+        modelBuilder.Entity<Booking>().HasMany(b => b.Charges).WithOne(c => c.Booking).HasForeignKey(c => c.BookingId);
 
-        modelBuilder.Entity<Booking>()
-                .HasOne(e => e.Release)
-                .WithOne(e => e.Booking)
-                .HasForeignKey<Booking>(e => e.ReleaseId)
-                .IsRequired(false);
+        modelBuilder.Entity<Booking>().HasOne(b => b.Release).WithOne(r => r.Booking).HasForeignKey<Release>(e => e.BookingId).IsRequired(false);
 
-        modelBuilder.Entity<Location>()
-            .HasMany(e => e.Bookings)
-            .WithOne(e => e.Location)
-            .HasForeignKey(e => e.LocationId);
+        modelBuilder.Entity<Booking>().HasOne(b => b.Location).WithMany(l => l.Bookings).HasForeignKey(b => b.LocationId);
 
         // Charge
         modelBuilder.Entity<Charge>().HasKey(x => x.Id);
 
-        modelBuilder.Entity<ApplicationUser>()
-           .HasMany(e => e.Charges)
-           .WithOne(e => e.User)
-           .HasForeignKey(e => e.UserId);
+        modelBuilder.Entity<Charge>().HasOne(c => c.User).WithMany(u => u.Charges).HasForeignKey(c => c.UserId);
 
         // Release
         modelBuilder.Entity<Release>().HasKey(x => x.Id);
 
-        modelBuilder.Entity<ApplicationUser>()
-            .HasMany(e => e.Releases)
-            .WithOne(e => e.User)
-            .HasForeignKey(e => e.UserId);
+        modelBuilder.Entity<Release>().HasOne(r => r.User).WithMany(u => u.Releases).HasForeignKey(r => r.UserId);
 
     }
 }

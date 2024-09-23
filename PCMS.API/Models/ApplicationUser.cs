@@ -41,7 +41,7 @@ namespace PCMS.API.Models
         /// <summary>
         /// Navigation property for the cases assigned to the user
         /// </summary>
-        public ICollection<ApplicationUserCase> AssignedCases { get; set; } = [];
+        public ICollection<ApplicationUserCase> AssignedCases { get; set; }
 
         /// <summary>
         /// Department ID
@@ -56,7 +56,7 @@ namespace PCMS.API.Models
         /// <summary>
         /// EF Core
         /// </summary>
-        public ICollection<Case> CreatedCases { get; set; } = [];
+        public ICollection<Case> CreatedCases { get; set; }
 
         /// <summary>
         /// EF Core
@@ -66,7 +66,7 @@ namespace PCMS.API.Models
         /// <summary>
         /// EF Core
         /// </summary>
-        public ICollection<CaseAction> CreatedCaseActions { get; set; } = [];
+        public ICollection<CaseAction> CreatedCaseActions { get; set; }
 
         /// <summary>
         /// EF Core
@@ -86,13 +86,13 @@ namespace PCMS.API.Models
         /// <summary>
         /// Navigation ef core
         /// </summary>
-        public ICollection<CaseEdit> CaseEdits { get; set; } = [];
+        public ICollection<CaseEdit> CaseEdits { get; set; }
 
-        public IEnumerable<Booking> Bookings { get; set; } = [];
+        public ICollection<Booking> Bookings { get; set; }
 
-        public IEnumerable<Release> Releases { get; set; } = [];
+        public ICollection<Release> Releases { get; set; } 
 
-        public IEnumerable<Charge> Charges { get; set; } = [];
+        public ICollection<Charge> Charges { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the ApplicationUser class.

@@ -39,6 +39,6 @@ namespace PCMS.API.Models
         /// </summary>
         public List<CasePerson> CasesInvolved { get; set; } = [];
 
-        public IEnumerable<Booking> Bookings { get; set; } = [];
+        public List<Booking> Bookings { get; set; }
     }
 }

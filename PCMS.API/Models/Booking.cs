@@ -26,7 +26,7 @@ namespace PCMS.API.Models
         public Person? Person { get; set; } = null!;
 
 
-        public IEnumerable<Charge> Charges { get; set; } = [];
+        public List<Charge> Charges { get; set; } = [];
 
 
         public string? ReleaseId { get; set; }
