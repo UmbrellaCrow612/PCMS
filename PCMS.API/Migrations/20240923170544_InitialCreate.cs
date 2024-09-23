@@ -303,8 +303,7 @@ namespace PCMS.API.Migrations
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     ReleaseDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    ReleaseUserId = table.Column<string>(type: "TEXT", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
                     BookingId = table.Column<string>(type: "TEXT", nullable: false),
                     ReleaseType = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Notes = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false)
@@ -316,7 +315,8 @@ namespace PCMS.API.Migrations
                         name: "FK_Releases_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -595,11 +595,18 @@ namespace PCMS.API.Migrations
                     Offense = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
                     DateCharged = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
-                    BookingId = table.Column<string>(type: "TEXT", nullable: false)
+                    BookingId = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Charges", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Charges_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Charges_Bookings_BookingId",
                         column: x => x.BookingId,
@@ -783,6 +790,11 @@ namespace PCMS.API.Migrations
                 table: "Charges",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Charges_UserId",
+                table: "Charges",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Departments_Id",

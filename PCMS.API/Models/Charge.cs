@@ -26,10 +26,14 @@ namespace PCMS.API.Models
         [StringLength(300)]
         public required string Description { get; set; }
 
-
         [Required]
         public required string BookingId { get; set; }
 
         public Booking? Booking { get; set; } = null!;
+
+        [Required]
+        public required string UserId { get; set; }
+
+        public ApplicationUser? User { get; set; } = null!;
     }
 }

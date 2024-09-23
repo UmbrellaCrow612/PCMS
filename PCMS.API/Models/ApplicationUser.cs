@@ -90,6 +90,10 @@ namespace PCMS.API.Models
 
         public IEnumerable<Booking> Bookings { get; set; } = [];
 
+        public IEnumerable<Release> Releases { get; set; } = [];
+
+        public IEnumerable<Charge> Charges { get; set; } = [];
+
         /// <summary>
         /// Initializes a new instance of the ApplicationUser class.
         /// </summary>

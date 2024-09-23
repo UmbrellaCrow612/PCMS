@@ -13,10 +13,8 @@ namespace PCMS.API.Models
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        [Required]
         [DataType(DataType.DateTime)]
-        [NotInFuture]
-        public required DateTime BookingDate { get; set; }
+        public DateTime BookingDate { get; set; } = DateTime.UtcNow;
 
         [Required]
         public required string UserId { get; set; }

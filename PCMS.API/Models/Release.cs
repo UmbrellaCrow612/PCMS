@@ -19,7 +19,7 @@ namespace PCMS.API.Models
         public required DateTime ReleaseDate { get; set; }
 
         [Required]
-        public required string ReleaseUserId { get; set; }
+        public required string UserId { get; set; }
         public ApplicationUser? User { get; set; } = null!;
 
         [Required]

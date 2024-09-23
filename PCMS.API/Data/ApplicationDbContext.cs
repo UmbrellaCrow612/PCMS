@@ -258,8 +258,18 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         // Charge
         modelBuilder.Entity<Charge>().HasKey(x => x.Id);
 
+        modelBuilder.Entity<ApplicationUser>()
+           .HasMany(e => e.Charges)
+           .WithOne(e => e.User)
+           .HasForeignKey(e => e.UserId);
+
         // Release
         modelBuilder.Entity<Release>().HasKey(x => x.Id);
+
+        modelBuilder.Entity<ApplicationUser>()
+            .HasMany(e => e.Releases)
+            .WithOne(e => e.User)
+            .HasForeignKey(e => e.UserId);
 
     }
 }
