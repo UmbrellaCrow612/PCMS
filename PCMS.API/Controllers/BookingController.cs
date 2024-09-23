@@ -43,14 +43,7 @@ namespace PCMS.API.Controllers
             booking.UserId = userId;
             booking.PersonId = id;
 
-            try
-            {
-                await _context.Bookings.AddAsync(booking);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            await _context.Bookings.AddAsync(booking);
             await _context.SaveChangesAsync();
 
             var _booking = await _context.Bookings.Where(b => b.Id == booking.Id)
