@@ -14,8 +14,6 @@ namespace PCMS.API.Controllers
     /// <summary>
     /// Handle booking related actions - for the base booking CRUD
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="mapper"></param>
     [ApiController]
     [Route("persons/{id}/bookings")]
     [Authorize]
@@ -29,12 +27,18 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> CreateBooking(string id, [FromBody] POSTBooking request)
+        public async Task<ActionResult<GETBooking>> CreateBooking(string id ,[FromBody] POSTBooking request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            var locationExists = await _context.Locations.Where(l => l.Id == request.LocationId).FirstOrDefaultAsync();
-            if (locationExists is null)
+            var personExists = await _context.Persons.AnyAsync(x => x.Id == id);
+            if (!personExists)
+            {
+                return NotFound("Person not found");
+            }
+
+            var locationExists = await _context.Locations.AnyAsync(l => l.Id == request.LocationId);
+            if (!locationExists)
             {
                 return NotFound("Location not found");
             }
@@ -56,6 +60,29 @@ namespace PCMS.API.Controllers
             var returnBooking = _mapper.Map<GETBooking>(_booking);
 
             return CreatedAtAction(nameof(CreateBooking), new { id = returnBooking.Id }, returnBooking);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<List<GETBooking>>> GetBookings(string id)
+        {
+            var personExists = await _context.Persons.AnyAsync(p => p.Id == id);
+            if (!personExists)
+            {
+                return NotFound("Person not found.");
+            }
+
+            var bookings = await _context.Bookings.Where(b => b.PersonId == id)
+                .Include(b => b.User)
+                .Include(b => b.Person)
+                .Include(b => b.Release)
+                .Include(b => b.Location)
+                .ToListAsync();
+
+            var returnBookings = _mapper.Map<List<GETBooking>>(bookings);
+            return Ok(returnBookings);
         }
     }
 }
