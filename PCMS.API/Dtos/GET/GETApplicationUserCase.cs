@@ -1,7 +1,7 @@
 ﻿namespace PCMS.API.DTOS.GET
 {
     /// <summary>
-    /// DTO for GET a Application User Case
+    /// DTO when you want to get a ApplicationUserCase
     /// </summary>
     public class GETApplicationUserCase
     {

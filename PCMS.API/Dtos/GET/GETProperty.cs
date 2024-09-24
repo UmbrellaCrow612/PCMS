@@ -1,7 +1,7 @@
 ﻿namespace PCMS.API.DTOS.GET
 {
     /// <summary>
-    /// DTO to GET a Property.
+    /// DTO when you want to get a Property
     /// </summary>
     public class GETProperty
     {

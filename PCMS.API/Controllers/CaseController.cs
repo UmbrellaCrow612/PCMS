@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.Dtos.GET;
@@ -18,10 +17,6 @@ namespace PCMS.API.Controllers
     /// Controller for handling case-related actions.
     /// </summary>
     /// <remarks>
-    /// Initializes a new instance of the <see cref="CaseController"/> class.
-    /// </remarks>
-    /// <param name="logger">The logger instance.</param>
-    /// <param name="context">The database context.</param>
     [ApiController]
     [Route("cases")]
     [Authorize]
@@ -30,11 +25,6 @@ namespace PCMS.API.Controllers
         private readonly ApplicationDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        /// <summary>
-        /// Creates a new case.
-        /// </summary>
-        /// <param name="request">The DTO containing POST case information.</param>
-        /// <returns>The created case details.</returns>
         [HttpPost]
         [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesDefaultResponseType]
@@ -60,11 +50,6 @@ namespace PCMS.API.Controllers
 
 
 
-        /// <summary>
-        /// Retrieves a case by its ID.
-        /// </summary>
-        /// <param name="id">The ID of the case.</param>
-        /// <returns>The requested case.</returns>
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -86,10 +71,7 @@ namespace PCMS.API.Controllers
             return Ok(caseResult);
         }
 
-        /// <summary>
-        /// Retrieves all cases.
-        /// </summary>
-        /// <returns>A list of all cases.</returns>
+
         [HttpGet("search")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
@@ -164,12 +146,7 @@ namespace PCMS.API.Controllers
             return Ok(response);
         }
 
-        /// <summary>
-        /// Updates a case by its ID.
-        /// </summary>
-        /// <param name="id">The ID of the case to update.</param>
-        /// <param name="request">The DTO containing the updated case information.</param>
-        /// <returns>No content if successful.</returns>
+
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -203,11 +180,7 @@ namespace PCMS.API.Controllers
             return NoContent();
         }
 
-        /// <summary>
-        /// Deletes a case by its ID.
-        /// </summary>
-        /// <param name="id">The ID of the case to delete.</param>
-        /// <returns>No content if successful.</returns>
+
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -229,12 +202,7 @@ namespace PCMS.API.Controllers
             return NoContent();
         }
 
-        /// <summary>
-        /// Get all persons linked to a case through case person.
-        /// </summary>
-        /// <param name="id">The ID of the case.</param>
-        /// <param name="role">The role <see cref="CaseRole"/> of the type of link a person has to this case</param>
-        /// <returns>List of people linked to the case through case person.</returns>
+
         [HttpGet("{id}/persons")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -276,11 +244,7 @@ namespace PCMS.API.Controllers
             return Ok(persons);
         }
 
-        /// <summary>
-        /// Get all users linked to a case through app user case.
-        /// </summary>
-        /// <param name="id">The ID of the case.</param>
-        /// <returns>List of users linked to the case through app user case.</returns>
+
         [HttpGet("{id}/users")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -295,11 +259,7 @@ namespace PCMS.API.Controllers
         }
 
 
-        /// <summary>
-        /// Gets the case edits made on a case with the user who made it.
-        /// </summary>
-        /// <param name="id">The ID of the case.</param>
-        /// <returns>List of case edits</returns>
+
         [HttpGet("{id}/edits")]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
@@ -337,8 +297,5 @@ namespace PCMS.API.Controllers
             return Ok(returnTags);
 
         }
-
-
-
     }
 }

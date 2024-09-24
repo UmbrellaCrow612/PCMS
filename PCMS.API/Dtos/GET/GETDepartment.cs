@@ -1,7 +1,7 @@
 ﻿namespace PCMS.API.Dtos.GET
 {
     /// <summary>
-    /// DTO for GET a department object
+    /// DTO when you want to get a Department
     /// </summary>
     public class GETDepartment
     {

@@ -4,7 +4,7 @@ using PCMS.API.Models;
 namespace PCMS.API.Dtos.GET
 {
     /// <summary>
-    /// DTO when GET a booking
+    /// DTO when you want to get a <see cref="Booking"/>
     /// </summary>
     public class GETBooking
     {

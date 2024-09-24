@@ -4,7 +4,7 @@ using PCMS.API.Models;
 namespace PCMS.API.Dtos.GET
 {
     /// <summary>
-    /// DTO to get a case edit
+    /// DTO when you want to get a <see cref="CaseEdit"/>
     /// </summary>
     public class GETCaseEdit
     {

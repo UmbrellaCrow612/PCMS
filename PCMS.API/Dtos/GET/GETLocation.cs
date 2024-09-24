@@ -1,7 +1,7 @@
 ﻿namespace PCMS.API.DTOS.GET
 {
     /// <summary>
-    /// DTO to GET a location.
+    /// DTO when you want to get a Location
     /// </summary>
     public class GETLocation
     {

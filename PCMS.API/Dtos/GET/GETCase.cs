@@ -3,72 +3,34 @@
 namespace PCMS.API.DTOS.GET
 {
     /// <summary>
-    /// DTO for GET a case object
+    /// DTO when you want to get a <see cref="Case"/>
     /// </summary>
     public record GETCase
     {
-        /// <summary>
-        /// Gets or sets the Case Id.
-        /// </summary>
-        public required string Id { get; set; } = string.Empty;
+        public required string Id { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Case Number.
-        /// </summary>
-        public required string CaseNumber { get; set; } = string.Empty;
+        public required string CaseNumber { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Case title.
-        /// </summary>
-        public required string Title { get; set; } = string.Empty;
+        public required string Title { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Case description.
-        /// </summary>
-        public required string Description { get; set; } = string.Empty;
+        public required string Description { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Case status based on the <see cref="CaseStatus"/> enum.
-        /// </summary>
         public required CaseStatus Status { get; set; }
 
-        /// <summary>
-        /// Gets or sets the time the case was opened defaults to now.
-        /// </summary>
         public required DateTime DateOpened { get; set; }
 
-        /// <summary>
-        /// Gets or sets the time the case was closed defaults to null.
-        /// </summary>
         public required DateTime? DateClosed { get; set; }
 
-        /// <summary>
-        /// Gets or sets the date and time when the case was last modified.
-        /// </summary>
         public DateTime? LastModifiedDate { get; set; }
 
-        /// <summary>
-        /// Gets or sets the case priority based on the <see cref="CasePriority"/> enum.
-        /// </summary>
         public required CasePriority Priority { get; set; }
 
-        /// <summary>
-        /// Gets or sets the case type.
-        /// </summary>
         public required string Type { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Gets or sets the user Id Who created the case.
-        /// </summary>
         public required GETApplicationUser Creator { get; set; }
 
-        /// <summary>
-        /// Gets or sets the user Id who last modified the case.
-        /// </summary>
         public GETApplicationUser? LastEditor { get; set; }
 
         public required CaseComplexity Complexity { get; set; }
-
-        public string? DepartmentId { get; set; }
     }
 }

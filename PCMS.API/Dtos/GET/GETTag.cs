@@ -1,7 +1,7 @@
 ﻿namespace PCMS.API.Dtos.GET
 {
     /// <summary>
-    /// DTO to GET a Tag
+    /// DTO when you want to get a Tag
     /// </summary>
     public class GETTag
     {

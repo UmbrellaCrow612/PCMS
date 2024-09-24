@@ -1,13 +1,13 @@
-﻿namespace PCMS.API.Dtos.GET
+﻿using PCMS.API.DTOS.GET;
+
+namespace PCMS.API.Dtos.GET
 {
     /// <summary>
-    /// DTO to get a case note.
+    /// DTO when you want to get a CaseNote
     /// </summary>
     public class GETCaseNote
     {
         public required string Id { get; set; }
-
-        public required string CaseId { get; set; }
 
         public required string Description { get; set; }
 
@@ -15,8 +15,7 @@
 
         public DateTime? LastModifiedDate { get; set; }
 
-        public required string CreatedById { get; set; }
+        public required GETApplicationUser Creator { get; set; }
 
-        public string? UpdatedById { get; set; }
     }
 }
