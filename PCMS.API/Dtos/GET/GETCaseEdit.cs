@@ -16,6 +16,8 @@ namespace PCMS.API.Dtos.GET
 
         public required string PreviousDescription { get; set; }
 
+        public required CaseComplexity PreviousComplexity { get; set; }
+
         public required CaseStatus PreviousStatus { get; set; }
 
         public required CasePriority PreviousPriority { get; set; }
