@@ -29,6 +29,12 @@ namespace PCMS.API.Models
 
 
         [Required]
+        public required string PersonId { get; set; }
+
+        public Person? Person { get; set; } = null!;
+
+
+        [Required]
         [StringLength(100)]
         public required string ReleaseType { get; set; }
 

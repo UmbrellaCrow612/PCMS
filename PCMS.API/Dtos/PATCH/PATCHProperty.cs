@@ -23,7 +23,7 @@ namespace PCMS.API.DTOS.PATCH
         public required string Status { get; set; }
 
         [Required]
-        [Range(0, double.MaxValue]
+        [Range(0, double.MaxValue)]
         public required decimal Price { get; set; }
 
         [Range(0, int.MaxValue)]

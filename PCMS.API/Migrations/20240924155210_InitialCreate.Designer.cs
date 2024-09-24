@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240924092954_InitialCreate")]
+    [Migration("20240924155210_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -556,6 +556,10 @@ namespace PCMS.API.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("PersonId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -566,6 +570,8 @@ namespace PCMS.API.Migrations
 
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("PersonId");
 
                     b.HasIndex("UserId");
 
@@ -796,6 +802,10 @@ namespace PCMS.API.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("PersonId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("TEXT");
 
@@ -815,6 +825,8 @@ namespace PCMS.API.Migrations
 
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("PersonId");
 
                     b.HasIndex("UserId");
 
@@ -984,7 +996,7 @@ namespace PCMS.API.Migrations
                         .IsRequired();
 
                     b.HasOne("PCMS.API.Models.ApplicationUser", "User")
-                        .WithMany("Bookings")
+                        .WithMany("CreatedBookings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1128,13 +1140,21 @@ namespace PCMS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
+                    b.HasOne("PCMS.API.Models.Person", "Person")
                         .WithMany("Charges")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
+                        .WithMany("CreatedCharges")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Booking");
+
+                    b.Navigation("Person");
 
                     b.Navigation("User");
                 });
@@ -1177,13 +1197,21 @@ namespace PCMS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
+                    b.HasOne("PCMS.API.Models.Person", "Person")
                         .WithMany("Releases")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
+                        .WithMany("CreatedReleases")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Booking");
+
+                    b.Navigation("Person");
 
                     b.Navigation("User");
                 });
@@ -1217,11 +1245,9 @@ namespace PCMS.API.Migrations
                 {
                     b.Navigation("AssignedCases");
 
-                    b.Navigation("Bookings");
-
                     b.Navigation("CaseEdits");
 
-                    b.Navigation("Charges");
+                    b.Navigation("CreatedBookings");
 
                     b.Navigation("CreatedCaseActions");
 
@@ -1229,7 +1255,11 @@ namespace PCMS.API.Migrations
 
                     b.Navigation("CreatedCases");
 
+                    b.Navigation("CreatedCharges");
+
                     b.Navigation("CreatedEvidence");
+
+                    b.Navigation("CreatedReleases");
 
                     b.Navigation("CreatedReports");
 
@@ -1238,8 +1268,6 @@ namespace PCMS.API.Migrations
                     b.Navigation("EditedCases");
 
                     b.Navigation("EditedReports");
-
-                    b.Navigation("Releases");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Booking", b =>
@@ -1287,6 +1315,10 @@ namespace PCMS.API.Migrations
                     b.Navigation("Bookings");
 
                     b.Navigation("CasesInvolved");
+
+                    b.Navigation("Charges");
+
+                    b.Navigation("Releases");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Tag", b =>

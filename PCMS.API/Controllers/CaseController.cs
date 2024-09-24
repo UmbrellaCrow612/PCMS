@@ -223,7 +223,6 @@ namespace PCMS.API.Controllers
                         Id = cp.Id,
                         Person = _mapper.Map<GETPerson>(cp.Person),
                         Role = cp.Role,
-                        CaseId = id
                     })
                     .ToListAsync();
 
@@ -237,7 +236,6 @@ namespace PCMS.API.Controllers
                     Id = cp.Id,
                     Person = _mapper.Map<GETPerson>(cp.Person),
                     Role = cp.Role,
-                    CaseId = id
                 })
                     .ToListAsync();
 

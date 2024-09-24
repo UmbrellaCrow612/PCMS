@@ -35,5 +35,10 @@ namespace PCMS.API.Models
         public required string UserId { get; set; }
 
         public ApplicationUser? User { get; set; } = null!;
+
+        [Required]
+        public required string PersonId { get; set; }
+
+        public Person? Person { get; set; } = null!;
     }
 }

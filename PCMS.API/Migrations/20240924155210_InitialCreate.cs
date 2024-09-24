@@ -341,7 +341,8 @@ namespace PCMS.API.Migrations
                     DateCharged = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
                     BookingId = table.Column<string>(type: "TEXT", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false)
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    PersonId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -358,6 +359,12 @@ namespace PCMS.API.Migrations
                         principalTable: "Bookings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Charges_Persons_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -368,6 +375,7 @@ namespace PCMS.API.Migrations
                     ReleaseDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
                     BookingId = table.Column<string>(type: "TEXT", nullable: false),
+                    PersonId = table.Column<string>(type: "TEXT", nullable: false),
                     ReleaseType = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Notes = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false)
                 },
@@ -384,6 +392,12 @@ namespace PCMS.API.Migrations
                         name: "FK_Releases_Bookings_BookingId",
                         column: x => x.BookingId,
                         principalTable: "Bookings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Releases_Persons_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Persons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -807,6 +821,11 @@ namespace PCMS.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Charges_PersonId",
+                table: "Charges",
+                column: "PersonId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Charges_UserId",
                 table: "Charges",
                 column: "UserId");
@@ -867,6 +886,11 @@ namespace PCMS.API.Migrations
                 table: "Releases",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Releases_PersonId",
+                table: "Releases",
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Releases_UserId",

@@ -37,5 +37,9 @@ namespace PCMS.API.Models
         public ICollection<CasePerson> CasesInvolved { get; set; } = [];
 
         public ICollection<Booking> Bookings { get; set; } = [];
+
+        public ICollection<Release> Releases { get; set; } = [];
+
+        public ICollection<Charge> Charges { get; set; } = [];
     }
 }

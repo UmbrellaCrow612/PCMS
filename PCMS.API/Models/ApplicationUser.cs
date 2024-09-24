@@ -88,11 +88,11 @@ namespace PCMS.API.Models
         /// </summary>
         public ICollection<CaseEdit> CaseEdits { get; set; }
 
-        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Booking> CreatedBookings { get; set; }
 
-        public ICollection<Release> Releases { get; set; } 
+        public ICollection<Release> CreatedReleases { get; set; } 
 
-        public ICollection<Charge> Charges { get; set; }
+        public ICollection<Charge> CreatedCharges { get; set; }
 
         public ICollection<Evidence> CreatedEvidence { get; set; }
 
