@@ -8,17 +8,11 @@ namespace PCMS.API.DTOS.POST
     /// </summary>
     public record LoginRequest
     {
-        /// <summary>
-        /// The user's email address which acts as a user name.
-        /// </summary>
-        [Required(ErrorMessage = "Username is required")]
-        public string UserName { get; init; } = string.Empty;
+        [Required]
+        public required string UserName { get; init; }
 
-        /// <summary>
-        /// The user's password.
-        /// </summary>
-        [Required(ErrorMessage = "Password is required")]
-        public string Password { get; init; } = string.Empty;
+        [Required]
+        public required string Password { get; init; }
 
         /// <summary>
         /// The optional two-factor authenticator code. This may be required for users who have enabled two-factor authentication.

@@ -7,38 +7,38 @@ namespace PCMS.API.DTOS.POST
     /// </summary>
     public class POSTProperty
     {
-        [Required(ErrorMessage = "Name is required")]
-        [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters")]
+        [Required]
+        [StringLength(100)]
         public required string Name { get; set; }
 
-        [StringLength(500, ErrorMessage = "Description cannot be longer than 500 characters")]
+        [StringLength(500)]
         public string? Description { get; set; }
 
-        [Required(ErrorMessage = "Property type is required")]
-        [StringLength(50, ErrorMessage = "Property type cannot be longer than 50 characters")]
+        [Required]
+        [StringLength(50)]
         public required string PropertyType { get; set; }
 
-        [Required(ErrorMessage = "Status is required")]
-        [StringLength(20, ErrorMessage = "Status cannot be longer than 20 characters")]
+        [Required]
+        [StringLength(20)]
         public required string Status { get; set; }
 
-        [Required(ErrorMessage = "Price is required")]
-        [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive number")]
+        [Required]
+        [Range(0, double.MaxValue)]
         public required decimal Price { get; set; }
 
-        [Range(0, int.MaxValue, ErrorMessage = "Number of bedrooms must be a non-negative number")]
+        [Range(0, int.MaxValue)]
         public int Bedrooms { get; set; }
 
-        [Range(0, double.MaxValue, ErrorMessage = "Number of bathrooms must be a non-negative number")]
+        [Range(0, double.MaxValue)]
         public decimal Bathrooms { get; set; }
 
-        [Range(0, double.MaxValue, ErrorMessage = "Area must be a positive number")]
+        [Range(0, double.MaxValue)]
         public decimal Area { get; set; }
 
-        [Range(1600, 9999, ErrorMessage = "Year built must be between 1600 and 9999")]
+        [Range(1600, 9999)]
         public int? YearBuilt { get; set; }
 
-        [Required(ErrorMessage = "Location ID is required")]
+        [Required]
         public required string LocationId { get; set; }
     }
 }

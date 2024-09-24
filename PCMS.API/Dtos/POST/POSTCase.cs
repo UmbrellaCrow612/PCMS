@@ -9,30 +9,18 @@ namespace PCMS.API.DTOS.POST
     /// </summary>
     public record POSTCase
     {
-        /// <summary>
-        /// Get or set the case title..
-        /// </summary>
-        [Required(ErrorMessage = "Title is required")]
-        public string Title { get; set; } = string.Empty;
+        [Required]
+        public required string Title { get; set; }
 
-        /// <summary>
-        /// Get or set the case description..
-        /// </summary>
-        [Required(ErrorMessage = "Description is required")]
-        public string Description { get; set; } = string.Empty;
+        [Required]
+        public required string Description { get; set; } 
 
-        /// <summary>
-        /// Get or set the case priority based on the enum <see cref="CasePriority"/>.
-        /// </summary>
-        [Required(ErrorMessage = "Priority is required")]
+        [Required]
         [EnumDataType(typeof(CasePriority))]
         public CasePriority Priority { get; set; }
 
-        /// <summary>
-        /// Get or set the case type />.
-        /// </summary>
-        [Required(ErrorMessage = "Type is required")]
-        public string Type { get; set; } = string.Empty;
+        [Required]
+        public required string Type { get; set; } 
 
         [Required]
         [EnumDataType(typeof(CaseComplexity))]
