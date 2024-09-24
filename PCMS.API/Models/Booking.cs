@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PCMS.API.Filters;
 using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.Models

@@ -20,19 +20,19 @@ namespace PCMS.API.Models
         /// <summary>
         /// Gets or sets the Case Number. Defaults to the call to <see cref="CaseNumberGenerator.GenerateCaseNumber()"/>
         /// </summary>
-        [Required(ErrorMessage = "CaseNumber is required")]
+        [Required]
         public string CaseNumber { get; set; } = CaseNumberGenerator.GenerateCaseNumber();
 
         /// <summary>
         /// Gets or sets the Case title.
         /// </summary>
-        [Required(ErrorMessage = "Title is required")]
+        [Required]
         public required string Title { get; set; }
 
         /// <summary>
         /// Gets or sets the Case description.
         /// </summary>
-        [Required(ErrorMessage = "Description is required")]
+        [Required]
         public required string Description { get; set; }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace PCMS.API.Models
         /// <summary>
         /// Navigation ef core
         /// </summary>
-        public ICollection<CaseEdit> UserEdits { get; set; } = [];
+        public ICollection<CaseEdit> CaseEdits { get; set; } = [];
 
         /// <summary>
         /// Navigation ef core

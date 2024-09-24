@@ -13,7 +13,6 @@ namespace PCMS.API.Models
         /// Gets the evidence ID, defaults to <see cref="Guid.NewGuid()"/>.
         /// </summary>
         [Key]
-        [Required(ErrorMessage = "ID is required")]
         public string Id { get; } = Guid.NewGuid().ToString();
 
         /// <summary>
@@ -64,11 +63,8 @@ namespace PCMS.API.Models
         [Required(ErrorMessage = "CreatedById is required")]
         public required string CreatedById { get; set; }
 
-        /// <summary>
-        /// Gets or sets the evidence LastEditedBy.
-        /// </summary>
-        [Required(ErrorMessage = "LastEditedById is required")]
-        public required string LastEditedById { get; set; }
+        public ApplicationUser? Creator { get; set; } = null;
+
 
         /// <summary>
         /// Gets or sets the person details of who collected the evidence.

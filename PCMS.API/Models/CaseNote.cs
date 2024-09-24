@@ -41,15 +41,12 @@ namespace PCMS.API.Models
         /// </summary>
         public required string CreatedById { get; set; }
 
+        public ApplicationUser? Creator { get; set; } = null;
+
         /// <summary>
         /// Gets or sets the last update time of the CaseNote.
         /// </summary>
         [DataType(DataType.DateTime)]
         public DateTime? LastModifiedDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ID of the user who last updated the CaseNote.
-        /// </summary>
-        public string? UpdatedById { get; set; }
     }
 }

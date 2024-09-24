@@ -138,7 +138,6 @@ namespace PCMS.API.Controllers
 
             _mapper.Map(request, caseNote);
             caseNote.LastModifiedDate = DateTime.UtcNow;
-            caseNote.UpdatedById = userId;
 
             await _context.SaveChangesAsync();
 

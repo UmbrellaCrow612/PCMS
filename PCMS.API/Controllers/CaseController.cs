@@ -287,7 +287,7 @@ namespace PCMS.API.Controllers
         public async Task<ActionResult<List<GETApplicationUser>>> GetUserCases(string id)
         {
             var users = await _context.ApplicationUserCases.Where(ap => ap.CaseId == id)
-                .Select(u => u.ApplicationUser)
+                .Select(u => u.User)
                 .ToListAsync();
 
             var returnUsers = _mapper.Map<List<GETApplicationUser>>(users);

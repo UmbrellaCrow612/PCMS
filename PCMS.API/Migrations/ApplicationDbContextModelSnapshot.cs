@@ -405,16 +405,14 @@ namespace PCMS.API.Migrations
 
             modelBuilder.Entity("PCMS.API.Models.CaseEdit", b =>
                 {
-                    b.Property<string>("UserId")
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CaseId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PreviousComplexity")
@@ -438,12 +436,18 @@ namespace PCMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("UserId", "CaseId");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CaseId");
 
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("CaseEdits");
                 });
@@ -472,12 +476,11 @@ namespace PCMS.API.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UpdatedById")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CaseId");
+
+                    b.HasIndex("CreatedById");
 
                     b.HasIndex("Id")
                         .IsUnique();
@@ -515,15 +518,15 @@ namespace PCMS.API.Migrations
 
             modelBuilder.Entity("PCMS.API.Models.CaseTag", b =>
                 {
-                    b.Property<string>("CaseId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("TagId")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("CaseId", "TagId");
+                    b.Property<string>("CaseId")
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("TagId");
+                    b.HasKey("TagId", "CaseId");
+
+                    b.HasIndex("CaseId");
 
                     b.ToTable("CaseTags");
                 });
@@ -625,10 +628,6 @@ namespace PCMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("LastEditedById")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("LastModifiedDate")
                         .HasColumnType("TEXT");
 
@@ -643,6 +642,8 @@ namespace PCMS.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CaseId");
+
+                    b.HasIndex("CreatedById");
 
                     b.HasIndex("Id")
                         .IsUnique();
@@ -954,15 +955,15 @@ namespace PCMS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "ApplicationUser")
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
                         .WithMany("AssignedCases")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ApplicationUser");
-
                     b.Navigation("Case");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Booking", b =>
@@ -1043,7 +1044,7 @@ namespace PCMS.API.Migrations
             modelBuilder.Entity("PCMS.API.Models.CaseEdit", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
-                        .WithMany("UserEdits")
+                        .WithMany("CaseEdits")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1067,7 +1068,15 @@ namespace PCMS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "Creator")
+                        .WithMany("CreatedCaseNotes")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Case");
+
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.CasePerson", b =>
@@ -1135,7 +1144,15 @@ namespace PCMS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "Creator")
+                        .WithMany("CreatedEvidence")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Case");
+
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Property", b =>
@@ -1153,7 +1170,9 @@ namespace PCMS.API.Migrations
                 {
                     b.HasOne("PCMS.API.Models.Booking", "Booking")
                         .WithOne("Release")
-                        .HasForeignKey("PCMS.API.Models.Release", "BookingId");
+                        .HasForeignKey("PCMS.API.Models.Release", "BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PCMS.API.Models.ApplicationUser", "User")
                         .WithMany("Releases")
@@ -1203,7 +1222,11 @@ namespace PCMS.API.Migrations
 
                     b.Navigation("CreatedCaseActions");
 
+                    b.Navigation("CreatedCaseNotes");
+
                     b.Navigation("CreatedCases");
+
+                    b.Navigation("CreatedEvidence");
 
                     b.Navigation("CreatedReports");
 
@@ -1229,6 +1252,8 @@ namespace PCMS.API.Migrations
 
                     b.Navigation("CaseActions");
 
+                    b.Navigation("CaseEdits");
+
                     b.Navigation("CaseNotes");
 
                     b.Navigation("CaseTags");
@@ -1238,8 +1263,6 @@ namespace PCMS.API.Migrations
                     b.Navigation("PersonsInvolved");
 
                     b.Navigation("Reports");
-
-                    b.Navigation("UserEdits");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Department", b =>

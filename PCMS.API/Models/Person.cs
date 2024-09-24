@@ -13,7 +13,6 @@ namespace PCMS.API.Models
         /// Gets the Person Id. Defaults to <see cref="Guid.NewGuid()".
         /// </summary>
         [Key]
-        [Required(ErrorMessage = "ID is required")]
         public string Id { get; } = Guid.NewGuid().ToString();
 
         /// <summary>
@@ -34,11 +33,9 @@ namespace PCMS.API.Models
         [Required(ErrorMessage = "DateOfBirth is required")]
         public required DateTime DateOfBirth { get; set; }
 
-        /// <summary>
-        /// Navigation ef core
-        /// </summary>
-        public List<CasePerson> CasesInvolved { get; set; } = [];
 
-        public List<Booking> Bookings { get; set; }
+        public ICollection<CasePerson> CasesInvolved { get; set; } = [];
+
+        public ICollection<Booking> Bookings { get; set; } = [];
     }
 }

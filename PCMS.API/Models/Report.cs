@@ -13,7 +13,6 @@ namespace PCMS.API.Models
         /// Gets the report ID, defaults to <see cref="Guid.NewGuid()"/>.
         /// </summary>
         [Key]
-        [Required(ErrorMessage = "ID is required")]
         public string Id { get; } = Guid.NewGuid().ToString();
 
         /// <summary>

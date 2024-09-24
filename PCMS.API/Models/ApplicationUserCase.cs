@@ -13,7 +13,7 @@
         /// <summary>
         /// EF core nav property.
         /// </summary>
-        public ApplicationUser? ApplicationUser { get; set; } = null!;
+        public ApplicationUser? User { get; set; } = null!;
 
         /// <summary>
         /// Get or set the case ID.

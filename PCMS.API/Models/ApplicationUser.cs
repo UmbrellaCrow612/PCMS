@@ -94,6 +94,10 @@ namespace PCMS.API.Models
 
         public ICollection<Charge> Charges { get; set; }
 
+        public ICollection<Evidence> CreatedEvidence { get; set; }
+
+        public ICollection<CaseNote> CreatedCaseNotes { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the ApplicationUser class.
         /// </summary>

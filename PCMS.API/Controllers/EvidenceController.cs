@@ -55,7 +55,6 @@ namespace PCMS.API.Controllers
                 opts.AfterMap((src, dest) =>
                 {
                     dest.CaseId = caseId;
-                    dest.LastEditedById = userId;
                     dest.CreatedById = userId;
                 });
             });
@@ -140,7 +139,6 @@ namespace PCMS.API.Controllers
 
             _mapper.Map(request, evidence);
 
-            evidence.LastEditedById = userId;
             evidence.LastModifiedDate = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

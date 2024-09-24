@@ -384,7 +384,8 @@ namespace PCMS.API.Migrations
                         name: "FK_Releases_Bookings_BookingId",
                         column: x => x.BookingId,
                         principalTable: "Bookings",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -451,9 +452,9 @@ namespace PCMS.API.Migrations
                 name: "CaseEdits",
                 columns: table => new
                 {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
                     CaseId = table.Column<string>(type: "TEXT", nullable: false),
-                    Id = table.Column<string>(type: "TEXT", nullable: true),
                     PreviousTitle = table.Column<string>(type: "TEXT", nullable: false),
                     PreviousDescription = table.Column<string>(type: "TEXT", nullable: false),
                     PreviousStatus = table.Column<int>(type: "INTEGER", nullable: false),
@@ -464,7 +465,7 @@ namespace PCMS.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CaseEdits", x => new { x.UserId, x.CaseId });
+                    table.PrimaryKey("PK_CaseEdits", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CaseEdits_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -488,12 +489,17 @@ namespace PCMS.API.Migrations
                     Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    UpdatedById = table.Column<string>(type: "TEXT", nullable: true)
+                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CaseNotes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CaseNotes_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CaseNotes_Cases_CaseId",
                         column: x => x.CaseId,
@@ -537,7 +543,7 @@ namespace PCMS.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CaseTags", x => new { x.CaseId, x.TagId });
+                    table.PrimaryKey("PK_CaseTags", x => new { x.TagId, x.CaseId });
                     table.ForeignKey(
                         name: "FK_CaseTags_Cases_CaseId",
                         column: x => x.CaseId,
@@ -564,7 +570,6 @@ namespace PCMS.API.Migrations
                     Location = table.Column<string>(type: "TEXT", nullable: false),
                     CollectionDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    LastEditedById = table.Column<string>(type: "TEXT", nullable: false),
                     CollectedByDetails = table.Column<string>(type: "TEXT", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
@@ -572,6 +577,12 @@ namespace PCMS.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Evidences", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Evidences_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Evidences_Cases_CaseId",
                         column: x => x.CaseId,
@@ -716,9 +727,19 @@ namespace PCMS.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CaseEdits_UserId",
+                table: "CaseEdits",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CaseNotes_CaseId",
                 table: "CaseNotes",
                 column: "CaseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CaseNotes_CreatedById",
+                table: "CaseNotes",
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CaseNotes_Id",
@@ -770,9 +791,9 @@ namespace PCMS.API.Migrations
                 column: "LastEditedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CaseTags_TagId",
+                name: "IX_CaseTags_CaseId",
                 table: "CaseTags",
-                column: "TagId");
+                column: "CaseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Charges_BookingId",
@@ -800,6 +821,11 @@ namespace PCMS.API.Migrations
                 name: "IX_Evidences_CaseId",
                 table: "Evidences",
                 column: "CaseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Evidences_CreatedById",
+                table: "Evidences",
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Evidences_Id",
