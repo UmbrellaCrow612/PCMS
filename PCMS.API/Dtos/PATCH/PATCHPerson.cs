@@ -4,27 +4,18 @@ using System.ComponentModel.DataAnnotations;
 namespace PCMS.API.DTOS.PATCH
 {
     /// <summary>
-    /// DTO for PATCH a person.
-    /// </summary>
+    /// DTO for when you want to update a Person
+    /// </summary
     public class PATCHPerson
     {
-        /// <summary>
-        /// Gets or sets the Person FullName.
-        /// </summary>
-        [Required(ErrorMessage = "FullName is required")]
+        [Required]
         public required string FullName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Person ContactInfo.
-        /// </summary>
-        [Required(ErrorMessage = "ContactInfo is required")]
+        [Required]
         public required string ContactInfo { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Person DateOfBirth.
-        /// </summary>
-        [Required(ErrorMessage = "DateOfBirth is required")]
-        [NotInFuture(ErrorMessage = "DateOfBirth can not be in the future")]
+        [Required]
+        [NotInFuture]
         public required DateTime DateOfBirth { get; set; }
     }
 }

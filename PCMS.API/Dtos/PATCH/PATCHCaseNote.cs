@@ -3,8 +3,8 @@
 namespace PCMS.API.Dtos.PATCH
 {
     /// <summary>
-    /// DTO to PATCH a Case Note
-    /// </summary>
+    /// DTO for when you want to update a case note
+    /// </summary
     public class PATCHCaseNote
     {
         [Required]

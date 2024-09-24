@@ -3,7 +3,7 @@
 namespace PCMS.API.Dtos.PATCH
 {
     /// <summary>
-    /// PATCH a Tag
+    /// DTO when you want to update a tag
     /// </summary>
     public class PATCHTag
     {

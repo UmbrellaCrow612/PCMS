@@ -3,20 +3,14 @@
 namespace PCMS.API.DTOS.PATCH
 {
     /// <summary>
-    /// DTO for a PATCH report.
+    /// DTO when you want to update a report
     /// </summary>
     public class PATCHReport
     {
-        /// <summary>
-        /// Gets or sets the report Title.
-        /// </summary>
-        [Required(ErrorMessage = "Title is required")]
-        public string Title { get; set; } = string.Empty;
+        [Required]
+        public required string Title { get; set; }
 
-        /// <summary>
-        /// Gets or sets the report Details.
-        /// </summary>
-        [Required(ErrorMessage = "Details is required")]
-        public string Details { get; set; } = string.Empty;
+        [Required]
+        public required string Details { get; set; }
     }
 }

@@ -3,20 +3,20 @@
 namespace PCMS.API.Dtos.PATCH
 {
     /// <summary>
-    /// DTO to PATCH a Department.
-    /// </summary>
+    /// DTO for when you want to update a department
+    /// </summary
     public class PATCHDepartment
     {
-        [Required(ErrorMessage = "Name is required")]
-        [StringLength(50, ErrorMessage = "Name cannot be longer than 100 characters")]
+        [Required]
+        [StringLength(50)]
         public required string Name { get; set; }
 
-        [Required(ErrorMessage = "Description is required")]
-        [StringLength(250, ErrorMessage = "Description cannot be longer than 250 characters")]
+        [Required]
+        [StringLength(250)]
         public required string Description { get; set; }
 
-        [Required(ErrorMessage = "ShortCode is required")]
-        [StringLength(20, ErrorMessage = "ShortCode cannot be longer than 20 characters")]
+        [Required]
+        [StringLength(20)]
         public required string ShortCode { get; set; }
     }
 }
