@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PCMS.API.Dtos.POST;
 
 namespace PCMS.API.Controllers
 {
@@ -14,7 +15,7 @@ namespace PCMS.API.Controllers
     public class ReleaseController : ControllerBase
     {
         [HttpPost]
-        public async Task<ActionResult> CreateRelease(string id, string bookingId, [FromBody] )
+        public async Task<ActionResult> CreateRelease(string id, string bookingId, [FromBody] POSTRelease request)
         {
             return Ok();
         }
