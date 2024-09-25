@@ -8,6 +8,7 @@ using PCMS.API.Models;
 using Microsoft.AspNetCore.Http;
 using PCMS.API.Filters;
 using System.Security.Claims;
+using PCMS.API.Dtos.PATCH;
 
 namespace PCMS.API.Controllers
 {
@@ -83,6 +84,55 @@ namespace PCMS.API.Controllers
 
             var returnBookings = _mapper.Map<List<GETBooking>>(bookings);
             return Ok(returnBookings);
+        }
+
+        [HttpPatch("{bookingId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> UpdateBooking(string id, string bookingId, [FromBody] PATCHBooking request)
+        {
+            var personExists = await _context.Persons.AnyAsync (p => p.Id == id);
+            if (!personExists)
+            {
+                return NotFound("Person not found.");
+            }
+
+            var booking = await _context.Bookings.Where(b => b.Id == bookingId && b.PersonId == id).FirstOrDefaultAsync();
+            if (booking is null)
+            {
+                return NotFound("Booking not found or is linked to this person.");
+            }
+
+            _mapper.Map(request, booking);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{bookingId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> DeleteBooking(string id, string bookingId)
+        {
+            var personExists = await _context.Persons.AnyAsync(p => p.Id == id);
+            if (!personExists)
+            {
+                return NotFound("Person not found.");
+            }
+
+            var booking = await _context.Bookings.Where(b => b.Id == bookingId).FirstOrDefaultAsync();
+            if (booking is null)
+            {
+                return NotFound("Booking not found.");
+            }
+
+            _context.Remove(booking);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
