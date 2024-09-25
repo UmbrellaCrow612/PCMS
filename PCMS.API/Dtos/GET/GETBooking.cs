@@ -18,7 +18,7 @@ namespace PCMS.API.Dtos.GET
 
         public required GETPerson Person { get; set; }
 
-        public Release? Release { get; set; }
+        public GETRelease? Release { get; set; }
 
         public required GETLocation Location { get; set; }
     }
