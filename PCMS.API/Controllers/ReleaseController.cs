@@ -60,7 +60,8 @@ namespace PCMS.API.Controllers
             await _context.Releases.AddAsync(release);
             await _context.SaveChangesAsync();
 
-            return Created();
+            var returnRelease = _mapper.Map<GETRelease>(release);
+            return CreatedAtAction(nameof(CreateRelease), returnRelease);
         }
 
         [HttpGet]
