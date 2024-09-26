@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using PCMS.API.Dtos.GET;
 using PCMS.API.Dtos.POST;
 using PCMS.API.Models;
-using SQLitePCL;
-using Microsoft.AspNetCore.Http;
 using PCMS.API.Filters;
 using System.Security.Claims;
 
@@ -65,9 +63,31 @@ namespace PCMS.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> GetRelease(string id, string bookingId)
         {
-            return Ok();
+            var personExists = await _context.Persons.AnyAsync(x => x.Id == id);
+            if (!personExists)
+            {
+                return NotFound("Person dose not exist.");
+            }
+
+            var booking = await _context.Bookings.Where(x => x.Id == bookingId && x.PersonId == id).Include(x => x.Release).FirstOrDefaultAsync();
+            if (booking is null)
+            {
+                return NotFound("Booking dose not exist or is linked to this person.");
+            }
+
+            if (booking.Release is null)
+            {
+                return NotFound("This booking dose have a release.");
+            }
+
+            var returnRelease = _mapper.Map<GETRelease>((booking.Release));
+
+            return Ok(returnRelease);
         }
 
         [HttpPatch]

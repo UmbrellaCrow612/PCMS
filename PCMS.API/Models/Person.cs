@@ -7,31 +7,23 @@ namespace PCMS.API.Models
     /// Represents a person in the system, outside people, not officers or users of the system.
     /// </summary>
     [Index(nameof(Id), IsUnique = true)]
+    [Index(nameof(FullName))]
     public class Person
     {
-        /// <summary>
-        /// Gets the Person Id. Defaults to <see cref="Guid.NewGuid()".
-        /// </summary>
+
         [Key]
         public string Id { get; } = Guid.NewGuid().ToString();
 
-        /// <summary>
-        /// Gets or sets the Person FullName.
-        /// </summary>
-        [Required(ErrorMessage = "FullName is required")]
+        [Required]
+        [MaxLength(100)]
         public required string FullName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Person ContactInfo.
-        /// </summary>
-        [Required(ErrorMessage = "ContactInfo is required")]
+        [Required]
         public required string ContactInfo { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Person DateOfBirth.
-        /// </summary>
-        [Required(ErrorMessage = "DateOfBirth is required")]
+        [Required]
         public required DateTime DateOfBirth { get; set; }
+
 
 
         public ICollection<CasePerson> CasesInvolved { get; set; } = [];
