@@ -20,6 +20,8 @@ namespace PCMS.API.Dtos.GET
 
         public GETRelease? Release { get; set; }
 
+        public ICollection<GETCharge> Charges { get; set; } = [];
+
         public required GETLocation Location { get; set; }
     }
 }

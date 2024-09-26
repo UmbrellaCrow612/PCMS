@@ -55,6 +55,7 @@ namespace PCMS.API.Controllers
                 .Include(b => b.User)
                 .Include(b => b.Person)
                 .Include(b => b.Release)
+                .Include(b => b.Charges)
                 .Include(b => b.Location)
                 .FirstOrDefaultAsync() ?? throw new ApplicationException("Failed to get created booking");
 
@@ -79,6 +80,7 @@ namespace PCMS.API.Controllers
                 .Include(b => b.User)
                 .Include(b => b.Person)
                 .Include(b => b.Release)
+                .Include(b => b.Charges)
                 .Include(b => b.Location)
                 .ToListAsync();
 

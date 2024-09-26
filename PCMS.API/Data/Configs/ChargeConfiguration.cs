@@ -13,6 +13,8 @@ namespace PCMS.API.Data.Configs
             builder.HasOne(x => x.Booking).WithMany(x => x.Charges).HasForeignKey(x => x.BookingId);
 
             builder.HasOne(x => x.User).WithMany(x => x.CreatedCharges).HasForeignKey(x => x.UserId);
+
+            builder.HasOne(x => x.Person).WithMany(x => x.Charges).HasForeignKey(x => x.PersonId);
         }
     }
 }
