@@ -1,5 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PCMS.API.Dtos.GET;
 using PCMS.API.Dtos.POST;
+using PCMS.API.Models;
+using SQLitePCL;
+using Microsoft.AspNetCore.Http;
+using PCMS.API.Filters;
+using System.Security.Claims;
 
 namespace PCMS.API.Controllers
 {
@@ -12,12 +20,47 @@ namespace PCMS.API.Controllers
     /// </remarks>
     [ApiController]
     [Route("persons/{id}/bookings/{bookingId}/release")]
-    public class ReleaseController : ControllerBase
+    public class ReleaseController(ApplicationDbContext context, IMapper mapper) : ControllerBase
     {
+        private readonly ApplicationDbContext _context = context;
+        private readonly IMapper _mapper = mapper;
+
         [HttpPost]
-        public async Task<ActionResult> CreateRelease(string id, string bookingId, [FromBody] POSTRelease request)
+        [ServiceFilter(typeof(UserValidationFilter))]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<GETRelease>> CreateRelease(string id, string bookingId, [FromBody] POSTRelease request)
         {
-            return Ok();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            var personExists = await _context.Persons.AnyAsync(x => x.Id == id);
+            if (!personExists)
+            {
+                return NotFound("Person dose not exist.");
+            }
+
+            var booking = await _context.Bookings.Where(x => x.Id == bookingId && x.PersonId == id).Include(x => x.Release).FirstOrDefaultAsync();
+            if (booking is null)
+            {
+                return NotFound("Booking dose not exist or is linked to this person.");
+            }
+
+            if (booking.Release is not null)
+            {
+                return BadRequest("There is already a release for this booking.");
+            }
+
+            var release = _mapper.Map<Release>(request);
+            release.UserId = userId;
+            release.PersonId = id;
+            release.BookingId = bookingId;
+
+            await _context.Releases.AddAsync(release);
+            await _context.SaveChangesAsync();
+
+            return Created();
         }
 
         [HttpGet]
