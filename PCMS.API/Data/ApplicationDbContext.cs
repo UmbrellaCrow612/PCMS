@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using PCMS.API.Models;
 using System.Reflection;
 
+/// <summary>
+/// The PCMS DB context used to interact with the db.
+/// </summary>
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, IdentityRole, string>(options)
 {
     public DbSet<Case> Cases { get; set; }
