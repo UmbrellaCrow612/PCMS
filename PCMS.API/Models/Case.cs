@@ -11,146 +11,70 @@ namespace PCMS.API.Models
     [Index(nameof(CaseNumber), IsUnique = true)]
     public class Case
     {
-        /// <summary>
-        /// Gets or sets the Case Id. Defaults to <see cref="Guid.NewGuid()"
-        /// </summary>
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        /// <summary>
-        /// Gets or sets the Case Number. Defaults to the call to <see cref="CaseNumberGenerator.GenerateCaseNumber()"/>
-        /// </summary>
         [Required]
         public string CaseNumber { get; set; } = CaseNumberGenerator.GenerateCaseNumber();
 
-        /// <summary>
-        /// Gets or sets the Case title.
-        /// </summary>
         [Required]
         public required string Title { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Case description.
-        /// </summary>
         [Required]
         public required string Description { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Case status, defaults to <see cref="CaseStatus.Open"/>.
-        /// </summary>
-        [Required(ErrorMessage = "Status is required")]
+        [Required]
         [EnumDataType(typeof(CaseStatus))]
         public CaseStatus Status { get; set; } = CaseStatus.Open;
 
-        /// <summary>
-        /// Gets or sets the Case Complexity.>.
-        /// </summary>
         [Required]
         [EnumDataType(typeof(CaseComplexity))]
         public required CaseComplexity Complexity { get; set; }
 
-        /// <summary>
-        /// Gets or sets the time the case was opened defaults to <see cref="DateTime.UtcNow"/>.
-        /// </summary>
-        [Required(ErrorMessage = "DateOpened is required")]
+        [Required]
         [DataType(DataType.DateTime)]
         public DateTime DateOpened { get; set; } = DateTime.UtcNow;
 
-        /// <summary>
-        /// Gets or sets the time the case was closed defaults to <see cref="Nullable"/>.
-        /// </summary>
         [DataType(DataType.DateTime)]
         public DateTime? DateClosed { get; set; } = null;
 
-        /// <summary>
-        /// Gets or sets the date and time when the case was last modified, defaults to <see cref="DateTime.UtcNow;"/>.
-        /// </summary>
         [DataType(DataType.DateTime)]
         public DateTime? LastModifiedDate { get; set; }
 
-        /// <summary>
-        /// Gets or sets the case priority based on the <see cref="CasePriority"/> enum.
-        /// </summary>
-        [Required(ErrorMessage = "Priority is required")]
+        [Required]
         [EnumDataType(typeof(CasePriority))]
         public required CasePriority Priority { get; set; }
 
-        /// <summary>
-        /// Gets or sets the case type.
-        /// </summary>
-        [Required(ErrorMessage = "Type is required")]
+        [Required]
         public required string Type { get; set; }
 
-        /// <summary>
-        /// Gets or sets the user Id Who created the case.
-        /// </summary>
-        [Required(ErrorMessage = "CreatedById is required")]
+        [Required]
         public required string CreatedById { get; set; }
 
-        /// <summary>
-        /// EF core nav for <see cref="CreatedById"/>
-        /// </summary>
         public ApplicationUser? Creator { get; set; } = null!;
 
-        /// <summary>
-        /// Gets or sets the user Id who last modified the case.
-        /// </summary>
         public string? LastEditedById { get; set; }
 
-        /// <summary>
-        /// EF core nav for <see cref="LastEditedById"/>
-        /// </summary>
         public ApplicationUser? LastEditor { get; set; } = null!;
 
-        /// <summary>
-        /// Get or set the department for this case
-        /// </summary>
         public string? DepartmentId { get; set; }
 
-        /// <summary>
-        /// Ef core
-        /// </summary>
         public Department? Department { get; set; } = null!;
 
-        /// <summary>
-        /// Gets or sets the case actions, list of <see cref="CaseAction"/>.
-        /// </summary>
         public List<CaseAction> CaseActions { get; set; } = [];
 
-        /// <summary>
-        /// Gets or sets the case reports, list of <see cref="Report"/>.
-        /// </summary>
         public List<Report> Reports { get; set; } = [];
 
-        /// <summary>
-        /// Gets or sets the case evidence, list of <see cref="Evidence"/>.
-        /// </summary>
         public List<Evidence> Evidences { get; set; } = [];
 
-        /// <summary>
-        /// Navigation ef core
-        /// </summary>
         public List<CasePerson> PersonsInvolved { get; set; } = [];
 
-        /// <summary>
-        /// Navigation property for the users assigned to the case.
-        /// A case can have many users assigned to it.
-        /// </summary>
         public List<ApplicationUserCase> AssignedUsers { get; set; } = [];
 
-        /// <summary>
-        /// Navigation ef core
-        /// </summary>
         public ICollection<CaseNote> CaseNotes { get; set; } = [];
 
-        /// <summary>
-        /// Navigation ef core
-        /// </summary>
         public ICollection<CaseEdit> CaseEdits { get; set; } = [];
 
-        /// <summary>
-        /// Navigation ef core
-        /// </summary>
         public ICollection<CaseTag> CaseTags { get; set; } = [];
 
         public ICollection<CrimeSceneCase> CrimeSceneCases = [];
