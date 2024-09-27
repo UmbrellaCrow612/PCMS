@@ -6,6 +6,7 @@ using PCMS.API.Dtos.GET;
 using PCMS.API.Dtos.POST;
 using PCMS.API.Models;
 using Microsoft.AspNetCore.Http;
+using PCMS.API.DTOS.GET;
 
 namespace PCMS.API.Controllers
 {
@@ -44,6 +45,33 @@ namespace PCMS.API.Controllers
 
             return Created(nameof(CreateCrimeScene), returnCrimeScene);
         }
-        
+
+
+        [HttpGet("/crime-scenes/{id}/persons")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> GetCrimePersons(string id)
+        {
+            var crimeSceneExists = await _context.CrimeScenes.AnyAsync(x => x.Id == id);
+            if (!crimeSceneExists)
+            {
+                return NotFound("Crime scene not found.");
+            }
+
+            var persons = await _context.CrimeScenePersons
+                .Where(x => x.CrimeSceneId == id)
+                .Include(x => x.Person)
+                 .Select(x => new GETCrimeScenePerson
+                 {
+                     Id = x.Id,
+                     Person = _mapper.Map<GETPerson>(x.Person),
+                     Role = x.Role
+                 })
+                .ToListAsync();
+
+            return Ok(persons);
+        }
+
     }
 }

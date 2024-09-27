@@ -5,7 +5,7 @@ using PCMS.API.Models;
 using System.Reflection;
 
 /// <summary>
-/// The PCMS DB context used to interact with the db.
+/// The PCMS DB context used to interact with the db and its tables.
 /// </summary>
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, IdentityRole, string>(options)
 {

@@ -2,5 +2,6 @@
 {
     public enum CrimeSceneRole
     {
+        Witness = 0,
     }
 }
