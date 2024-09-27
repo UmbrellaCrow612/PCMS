@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PCMS.API.Dtos.POST;
 using PCMS.API.DTOS.GET;
 using PCMS.API.DTOS.PATCH;
 using PCMS.API.DTOS.POST;
 using PCMS.API.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
@@ -167,6 +169,71 @@ namespace PCMS.API.Controllers
             }
 
             _context.Remove(casePerson);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpPost("{id}/crime-scenes/{crimeSceneId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> LinkPersonToCrimeScene(string id, string crimeSceneId, [FromBody] POSTCrimeScenePerson request)
+        {
+            var personExists = await _context.Persons.AnyAsync(x => x.Id == id);
+            if (!personExists)
+            {
+                return NotFound("Person not found.");
+            }
+
+            var crimeSceneExists = await _context.CrimeScenes.AnyAsync(x => x.Id == crimeSceneId);
+            if (!crimeSceneExists)
+            {
+                return NotFound("Crime scene not found");
+            }
+
+            var crimeScenePerson = new CrimeScenePerson
+            {
+                CrimeSceneId = crimeSceneId,
+                PersonId = id,
+                Role = request.Role
+            };
+
+            await _context.CrimeScenePersons.AddAsync(crimeScenePerson);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}/crime-scenes/{crimeSceneId}/links/{linkId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> UnLinkPersonToCrimeScene(string id, string crimeSceneId, string linkId)
+        {
+            var personExists = await _context.Persons.AnyAsync(x => x.Id == id);
+            if (!personExists)
+            {
+                return NotFound("Person not found.");
+            }
+
+            var crimeSceneExists = await _context.CrimeScenes.AnyAsync(x => x.Id == crimeSceneId);
+            if (!crimeSceneExists)
+            {
+                return NotFound("Crime scene not found");
+            }
+
+            var link = await _context.CrimeScenePersons
+                .Where(x => x.Id == id && x.CrimeSceneId == crimeSceneId && x.PersonId == id)
+                .FirstOrDefaultAsync();
+
+            if (link is null)
+            {
+                return BadRequest("No link between this person and crime scene");
+            }
+
+            _context.CrimeScenePersons.Remove(link);
             await _context.SaveChangesAsync();
 
             return NoContent();
