@@ -152,6 +152,8 @@ namespace PCMS.API.Models
         /// Navigation ef core
         /// </summary>
         public ICollection<CaseTag> CaseTags { get; set; } = [];
+
+        public ICollection<CrimeSceneCase> CrimeSceneCases = [];
     }
 
 

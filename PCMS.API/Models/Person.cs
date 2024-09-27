@@ -33,5 +33,7 @@ namespace PCMS.API.Models
         public ICollection<Release> Releases { get; set; } = [];
 
         public ICollection<Charge> Charges { get; set; } = [];
+
+        public ICollection<CrimeScenePerson> CrimeScenePersons { get; set; } = [];
     }
 }

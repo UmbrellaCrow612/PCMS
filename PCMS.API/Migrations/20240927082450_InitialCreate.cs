@@ -63,7 +63,7 @@ namespace PCMS.API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    FullName = table.Column<string>(type: "TEXT", nullable: false),
+                    FullName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     ContactInfo = table.Column<string>(type: "TEXT", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -141,6 +141,28 @@ namespace PCMS.API.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CrimeScenes",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    ReportedDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DiscoveredDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LocationId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CrimeScenes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CrimeScenes_Locations_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "Locations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -330,6 +352,32 @@ namespace PCMS.API.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CrimeScenePersons",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Role = table.Column<int>(type: "INTEGER", nullable: false),
+                    CrimeSceneId = table.Column<string>(type: "TEXT", nullable: false),
+                    PersonId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CrimeScenePersons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CrimeScenePersons_CrimeScenes_CrimeSceneId",
+                        column: x => x.CrimeSceneId,
+                        principalTable: "CrimeScenes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CrimeScenePersons_Persons_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -568,6 +616,30 @@ namespace PCMS.API.Migrations
                         name: "FK_CaseTags_Tags_TagId",
                         column: x => x.TagId,
                         principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CrimeSceneCases",
+                columns: table => new
+                {
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    CrimeSceneId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CrimeSceneCases", x => new { x.CaseId, x.CrimeSceneId });
+                    table.ForeignKey(
+                        name: "FK_CrimeSceneCases_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CrimeSceneCases_CrimeScenes_CrimeSceneId",
+                        column: x => x.CrimeSceneId,
+                        principalTable: "CrimeScenes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -831,6 +903,38 @@ namespace PCMS.API.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CrimeSceneCases_CrimeSceneId",
+                table: "CrimeSceneCases",
+                column: "CrimeSceneId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CrimeScenePersons_CrimeSceneId",
+                table: "CrimeScenePersons",
+                column: "CrimeSceneId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CrimeScenePersons_Id",
+                table: "CrimeScenePersons",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CrimeScenePersons_PersonId",
+                table: "CrimeScenePersons",
+                column: "PersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CrimeScenes_Id",
+                table: "CrimeScenes",
+                column: "Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CrimeScenes_LocationId",
+                table: "CrimeScenes",
+                column: "LocationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Departments_Id",
                 table: "Departments",
                 column: "Id",
@@ -857,6 +961,11 @@ namespace PCMS.API.Migrations
                 table: "Locations",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Persons_FullName",
+                table: "Persons",
+                column: "FullName");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Persons_Id",
@@ -965,6 +1074,12 @@ namespace PCMS.API.Migrations
                 name: "Charges");
 
             migrationBuilder.DropTable(
+                name: "CrimeSceneCases");
+
+            migrationBuilder.DropTable(
+                name: "CrimeScenePersons");
+
+            migrationBuilder.DropTable(
                 name: "Evidences");
 
             migrationBuilder.DropTable(
@@ -981,6 +1096,9 @@ namespace PCMS.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tags");
+
+            migrationBuilder.DropTable(
+                name: "CrimeScenes");
 
             migrationBuilder.DropTable(
                 name: "Bookings");

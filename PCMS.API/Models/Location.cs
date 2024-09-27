@@ -76,5 +76,7 @@ namespace PCMS.API.Models
         public ICollection<Property> Properties { get; set; } = [];
 
         public List<Booking> Bookings { get; set; } = [];
+
+        public ICollection<CrimeScene> CrimeScenes { get; set; } = [];
     }
 }

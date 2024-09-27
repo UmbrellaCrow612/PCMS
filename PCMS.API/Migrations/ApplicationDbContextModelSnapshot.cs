@@ -575,6 +575,82 @@ namespace PCMS.API.Migrations
                     b.ToTable("Charges");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.CrimeScene", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DiscoveredDateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LocationId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ReportedDateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("CrimeScenes");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.CrimeSceneCase", b =>
+                {
+                    b.Property<string>("CaseId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CrimeSceneId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CaseId", "CrimeSceneId");
+
+                    b.HasIndex("CrimeSceneId");
+
+                    b.ToTable("CrimeSceneCases");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.CrimeScenePerson", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CrimeSceneId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PersonId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CrimeSceneId");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("CrimeScenePersons");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Department", b =>
                 {
                     b.Property<string>("Id")
@@ -716,9 +792,12 @@ namespace PCMS.API.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FullName");
 
                     b.HasIndex("Id")
                         .IsUnique();
@@ -1156,6 +1235,55 @@ namespace PCMS.API.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.CrimeScene", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Location", "Location")
+                        .WithMany("CrimeScenes")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.CrimeSceneCase", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Case", "Case")
+                        .WithMany("CrimeSceneCases")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.CrimeScene", "CrimeScene")
+                        .WithMany("CrimeSceneCases")
+                        .HasForeignKey("CrimeSceneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+
+                    b.Navigation("CrimeScene");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.CrimeScenePerson", b =>
+                {
+                    b.HasOne("PCMS.API.Models.CrimeScene", "CrimeScene")
+                        .WithMany("CrimeScenePersons")
+                        .HasForeignKey("CrimeSceneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.Person", "Person")
+                        .WithMany("CrimeScenePersons")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CrimeScene");
+
+                    b.Navigation("Person");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Evidence", b =>
                 {
                     b.HasOne("PCMS.API.Models.Case", "Case")
@@ -1286,11 +1414,20 @@ namespace PCMS.API.Migrations
 
                     b.Navigation("CaseTags");
 
+                    b.Navigation("CrimeSceneCases");
+
                     b.Navigation("Evidences");
 
                     b.Navigation("PersonsInvolved");
 
                     b.Navigation("Reports");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.CrimeScene", b =>
+                {
+                    b.Navigation("CrimeSceneCases");
+
+                    b.Navigation("CrimeScenePersons");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Department", b =>
@@ -1304,6 +1441,8 @@ namespace PCMS.API.Migrations
                 {
                     b.Navigation("Bookings");
 
+                    b.Navigation("CrimeScenes");
+
                     b.Navigation("Properties");
                 });
 
@@ -1314,6 +1453,8 @@ namespace PCMS.API.Migrations
                     b.Navigation("CasesInvolved");
 
                     b.Navigation("Charges");
+
+                    b.Navigation("CrimeScenePersons");
 
                     b.Navigation("Releases");
                 });

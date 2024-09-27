@@ -40,6 +40,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<Release> Releases { get; set; }
 
+    public DbSet<CrimeScene> CrimeScenes { get; set; }
+
+    public DbSet<CrimeSceneCase> CrimeSceneCases { get; set; }
+
+    public DbSet<CrimeScenePerson> CrimeScenePersons { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
