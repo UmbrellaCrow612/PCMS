@@ -90,7 +90,7 @@ namespace PCMS.API.Models
 
         public ICollection<Booking> CreatedBookings { get; set; }
 
-        public ICollection<Release> CreatedReleases { get; set; } 
+        public ICollection<Release> CreatedReleases { get; set; }
 
         public ICollection<Charge> CreatedCharges { get; set; }
 

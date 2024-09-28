@@ -13,6 +13,7 @@ namespace PCMS.API.Data.Configs
             builder.HasMany(x => x.AssignedUsers).WithOne(x => x.Department).HasForeignKey(x => x.DepartmentId);
 
             builder.HasMany(x => x.AssignedCases).WithOne(x => x.Department).HasForeignKey(x => x.DepartmentId);
-;        }
+            ;
+        }
     }
 }

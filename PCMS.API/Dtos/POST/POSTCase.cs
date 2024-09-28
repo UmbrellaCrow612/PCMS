@@ -14,14 +14,14 @@ namespace PCMS.API.DTOS.POST
         public required string Title { get; set; }
 
         [Required]
-        public required string Description { get; set; } 
+        public required string Description { get; set; }
 
         [Required]
         [EnumDataType(typeof(CasePriority))]
         public CasePriority Priority { get; set; }
 
         [Required]
-        public required string Type { get; set; } 
+        public required string Type { get; set; }
 
         [Required]
         [EnumDataType(typeof(CaseComplexity))]

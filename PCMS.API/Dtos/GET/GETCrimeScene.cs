@@ -17,6 +17,6 @@ namespace PCMS.API.Dtos.GET
 
         public required DateTime DiscoveredDateTime { get; set; }
 
-        public required  GETLocation Location { get; set; }
+        public required GETLocation Location { get; set; }
     }
 }

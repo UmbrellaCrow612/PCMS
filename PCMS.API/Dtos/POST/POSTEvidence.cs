@@ -17,7 +17,7 @@ namespace PCMS.API.DTOS.POST
         public required string Description { get; set; }
 
         [Required]
-        public required string Location { get; set; } 
+        public required string Location { get; set; }
 
         [Required]
         public DateTime CollectionDateTime { get; set; }

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.DTOS.PATCH
-{ 
+{
     /// <summary>
     /// DTO when you want to update a property
     /// </summary>

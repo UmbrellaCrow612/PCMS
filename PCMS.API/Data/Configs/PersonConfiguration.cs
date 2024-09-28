@@ -12,7 +12,7 @@ namespace PCMS.API.Data.Configs
 
             builder.HasMany(x => x.CasesInvolved).WithOne(x => x.Person).HasForeignKey(x => x.PersonId);
 
-            builder.HasMany(x => x.Bookings).WithOne(x => x.Person).HasForeignKey( x => x.PersonId);
+            builder.HasMany(x => x.Bookings).WithOne(x => x.Person).HasForeignKey(x => x.PersonId);
 
             builder.HasMany(x => x.Releases).WithOne(x => x.Person).HasForeignKey(x => x.PersonId);
 

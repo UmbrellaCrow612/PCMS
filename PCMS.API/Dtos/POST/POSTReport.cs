@@ -9,9 +9,9 @@ namespace PCMS.API.DTOS.POST
     {
 
         [Required]
-        public required string Title { get; set; } 
+        public required string Title { get; set; }
 
         [Required]
-        public required string Details { get; set; } 
+        public required string Details { get; set; }
     }
 }

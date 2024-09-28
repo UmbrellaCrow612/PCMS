@@ -17,7 +17,7 @@
 
         public required DateTime CollectionDateTime { get; set; }
 
-        public required GETApplicationUser Creator { get; set; } 
+        public required GETApplicationUser Creator { get; set; }
 
         public required string CollectedByDetails { get; set; }
 

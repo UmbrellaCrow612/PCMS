@@ -9,7 +9,7 @@ namespace PCMS.API.Data.Configs
         public void Configure(EntityTypeBuilder<Case> builder)
         {
             builder.HasKey(x => x.Id);
-           
+
             builder.HasOne(x => x.Creator).WithMany(x => x.CreatedCases).HasForeignKey(x => x.CreatedById);
 
             builder.HasOne(x => x.LastEditor).WithMany(x => x.EditedCases).HasForeignKey(x => x.LastEditedById);

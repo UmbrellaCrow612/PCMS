@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.Dtos.GET;
-using PCMS.API.Dtos.POST;
-using PCMS.API.Models;
-using Microsoft.AspNetCore.Http;
-using PCMS.API.Filters;
-using System.Security.Claims;
 using PCMS.API.Dtos.PATCH;
+using PCMS.API.Dtos.POST;
+using PCMS.API.Filters;
+using PCMS.API.Models;
+using System.Security.Claims;
 
 namespace PCMS.API.Controllers
 {
@@ -28,7 +28,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<GETBooking>> CreateBooking(string id ,[FromBody] POSTBooking request)
+        public async Task<ActionResult<GETBooking>> CreateBooking(string id, [FromBody] POSTBooking request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -94,7 +94,7 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> UpdateBooking(string id, string bookingId, [FromBody] PATCHBooking request)
         {
-            var personExists = await _context.Persons.AnyAsync (p => p.Id == id);
+            var personExists = await _context.Persons.AnyAsync(p => p.Id == id);
             if (!personExists)
             {
                 return NotFound("Person not found.");
