@@ -153,14 +153,13 @@ namespace PCMS.API.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("BadgeNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DepartmentId")
@@ -174,11 +173,9 @@ namespace PCMS.API.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
@@ -205,7 +202,6 @@ namespace PCMS.API.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Rank")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SecurityStamp")
