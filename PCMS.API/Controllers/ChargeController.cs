@@ -58,21 +58,87 @@ namespace PCMS.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> GetCharges(string id, string bookingId)
         {
-            return Ok();
+            var personExists = await _context.Persons.AnyAsync(x => x.Id == id);
+            if (!personExists)
+            {
+                return NotFound("Person not found.");
+            }
+
+            var bookingExists = await _context.Bookings.AnyAsync(y => y.Id == bookingId);
+            if (!bookingExists)
+            {
+                return NotFound("Booking not found.");
+            }
+
+            var charges = await _context.Charges.Where(x => x.BookingId == bookingId && x.PersonId == id).ToListAsync();
+
+            var returnCharges = _mapper.Map<List<GETCharge>>(charges);
+            return Ok(returnCharges);
         }
 
         [HttpGet("{chargeId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> GetCharge(string id, string bookingId, string chargeId)
         {
-            return Ok();
+            var personExists = await _context.Persons.AnyAsync(x => x.Id == id);
+            if (!personExists)
+            {
+                return NotFound("Person not found.");
+            }
+
+            var bookingExists = await _context.Bookings.AnyAsync(y => y.Id == bookingId);
+            if (!bookingExists)
+            {
+                return NotFound("Booking not found.");
+            }
+
+
+            var charge = await _context.Charges.Where(x => x.Id == chargeId).FirstOrDefaultAsync();
+            if (charge is null)
+            {
+                return NotFound("Charge not found.");
+            }
+
+            var returnCharge = _mapper.Map<GETCharge>(charge);
+            return Ok(returnCharge);
         }
 
         [HttpDelete("{chargeId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> DeleteCharge(string id, string bookingId, string chargeId)
         {
-            return Ok();
+            var personExists = await _context.Persons.AnyAsync(x => x.Id == id);
+            if (!personExists)
+            {
+                return NotFound("Person not found.");
+            }
+
+            var bookingExists = await _context.Bookings.AnyAsync(y => y.Id == bookingId);
+            if (!bookingExists)
+            {
+                return NotFound("Booking not found.");
+            }
+
+
+            var charge = await _context.Charges.Where(x => x.Id == chargeId).FirstOrDefaultAsync();
+            if (charge is null)
+            {
+                return NotFound("Charge not found.");
+            }
+
+            _context.Charges.Remove(charge);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
