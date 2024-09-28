@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PCMS.API.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 
@@ -78,40 +79,6 @@ namespace PCMS.API.Models
         public ICollection<CaseTag> CaseTags { get; set; } = [];
 
         public ICollection<CrimeSceneCase> CrimeSceneCases = [];
-    }
-
-
-    /// <summary>
-    /// Represents statuses a case can be in at a given time.
-    /// </summary>
-    public enum CaseStatus
-    {
-        Open = 0,
-        Closed,
-        InProgress,
-        OnHold,
-        Resolved
-    }
-
-    /// <summary>
-    /// Represents priorities a case can be in at a given time.
-    /// </summary>
-    public enum CasePriority
-    {
-        Low = 0,
-        Medium,
-        High,
-        Critical
-    }
-
-    /// <summary>
-    /// Represents Complexity of case..
-    /// </summary>
-    public enum CaseComplexity
-    {
-        Simple = 0,
-        Moderate,
-        Complex
     }
 
     /// <summary>

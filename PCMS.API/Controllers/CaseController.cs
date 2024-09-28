@@ -8,6 +8,7 @@ using PCMS.API.DTOS.PATCH;
 using PCMS.API.DTOS.POST;
 using PCMS.API.Filters;
 using PCMS.API.Models;
+using PCMS.API.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 

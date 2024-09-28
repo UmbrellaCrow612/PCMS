@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PCMS.API.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Security;
 

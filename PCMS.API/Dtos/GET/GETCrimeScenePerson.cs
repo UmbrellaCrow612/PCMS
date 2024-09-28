@@ -1,5 +1,5 @@
 ﻿using PCMS.API.DTOS.GET;
-using PCMS.API.Models;
+using PCMS.API.Models.Enums;
 
 namespace PCMS.API.Dtos.GET
 {

@@ -1,4 +1,5 @@
 ﻿using PCMS.API.Models;
+using PCMS.API.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.DTOS.PATCH

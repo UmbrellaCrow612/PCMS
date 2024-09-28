@@ -1,4 +1,4 @@
-﻿namespace PCMS.API.Models
+﻿namespace PCMS.API.Models.Enums
 {
     public enum CrimeSceneRole
     {

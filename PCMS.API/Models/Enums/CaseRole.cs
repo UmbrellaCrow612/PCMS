@@ -1,4 +1,4 @@
-﻿namespace PCMS.API.Models
+﻿namespace PCMS.API.Models.Enums
 {
     /// <summary>
     /// Represents a Role a <see cref="Person"/> can have in a case.
