@@ -6,6 +6,7 @@ using PCMS.API.Dtos.POST;
 using PCMS.API.Models;
 using PCMS.API.Filters;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
@@ -90,16 +91,33 @@ namespace PCMS.API.Controllers
             return Ok(returnRelease);
         }
 
-        [HttpPatch]
-        public async Task<ActionResult> PatchRelease(string id, string bookingId)
-        {
-            return Ok();
-        }
-
         [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult> DeleteRelease(string id, string bookingId)
         {
-            return Ok();
+            var personExists = await _context.Persons.AnyAsync(x => x.Id == id);
+            if (!personExists)
+            {
+                return NotFound("Person dose not exist.");
+            }
+
+            var booking = await _context.Bookings.Where(x => x.Id == bookingId && x.PersonId == id).Include(x => x.Release).FirstOrDefaultAsync();
+            if (booking is null)
+            {
+                return NotFound("Booking dose not exist or is linked to this person.");
+            }
+
+            if (booking.Release is null)
+            {
+                return NotFound("This booking dose have a release.");
+            }
+
+            _context.Releases.Remove(booking.Release);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
