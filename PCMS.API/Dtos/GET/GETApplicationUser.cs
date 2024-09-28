@@ -7,15 +7,15 @@
     {
         public required string Id { get; set; }
 
-        public required string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
-        public required string LastName { get; set; }
+        public string? LastName { get; set; }
 
-        public required string Rank { get; set; }
+        public string? Rank { get; set; }
 
-        public required string BadgeNumber { get; set; }
+        public string? BadgeNumber { get; set; }
 
-        public required DateTime DOB { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         public required string UserName { get; set; }
 
