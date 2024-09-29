@@ -118,5 +118,36 @@ namespace PCMS.API.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{id}/cases/{caseId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> UnLinkVehicleToCase(string id, string caseId)
+        {
+            var caseExists = await _context.Cases.AnyAsync(x => x.Id == caseId);
+            if (!caseExists)
+            {
+                return NotFound("Case not found.");
+            }
+
+            var vehicleExists = await _context.Vehicles.AnyAsync(x => x.Id == id);
+            if (!vehicleExists)
+            {
+                return NotFound("Vehicle not found.");
+            }
+
+            var link = await _context.CaseVehicles.Where(x => x.VehicleId == id && x.CaseId == caseId).FirstOrDefaultAsync();
+            if (link is null)
+            {
+                return BadRequest("Vehicle is not linked to this case");
+            }
+
+            _context.CaseVehicles.Remove(link);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
