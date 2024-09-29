@@ -87,6 +87,24 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Vehicles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Make = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Model = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Year = table.Column<int>(type: "INTEGER", nullable: false),
+                    VIN = table.Column<string>(type: "TEXT", maxLength: 17, nullable: false),
+                    LicensePlate = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    Color = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vehicles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -1032,6 +1050,12 @@ namespace PCMS.API.Migrations
                 table: "Tags",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vehicles_Id",
+                table: "Vehicles",
+                column: "Id",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -1090,6 +1114,9 @@ namespace PCMS.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reports");
+
+            migrationBuilder.DropTable(
+                name: "Vehicles");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

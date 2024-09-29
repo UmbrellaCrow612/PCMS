@@ -49,6 +49,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<CrimeScenePerson> CrimeScenePersons { get; set; }
 
+    public DbSet<Vehicle> Vehicles { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
