@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PCMS.API.Auth;
 using PCMS.API.DTOS.POST;
 using PCMS.API.Models;
 using System.Diagnostics;
@@ -24,7 +25,7 @@ namespace PCMS.API.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpPost("register")]
-        [Authorize]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<Results<Ok, ValidationProblem>> Register([FromBody] PCMSRegisterRequest request)
         {
             var user = _mapper.Map<ApplicationUser>(request);

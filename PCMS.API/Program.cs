@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PCMS.API.Auth;
 using PCMS.API.Filters;
 using PCMS.API.Models;
 using PCMS.API.OpenApi;
@@ -85,7 +86,7 @@ async Task CreateDefaultRolesAndAdminUser(IServiceProvider serviceProvider)
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-    string[] roleNames = { "Admin", "User" };
+    string[] roleNames = { Roles.Admin, "User" };
     foreach (var roleName in roleNames)
     {
         var roleExist = await roleManager.RoleExistsAsync(roleName);
@@ -107,7 +108,7 @@ async Task CreateDefaultRolesAndAdminUser(IServiceProvider serviceProvider)
         var createAdminResult = await userManager.CreateAsync(adminUser, "Admin@123456");
         if (createAdminResult.Succeeded)
         {
-            await userManager.AddToRoleAsync(adminUser, "Admin");
+            await userManager.AddToRoleAsync(adminUser, Roles.Admin);
         }
     }
 }
