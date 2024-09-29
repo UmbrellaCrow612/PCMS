@@ -29,6 +29,12 @@ namespace PCMS.API.Controllers
         [Authorize(Roles = Roles.Admin)]
         public async Task<Results<Ok,BadRequest, ValidationProblem>> Register([FromBody] PCMSRegisterRequest request)
         {
+            var roleExists = await _rolesManager.RoleExistsAsync(request.Role);
+            if (!roleExists)
+            {
+                return TypedResults.BadRequest();
+            }
+
             var user = _mapper.Map<ApplicationUser>(request);
 
             var userResult = await _userManager.CreateAsync(user, request.Password);
@@ -37,13 +43,7 @@ namespace PCMS.API.Controllers
                 return CreateValidationProblem(userResult);
             }
 
-            var roleExists = _rolesManager.FindByNameAsync(request.Role);
-            if (roleExists is null)
-            {
-                return TypedResults.BadRequest();
-            }
-
-            await userManager.AddToRoleAsync(user, request.Role);
+            await _userManager.AddToRoleAsync(user, request.Role);
 
             return TypedResults.Ok();
         }
