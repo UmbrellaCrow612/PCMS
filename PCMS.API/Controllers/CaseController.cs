@@ -74,8 +74,8 @@ namespace PCMS.API.Controllers
                 [FromQuery] DateTime? endDate,
                 [FromQuery][EnumDataType(typeof(CasePriority))] CasePriority? priority,
                 [FromQuery] string? type,
-                [FromQuery] string? createdBy,
-                [FromQuery] string? department,
+                [FromQuery] string? createdById,
+                [FromQuery] string? departmentId,
                 [FromQuery] int page = 1,
                 [FromQuery] int pageSize = 10
             )
@@ -111,11 +111,11 @@ namespace PCMS.API.Controllers
             if (!string.IsNullOrEmpty(type))
                 query = query.Where(c => c.Type == type);
 
-            if (!string.IsNullOrEmpty(createdBy))
-                query = query.Where(c => c.CreatedById == createdBy);
+            if (!string.IsNullOrEmpty(createdById))
+                query = query.Where(c => c.CreatedById == createdById);
 
-            if (!string.IsNullOrEmpty(department))
-                query = query.Where(c => c.DepartmentId == department);
+            if (!string.IsNullOrEmpty(departmentId))
+                query = query.Where(c => c.DepartmentId == departmentId);
 
             var totalCount = await query.CountAsync();
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
@@ -180,15 +180,11 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteCase(string id)
         {
-            var caseToDelete = await _context.Cases.FindAsync(id);
-
-            if (caseToDelete is null)
+            var isDeleted = await _caseService.DeleteCaseByIdAsync(id);
+            if (!isDeleted)
             {
-                return NotFound("Case not found");
+                return NotFound("Case to delete not found");
             }
-
-            _context.Remove(caseToDelete);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
