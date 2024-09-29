@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240929111709_InitialCreate")]
+    [Migration("20240929124151_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -532,6 +532,21 @@ namespace PCMS.API.Migrations
                     b.HasIndex("CaseId");
 
                     b.ToTable("CaseTags");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.CaseVehicle", b =>
+                {
+                    b.Property<string>("CaseId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("VehicleId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CaseId", "VehicleId");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("CaseVehicles");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.Charge", b =>
@@ -1255,6 +1270,25 @@ namespace PCMS.API.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("PCMS.API.Models.CaseVehicle", b =>
+                {
+                    b.HasOne("PCMS.API.Models.Case", "Case")
+                        .WithMany("CaseVehicles")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.Models.Vehicle", "Vehicle")
+                        .WithMany("CaseVehicles")
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Case");
+
+                    b.Navigation("Vehicle");
+                });
+
             modelBuilder.Entity("PCMS.API.Models.Charge", b =>
                 {
                     b.HasOne("PCMS.API.Models.Booking", "Booking")
@@ -1461,6 +1495,8 @@ namespace PCMS.API.Migrations
 
                     b.Navigation("CaseTags");
 
+                    b.Navigation("CaseVehicles");
+
                     b.Navigation("CrimeSceneCases");
 
                     b.Navigation("Evidences");
@@ -1509,6 +1545,11 @@ namespace PCMS.API.Migrations
             modelBuilder.Entity("PCMS.API.Models.Tag", b =>
                 {
                     b.Navigation("CaseTags");
+                });
+
+            modelBuilder.Entity("PCMS.API.Models.Vehicle", b =>
+                {
+                    b.Navigation("CaseVehicles");
                 });
 #pragma warning restore 612, 618
         }

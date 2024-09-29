@@ -639,6 +639,30 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CaseVehicles",
+                columns: table => new
+                {
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    VehicleId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CaseVehicles", x => new { x.CaseId, x.VehicleId });
+                    table.ForeignKey(
+                        name: "FK_CaseVehicles_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CaseVehicles_Vehicles_VehicleId",
+                        column: x => x.VehicleId,
+                        principalTable: "Vehicles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CrimeSceneCases",
                 columns: table => new
                 {
@@ -900,6 +924,11 @@ namespace PCMS.API.Migrations
                 column: "CaseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CaseVehicles_VehicleId",
+                table: "CaseVehicles",
+                column: "VehicleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Charges_BookingId",
                 table: "Charges",
                 column: "BookingId");
@@ -1095,6 +1124,9 @@ namespace PCMS.API.Migrations
                 name: "CaseTags");
 
             migrationBuilder.DropTable(
+                name: "CaseVehicles");
+
+            migrationBuilder.DropTable(
                 name: "Charges");
 
             migrationBuilder.DropTable(
@@ -1116,13 +1148,13 @@ namespace PCMS.API.Migrations
                 name: "Reports");
 
             migrationBuilder.DropTable(
-                name: "Vehicles");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Tags");
+
+            migrationBuilder.DropTable(
+                name: "Vehicles");
 
             migrationBuilder.DropTable(
                 name: "CrimeScenes");

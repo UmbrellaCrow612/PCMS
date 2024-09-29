@@ -36,5 +36,7 @@ namespace PCMS.API.Models
         [Required]
         [MaxLength(50)]
         public required string Color { get; set; }
+
+        public ICollection<CaseVehicle> CaseVehicles { get; set; } = [];
     }
 }

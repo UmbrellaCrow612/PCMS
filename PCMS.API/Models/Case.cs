@@ -79,6 +79,8 @@ namespace PCMS.API.Models
         public ICollection<CaseTag> CaseTags { get; set; } = [];
 
         public ICollection<CrimeSceneCase> CrimeSceneCases = [];
+
+        public ICollection<CaseVehicle> CaseVehicles { get; set; } = [];
     }
 
     /// <summary>
