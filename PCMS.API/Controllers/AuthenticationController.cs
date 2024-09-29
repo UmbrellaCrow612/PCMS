@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
@@ -9,15 +10,21 @@ using System.Diagnostics;
 
 namespace PCMS.API.Controllers
 {
+    /// <summary>
+    /// Baseed on ASP.NET identity MapIdentity routes
+    /// </summary>
+    /// <param name="userManager"></param>
+    /// <param name="mapper"></param>
     [ApiController]
     [Route("auth")]
-    public class AuthenticationController(UserManager<ApplicationUser> userManager, IMapper mapper) : ControllerBase
+    public class AuthenticationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager ,IMapper mapper) : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
         private readonly IMapper _mapper = mapper;
 
-        [Authorize]
         [HttpPost("register")]
+        [Authorize]
         public async Task<Results<Ok, ValidationProblem>> Register([FromBody] PCMSRegisterRequest request)
         {
             var user = _mapper.Map<ApplicationUser>(request);
@@ -27,6 +34,36 @@ namespace PCMS.API.Controllers
                 return CreateValidationProblem(result);
             }
             return TypedResults.Ok();
+        }
+
+        [HttpPost("login")]
+        public async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>> Login([FromBody] PCMSLoginRequest request, [FromQuery] bool? useCookies, [FromQuery] bool? useSessionCookies)
+        {
+            var useCookieScheme = (useCookies == true) || (useSessionCookies == true);
+            var isPersistent = (useCookies == true) && (useSessionCookies != true);
+
+            _signInManager.AuthenticationScheme = useCookieScheme ? IdentityConstants.ApplicationScheme : IdentityConstants.BearerScheme;
+
+            var result = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, isPersistent, lockoutOnFailure: true);
+
+            if (result.RequiresTwoFactor)
+            {
+                if (!string.IsNullOrEmpty(request.TwoFactorCode))
+                {
+                    result = await _signInManager.TwoFactorAuthenticatorSignInAsync(request.TwoFactorCode, isPersistent, rememberClient: isPersistent);
+                }
+                else if (!string.IsNullOrEmpty(request.TwoFactorRecoveryCode))
+                {
+                    result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(request.TwoFactorRecoveryCode);
+                }
+            }
+
+            if (!result.Succeeded)
+            {
+                return TypedResults.Problem(result.ToString(), statusCode: StatusCodes.Status401Unauthorized);
+            }
+
+            return TypedResults.Empty;
         }
 
         private static ValidationProblem CreateValidationProblem(string errorCode, string errorDescription) =>
