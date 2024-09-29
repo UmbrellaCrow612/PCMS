@@ -1,7 +1,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using PCMS.API.Auth;
+using PCMS.API.Data;
 using PCMS.API.Filters;
 using PCMS.API.Models;
 using PCMS.API.OpenApi;
@@ -80,44 +80,11 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseSerilogRequestLogging();
 
-async Task CreateDefaultRolesAndAdminUser(IServiceProvider serviceProvider)
-{
-    using var scope = serviceProvider.CreateScope();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-    string[] roleNames = { Roles.Admin, "User" };
-    foreach (var roleName in roleNames)
-    {
-        var roleExist = await roleManager.RoleExistsAsync(roleName);
-        if (!roleExist)
-        {
-            await roleManager.CreateAsync(new IdentityRole(roleName));
-        }
-    }
-
-    var adminUser = await userManager.FindByEmailAsync("admin@example.com");
-    if (adminUser == null)
-    {
-        adminUser = new ApplicationUser
-        {
-            UserName = "admin@example.com",
-            Email = "admin@example.com",
-            EmailConfirmed = true
-        };
-        var createAdminResult = await userManager.CreateAsync(adminUser, "Admin@123456");
-        if (createAdminResult.Succeeded)
-        {
-            await userManager.AddToRoleAsync(adminUser, Roles.Admin);
-        }
-    }
-}
-
 try
 {
     Log.Information("Starting App");
 
-    await CreateDefaultRolesAndAdminUser(app.Services);
+    await DatabaseSeeder.SeedDatabase(app.Services);
 
     app.Run();
 }
