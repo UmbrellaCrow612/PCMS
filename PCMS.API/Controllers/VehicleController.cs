@@ -59,6 +59,25 @@ namespace PCMS.API.Controllers
             }
 
             _mapper.Map(request, vehicle);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> DeleteVehicle(string id)
+        {
+            var vehicle = await _context.Vehicles.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (vehicle is null)
+            {
+                return NotFound("Vehicle not found.");
+            }
+
+            _context.Remove(vehicle);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
