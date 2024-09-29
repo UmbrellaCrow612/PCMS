@@ -9,19 +9,19 @@ namespace PCMS.API.Models
     public class ApplicationUser : IdentityUser
     {
         [PersonalData]
-        public string? FirstName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
 
         [PersonalData]
-        public string? LastName { get; set; } 
+        public string LastName { get; set; } = string.Empty;
 
         [PersonalData]
-        public string? Rank { get; set; }
+        public string Rank { get; set; } = string.Empty;
 
         [ProtectedPersonalData]
-        public string? BadgeNumber { get; set; }
+        public string BadgeNumber { get; set; } = string.Empty;
 
         [ProtectedPersonalData]
-        public DateTime? DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
         public ICollection<ApplicationUserCase> AssignedCases { get; set; } = [];
 

@@ -18,22 +18,33 @@ namespace PCMS.API.Controllers
     /// <param name="mapper"></param>
     [ApiController]
     [Route("auth")]
-    public class AuthenticationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager ,IMapper mapper) : ControllerBase
+    public class AuthenticationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager ,IMapper mapper, RoleManager<IdentityRole> rolesManager) : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
         private readonly IMapper _mapper = mapper;
+        private readonly RoleManager<IdentityRole> _rolesManager = rolesManager;
 
         [HttpPost("register")]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<Results<Ok, ValidationProblem>> Register([FromBody] PCMSRegisterRequest request)
+        public async Task<Results<Ok,BadRequest, ValidationProblem>> Register([FromBody] PCMSRegisterRequest request)
         {
             var user = _mapper.Map<ApplicationUser>(request);
-            var result = await _userManager.CreateAsync(user, request.Password);
-            if (!result.Succeeded)
+
+            var userResult = await _userManager.CreateAsync(user, request.Password);
+            if (!userResult.Succeeded)
             {
-                return CreateValidationProblem(result);
+                return CreateValidationProblem(userResult);
             }
+
+            var roleExists = _rolesManager.FindByNameAsync(request.Role);
+            if (roleExists is null)
+            {
+                return TypedResults.BadRequest();
+            }
+
+            await userManager.AddToRoleAsync(user, request.Role);
+
             return TypedResults.Ok();
         }
 
