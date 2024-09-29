@@ -17,7 +17,6 @@ namespace PCMS.API.Controllers
     /// <summary>
     /// Controller for handling case-related actions.
     /// </summary>
-    /// <remarks>
     [ApiController]
     [Route("cases")]
     [Authorize]

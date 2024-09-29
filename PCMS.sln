@@ -5,7 +5,9 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PCMS.API", "PCMS.API\PCMS.API.csproj", "{D4AC7FB9-BF8A-4057-9955-BDF6FB929A7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCMS.FrontEnd", "PCMS.FrontEnd\PCMS.FrontEnd.csproj", "{35F00032-8045-4BB4-AE4C-C044EB22D9FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PCMS.FrontEnd", "PCMS.FrontEnd\PCMS.FrontEnd.csproj", "{35F00032-8045-4BB4-AE4C-C044EB22D9FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCMS.API.Tests", "PCMS.API.Tests\PCMS.API.Tests.csproj", "{6C8724DC-9AFE-469A-B911-02FECD415EBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{35F00032-8045-4BB4-AE4C-C044EB22D9FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35F00032-8045-4BB4-AE4C-C044EB22D9FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35F00032-8045-4BB4-AE4C-C044EB22D9FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C8724DC-9AFE-469A-B911-02FECD415EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C8724DC-9AFE-469A-B911-02FECD415EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C8724DC-9AFE-469A-B911-02FECD415EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C8724DC-9AFE-469A-B911-02FECD415EBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
