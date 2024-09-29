@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PCMS.API.BusinessLogic;
 using PCMS.API.Dtos.GET;
 using PCMS.API.DTOS.GET;
 using PCMS.API.DTOS.PATCH;
@@ -20,10 +21,12 @@ namespace PCMS.API.Controllers
     [ApiController]
     [Route("cases")]
     [Authorize]
-    public class CaseController(ApplicationDbContext context, IMapper mapper) : ControllerBase
+    public class CaseController(ApplicationDbContext context, IMapper mapper, ICaseService caseService) : ControllerBase
     {
         private readonly ApplicationDbContext _context = context;
         private readonly IMapper _mapper = mapper;
+        private readonly ICaseService _caseService = caseService;
+
 
         [HttpPost]
         [ServiceFilter(typeof(UserValidationFilter))]
@@ -32,19 +35,7 @@ namespace PCMS.API.Controllers
         public async Task<ActionResult<GETCase>> CreateCase([FromBody] POSTCase request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-
-            var newCase = _mapper.Map<Case>(request);
-            newCase.CreatedById = userId;
-
-            await _context.Cases.AddAsync(newCase);
-            await _context.SaveChangesAsync();
-
-            var createdCase = await _context.Cases
-                .FirstOrDefaultAsync(c => c.Id == newCase.Id)
-                ?? throw new ApplicationException("Failed to retrieve the created case");
-
-            var returnCase = _mapper.Map<GETCase>(createdCase);
-
+            var returnCase = await _caseService.CreateCaseAsync(request, userId);
             return CreatedAtAction(nameof(CreateCase), new { id = returnCase.Id }, returnCase);
         }
 

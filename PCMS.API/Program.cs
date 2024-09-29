@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PCMS.API.BusinessLogic;
 using PCMS.API.Data;
 using PCMS.API.Filters;
 using PCMS.API.Models;
@@ -53,6 +54,8 @@ builder.Services.AddAuthorization();
 
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
+
+builder.Services.AddScoped<ICaseService, CaseService>();
 
 var app = builder.Build();
 
