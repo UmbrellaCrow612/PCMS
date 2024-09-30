@@ -25,23 +25,6 @@ namespace PCMS.API.BusinessLogic
         Task<GETCase?> GetCaseByIdAsync(string id);
 
         /// <summary>
-        /// Get cases by search criteria
-        /// </summary>
-        /// <returns>List of <see cref="GETCase"/> matching the criteria.</returns>
-        Task<List<GETCase>> GetCasesBySearchAsync(
-            CaseStatus? status,
-            CaseComplexity? complexity,
-            CasePriority? priority,
-            DateTime? startDate,
-            DateTime? endDate,
-            string? type,
-            string? createdById,
-            string? departmentId,
-            int page = 1,
-            int pageSize = 10
-        );
-
-        /// <summary>
         /// Update a case by its ID
         /// </summary>
         /// <param name="id">The ID of the case</param>

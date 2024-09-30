@@ -1,4 +1,5 @@
-﻿using PCMS.API.Models;
+﻿using PCMS.API.Dtos.GET;
+using PCMS.API.Models;
 using PCMS.API.Models.Enums;
 
 namespace PCMS.API.DTOS.GET
@@ -33,5 +34,7 @@ namespace PCMS.API.DTOS.GET
         public GETApplicationUser? LastEditor { get; set; }
 
         public required CaseComplexity Complexity { get; set; }
+
+        public required GETDepartment Department { get; set; }
     }
 }

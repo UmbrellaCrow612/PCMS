@@ -34,51 +34,11 @@ namespace PCMS.API.BusinessLogic
         {
             var caseToGet = await _context.Cases
                 .Include(x => x.Creator)
+                .Include(x => x.LastEditor)
+                .Include(x => x.Department)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return caseToGet != null ? _mapper.Map<GETCase>(caseToGet) : null;
-        }
-
-        public async Task<List<GETCase>> GetCasesBySearchAsync(
-            CaseStatus? status,
-            CaseComplexity? complexity,
-            CasePriority? priority,
-            DateTime? startDate,
-            DateTime? endDate,
-            string? type,
-            string? createdById,
-            string? departmentId,
-            int page = 1,
-            int pageSize = 10)
-        {
-            var query = _context.Cases.AsQueryable();
-
-            if (status.HasValue)
-                query = query.Where(c => c.Status == status);
-
-            if (complexity.HasValue)
-                query = query.Where(c => c.Complexity == complexity);
-
-            if (priority.HasValue)
-                query = query.Where(c => c.Priority == priority);
-
-
-
-            if (!string.IsNullOrEmpty(type))
-                query = query.Where(c => c.Type == type);
-
-            if (!string.IsNullOrEmpty(createdById))
-                query = query.Where(c => c.CreatedById == createdById);
-
-            if (!string.IsNullOrEmpty(departmentId))
-                query = query.Where(c => c.DepartmentId == departmentId);
-
-            var cases = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            return _mapper.Map<List<GETCase>>(cases);
         }
 
         public async Task<GETCase?> UpdateCaseByIdAsync(string id,string userId, PATCHCase request)
