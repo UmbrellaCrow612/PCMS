@@ -8,66 +8,36 @@ using PCMS.API.DTOS.POST;
 using PCMS.API.Filters;
 using PCMS.API.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using PCMS.API.BusinessLogic;
 
 namespace PCMS.API.Controllers
 {
-    /// <summary>
-    /// Controller for handling case action related operations.
-    /// </summary>
-    /// <remarks>
-    /// Initializes a new instance of the <see cref="CaseActionController"/> class.
-    /// </remarks>
-    /// <param name="logger">The logger instance.</param>
-    /// <param name="context">The database context.</param>
     [ApiController]
     [Route("cases/{caseId}/actions")]
     [Authorize]
-    public class CaseActionController(ApplicationDbContext context, IMapper mapper) : ControllerBase
+    public class CaseActionController(ApplicationDbContext context, IMapper mapper, ICaseActionService caseActionService) : ControllerBase
     {
         private readonly ApplicationDbContext _context = context;
         private readonly IMapper _mapper = mapper;
+        private readonly ICaseActionService _caseActionService = caseActionService;
 
-        /// <summary>
-        /// Creates a new case action for a specific case.
-        /// </summary>
-        /// <param name="caseId">The ID of the case.</param>
-        /// <param name="request">The DTO containing POST case action information.</param>
-        /// <returns>The created case action details.</returns>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
         [ServiceFilter(typeof(UserValidationFilter))]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<GETCaseAction>> CreateAction(string caseId, [FromBody] POSTCaseAction request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            var existingCase = await _context.Cases.FindAsync(caseId);
-            if (existingCase is null)
+            var caseAction = await _caseActionService.CreateCaseActionAsync(caseId, userId, request);
+
+            if (caseAction is null)
             {
-                return NotFound("Case does not exist");
+                return NotFound("Case not found.");
             }
 
-            var caseAction = _mapper.Map<CaseAction>(request);
-            caseAction.CaseId = caseId;
-            caseAction.CreatedById = userId;
-
-            await _context.CaseActions.AddAsync(caseAction);
-            await _context.SaveChangesAsync();
-
-            var createdCaseAction = await _context.CaseActions
-                .Where(ca => ca.Id == caseAction.Id)
-                .Include(ca => ca.Creator)
-                .Include(ca => ca.LastEditor)
-                .FirstOrDefaultAsync() ?? throw new Exception("Failed to get created case action");
-
-            var returnCaseAction = _mapper.Map<GETCaseAction>(createdCaseAction);
-
-            return CreatedAtAction(nameof(CreateAction), new { caseId, id = returnCaseAction.Id }, returnCaseAction);
-
+            return Created(nameof(CreateAction), caseAction);
         }
 
         /// <summary>
