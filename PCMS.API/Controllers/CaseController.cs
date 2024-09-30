@@ -48,15 +48,6 @@ namespace PCMS.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("search")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult<List<GETCase>>> GetCases()
-        {
-            return Ok();
-        }
-
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
