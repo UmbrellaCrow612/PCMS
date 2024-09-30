@@ -81,7 +81,7 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<List<GETCase>>(cases);
         }
 
-        public async Task<GETCase?> UpdateCaseByIdAsync(string id, PATCHCase request)
+        public async Task<GETCase?> UpdateCaseByIdAsync(string id,string userId, PATCHCase request)
         {
             var caseToUpdate = await _context.Cases.FindAsync(id);
             if (caseToUpdate == null)
@@ -89,7 +89,15 @@ namespace PCMS.API.BusinessLogic
                 return null;
             }
 
+            var caseEdit = _mapper.Map<CaseEdit>(caseToUpdate);
+            caseEdit.UserId = userId;
+            caseEdit.CaseId = id;
+
             _mapper.Map(request, caseToUpdate);
+            caseToUpdate.LastEditedById = userId;
+            caseToUpdate.LastModifiedDate = DateTime.UtcNow;
+
+            await _context.CaseEdits.AddAsync(caseEdit);
             await _context.SaveChangesAsync();
 
             return _mapper.Map<GETCase>(caseToUpdate);
@@ -108,15 +116,14 @@ namespace PCMS.API.BusinessLogic
             return true;
         }
 
-        public async Task<List<GETPerson>> GetCasePersonsAsync(string id)
+        public async Task<List<GETCasePerson>> GetCasePersonsAsync(string id)
         {
             var persons = await _context.CasePersons
                 .Where(x => x.CaseId == id)
                 .Include(x => x.Person)
-                .Select(x => x.Person)
                 .ToListAsync();
 
-            return _mapper.Map<List<GETPerson>>(persons);
+            return _mapper.Map<List<GETCasePerson>>(persons);
         }
 
         public async Task<List<GETApplicationUser>> GetCaseUsersAsync(string id)

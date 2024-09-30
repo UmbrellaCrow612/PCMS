@@ -35,8 +35,10 @@ namespace PCMS.API.Controllers
         public async Task<ActionResult<GETCase>> CreateCase([FromBody] POSTCase request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-            var returnCase = await _caseService.CreateCaseAsync(request, userId);
-            return CreatedAtAction(nameof(CreateCase), new { id = returnCase.Id }, returnCase);
+
+            var _case = await _caseService.CreateCaseAsync(request, userId);
+
+            return CreatedAtAction(nameof(CreateCase), new { id = _case.Id }, _case);
         }
 
 
@@ -46,20 +48,14 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<GETCase>> GetCase(string id)
         {
-            var caseEntity = await _context.Cases
-                .Where(c => c.Id == id)
-                .Include(c => c.Creator)
-                .Include(c => c.LastEditor)
-                .FirstOrDefaultAsync();
+            var result = await _caseService.GetCaseByIdAsync(id);
 
-            if (caseEntity is null)
+            if (result is null)
             {
-                return NotFound("Case not found.");
+                return NotFound("Case not found");
             }
 
-            var caseResult = _mapper.Map<GETCase>(caseEntity);
-
-            return Ok(caseResult);
+            return Ok(result);
         }
 
 
@@ -150,23 +146,12 @@ namespace PCMS.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            var existingCase = await _context.Cases.FirstOrDefaultAsync(c => c.Id == id);
-            if (existingCase is null)
+            var result = await _caseService.UpdateCaseByIdAsync(id, userId, request);
+
+            if (result is null)
             {
-                return NotFound("Case not found.");
+                return NotFound("Case not found");
             }
-
-            var caseEdit = _mapper.Map<CaseEdit>(existingCase);
-            caseEdit.UserId = userId;
-            caseEdit.CaseId = id;
-
-            _mapper.Map(request, existingCase);
-            existingCase.LastEditedById = userId;
-            existingCase.LastModifiedDate = DateTime.UtcNow;
-
-            await _context.CaseEdits.AddAsync(caseEdit);
-
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -193,38 +178,9 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}/persons")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<GETPerson>>> GetCasePersons(string id, [FromQuery][EnumDataType(typeof(CaseRole))] CaseRole? role = null)
+        public async Task<ActionResult<List<GETPerson>>> GetCasePersons(string id)
         {
-            var caseExists = await _context.Cases.AnyAsync(c => c.Id == id);
-            if (!caseExists)
-            {
-                return NotFound("Case not found.");
-            }
-
-            if (role is null)
-            {
-                var query = await _context.CasePersons
-                    .Where(cp => cp.CaseId == id)
-                    .Select(cp => new GETCasePerson
-                    {
-                        Id = cp.Id,
-                        Person = _mapper.Map<GETPerson>(cp.Person),
-                        Role = cp.Role,
-                    })
-                    .ToListAsync();
-
-                return Ok(query);
-            }
-
-            var persons = await _context.CasePersons
-                .Where(cp => cp.CaseId == id && cp.Role == role)
-                .Select(cp => new GETCasePerson
-                {
-                    Id = cp.Id,
-                    Person = _mapper.Map<GETPerson>(cp.Person),
-                    Role = cp.Role,
-                })
-                    .ToListAsync();
+            var persons = await _caseService.GetCasePersonsAsync(id);
 
             return Ok(persons);
         }
@@ -235,12 +191,9 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GETApplicationUser>>> GetUserCases(string id)
         {
-            var users = await _context.ApplicationUserCases.Where(ap => ap.CaseId == id)
-                .Select(u => u.User)
-                .ToListAsync();
+            var users = await _caseService.GetCaseUsersAsync(id);
 
-            var returnUsers = _mapper.Map<List<GETApplicationUser>>(users);
-            return Ok(returnUsers);
+            return Ok(users);
         }
 
 
@@ -251,16 +204,9 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GETCaseEdit>>> GetCaseEdits(string id)
         {
-            var caseExists = await _context.Cases.AnyAsync(c => c.Id == id);
-            if (!caseExists)
-            {
-                return NotFound("Case not found.");
-            }
+            var edits = await _caseService.GetCaseEditsByIdAsync(id);
 
-            var caseEdits = await _context.CaseEdits.Where(ce => ce.CaseId == id).Include(ce => ce.User).ToListAsync();
-
-            var returnCaseEdits = _mapper.Map<List<GETCaseEdit>>(caseEdits);
-            return Ok(returnCaseEdits);
+            return Ok(edits);
         }
 
         [HttpGet("{id}/tags")]
@@ -269,17 +215,9 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GETTag>>> GetCaseTags(string id)
         {
-            var caseExists = await _context.Cases.AnyAsync(c => c.Id == id);
-            if (!caseExists)
-            {
-                return NotFound("Case not found.");
-            }
+           var tags = await _caseService.GetCaseTagsAsync(id);
 
-            var tags = await _context.CaseTags.Where(ct => ct.CaseId == id).Include(ct => ct.Tag).Select(ct => ct.Tag).ToListAsync();
-
-            var returnTags = _mapper.Map<List<GETTag>>(tags);
-
-            return Ok(returnTags);
+            return Ok(tags);
 
         }
     }

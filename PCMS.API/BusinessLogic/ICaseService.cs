@@ -46,8 +46,9 @@ namespace PCMS.API.BusinessLogic
         /// </summary>
         /// <param name="id">The ID of the case</param>
         /// <param name="request">The new Case data sent across</param>
+        /// <param name="userId">The ID of the user making the update.</param>
         /// <returns>Updated <see cref="GETCase"/> if successful, null if the case was not found.</returns>
-        Task<GETCase?> UpdateCaseByIdAsync(string id, PATCHCase request);
+        Task<GETCase?> UpdateCaseByIdAsync(string id, string userId, PATCHCase request);
 
         /// <summary>
         /// Deletes a case by its ID
@@ -60,8 +61,8 @@ namespace PCMS.API.BusinessLogic
         /// Gets Persons linked to this case
         /// </summary>
         /// <param name="id">The ID of the case</param>
-        /// <returns>List of <see cref="GETPerson"/> or empty array</returns>
-        Task<List<GETPerson>> GetCasePersonsAsync(string id);
+        /// <returns>List of <see cref="GETCasePerson"/> or empty array</returns>
+        Task<List<GETCasePerson>> GetCasePersonsAsync(string id);
 
         /// <summary>
         /// Get all users linked to this case
