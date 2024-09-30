@@ -8,38 +8,80 @@ namespace PCMS.API.BusinessLogic
 {
     public interface ICaseService
     {
+        /// <summary>
+        /// Create a case
+        /// </summary>
+        /// <param name="request">The data sent to create the case.</param>
+        /// <param name="userId">The ID of the user who made the request to make the case.</param>
+        /// <returns>DTO <see cref="GETCase"/> of the created case.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the case creation fails.</exception>
         Task<GETCase> CreateCaseAsync(POSTCase request, string userId);
 
-        Task<GETCase> GetCaseByIdAsync(string id);
+        /// <summary>
+        /// Get a <see cref="Case"/> by its ID
+        /// </summary>
+        /// <param name="id">The ID of the case</param>
+        /// <returns>DTO <see cref="GETCase"/> or null if it could not find it.</returns>
+        Task<GETCase?> GetCaseByIdAsync(string id);
 
+        /// <summary>
+        /// Get cases by search criteria
+        /// </summary>
+        /// <returns>List of <see cref="GETCase"/> matching the criteria.</returns>
         Task<List<GETCase>> GetCasesBySearchAsync(
             CaseStatus? status,
             CaseComplexity? complexity,
             CasePriority? priority,
             DateTime? startDate,
             DateTime? endDate,
-             string? type,
-             string? createdById,
-             string? departmentId,
-              int page = 1,
-               int pageSize = 10
-            );
-
-        Task UpdateCaseByIdAsync(string id, PATCHCase request);
+            string? type,
+            string? createdById,
+            string? departmentId,
+            int page = 1,
+            int pageSize = 10
+        );
 
         /// <summary>
-        /// Deletes a case by it's ID
+        /// Update a case by its ID
         /// </summary>
         /// <param name="id">The ID of the case</param>
-        /// <returns>True or False depending on if it was able to delete the case by ID or the case did not exist.</returns>
+        /// <param name="request">The new Case data sent across</param>
+        /// <returns>Updated <see cref="GETCase"/> if successful, null if the case was not found.</returns>
+        Task<GETCase?> UpdateCaseByIdAsync(string id, PATCHCase request);
+
+        /// <summary>
+        /// Deletes a case by its ID
+        /// </summary>
+        /// <param name="id">The ID of the case</param>
+        /// <returns>True if the case was deleted, false if it was not found.</returns>
         Task<bool> DeleteCaseByIdAsync(string id);
 
+        /// <summary>
+        /// Gets Persons linked to this case
+        /// </summary>
+        /// <param name="id">The ID of the case</param>
+        /// <returns>List of <see cref="GETPerson"/> or empty array</returns>
         Task<List<GETPerson>> GetCasePersonsAsync(string id);
 
+        /// <summary>
+        /// Get all users linked to this case
+        /// </summary>
+        /// <param name="id">The ID of the case.</param>
+        /// <returns>List of <see cref="GETApplicationUser"/> or empty</returns>
         Task<List<GETApplicationUser>> GetCaseUsersAsync(string id);
 
+        /// <summary>
+        /// Gets all the edits made on a case
+        /// </summary>
+        /// <param name="id">The ID of the case</param>
+        /// <returns>List of <see cref="GETCaseEdit"/> or empty</returns>
         Task<List<GETCaseEdit>> GetCaseEditsByIdAsync(string id);
 
+        /// <summary>
+        /// Get all the tags linked to a case.
+        /// </summary>
+        /// <param name="id">The ID of the case</param>
+        /// <returns>List of <see cref="GETTag"/> or empty.</returns>
         Task<List<GETTag>> GetCaseTagsAsync(string id);
     }
 }
