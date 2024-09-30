@@ -36,8 +36,10 @@ namespace PCMS.API.Models
         [DataType(DataType.DateTime)]
         public DateTime DateOpened { get; set; } = DateTime.UtcNow;
 
+
         [DataType(DataType.DateTime)]
         public DateTime? DateClosed { get; set; } = null;
+
 
         [DataType(DataType.DateTime)]
         public DateTime? LastModifiedDate { get; set; }
@@ -48,6 +50,8 @@ namespace PCMS.API.Models
 
         [Required]
         public required string Type { get; set; }
+
+
 
         [Required]
         public required string CreatedById { get; set; }
@@ -77,6 +81,7 @@ namespace PCMS.API.Models
         public ICollection<CaseEdit> CaseEdits { get; set; } = [];
 
         public ICollection<CaseTag> CaseTags { get; set; } = [];
+
 
         public ICollection<CrimeSceneCase> CrimeSceneCases = [];
 

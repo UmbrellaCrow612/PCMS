@@ -31,6 +31,10 @@ namespace PCMS.API.Data.Configs
             builder.HasMany(x => x.CaseEdits).WithOne(x => x.Case).HasForeignKey(x => x.CaseId);
 
             builder.HasMany(x => x.CaseTags).WithOne(x => x.Case).HasForeignKey(x => x.CaseId);
+
+            builder.HasMany(x => x.CrimeSceneCases).WithOne(x => x.Case).HasForeignKey(x => x.CaseId);
+
+            builder.HasMany(x => x.CaseVehicles).WithOne(x => x.Case).HasForeignKey(x => x.CaseId);
         }
     }
 }

@@ -5,24 +5,12 @@
     /// </summary>
     public class ApplicationUserCase
     {
-        /// <summary>
-        /// Get or set the app user ID.
-        /// </summary>
         public required string UserId { get; set; }
 
-        /// <summary>
-        /// EF core nav property.
-        /// </summary>
         public ApplicationUser? User { get; set; } = null!;
 
-        /// <summary>
-        /// Get or set the case ID.
-        /// </summary>
         public required string CaseId { get; set; }
 
-        /// <summary>
-        /// EF core nav property.
-        /// </summary>
         public Case? Case { get; set; } = null!;
     }
 }
