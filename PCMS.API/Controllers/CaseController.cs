@@ -1,16 +1,11 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PCMS.API.BusinessLogic;
 using PCMS.API.Dtos.GET;
 using PCMS.API.DTOS.GET;
 using PCMS.API.DTOS.PATCH;
 using PCMS.API.DTOS.POST;
 using PCMS.API.Filters;
-using PCMS.API.Models;
-using PCMS.API.Models.Enums;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace PCMS.API.Controllers
@@ -21,12 +16,9 @@ namespace PCMS.API.Controllers
     [ApiController]
     [Route("cases")]
     [Authorize]
-    public class CaseController(ApplicationDbContext context, IMapper mapper, ICaseService caseService) : ControllerBase
+    public class CaseController(ICaseService caseService) : ControllerBase
     {
-        private readonly ApplicationDbContext _context = context;
-        private readonly IMapper _mapper = mapper;
         private readonly ICaseService _caseService = caseService;
-
 
         [HttpPost]
         [ServiceFilter(typeof(UserValidationFilter))]
@@ -40,8 +32,6 @@ namespace PCMS.API.Controllers
 
             return CreatedAtAction(nameof(CreateCase), new { id = _case.Id }, _case);
         }
-
-
 
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
@@ -58,81 +48,14 @@ namespace PCMS.API.Controllers
             return Ok(result);
         }
 
-
         [HttpGet("search")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<List<GETCase>>> GetCases(
-                [FromQuery][EnumDataType(typeof(CaseStatus))] CaseStatus? status,
-                [FromQuery][EnumDataType(typeof(CaseComplexity))] CaseComplexity? complexity,
-                [FromQuery] DateTime? startDate,
-                [FromQuery] DateTime? endDate,
-                [FromQuery][EnumDataType(typeof(CasePriority))] CasePriority? priority,
-                [FromQuery] string? type,
-                [FromQuery] string? createdById,
-                [FromQuery] string? departmentId,
-                [FromQuery] int page = 1,
-                [FromQuery] int pageSize = 10
-            )
+        public async Task<ActionResult<List<GETCase>>> GetCases()
         {
-
-            var query = _context.Cases.AsQueryable();
-
-            if (status.HasValue)
-            {
-                query = query.Where(c => c.Status == status.Value);
-            }
-
-            if (complexity.HasValue)
-            {
-                query = query.Where(c => c.Complexity == complexity.Value);
-            }
-
-            if (startDate.HasValue)
-            {
-                query = query.Where(c => c.DateOpened >= startDate.Value);
-            }
-
-            if (endDate.HasValue)
-            {
-                query = query.Where(c => c.DateOpened <= endDate.Value);
-            }
-
-            if (priority.HasValue)
-            {
-                query = query.Where(c => c.Priority == priority.Value);
-            }
-
-            if (!string.IsNullOrEmpty(type))
-                query = query.Where(c => c.Type == type);
-
-            if (!string.IsNullOrEmpty(createdById))
-                query = query.Where(c => c.CreatedById == createdById);
-
-            if (!string.IsNullOrEmpty(departmentId))
-                query = query.Where(c => c.DepartmentId == departmentId);
-
-            var totalCount = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-
-            var cases = await query
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-            var returnCases = _mapper.Map<List<GETCase>>(cases);
-            var response = new
-            {
-                Cases = returnCases,
-                TotalCount = totalCount,
-                TotalPages = totalPages,
-                CurrentPage = page
-            };
-
-            return Ok(response);
+            return Ok();
         }
-
 
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -156,7 +79,6 @@ namespace PCMS.API.Controllers
             return NoContent();
         }
 
-
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -174,7 +96,6 @@ namespace PCMS.API.Controllers
             return NoContent();
         }
 
-
         [HttpGet("{id}/persons")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -185,7 +106,6 @@ namespace PCMS.API.Controllers
             return Ok(persons);
         }
 
-
         [HttpGet("{id}/users")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -195,8 +115,6 @@ namespace PCMS.API.Controllers
 
             return Ok(users);
         }
-
-
 
         [HttpGet("{id}/edits")]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -215,10 +133,9 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GETTag>>> GetCaseTags(string id)
         {
-           var tags = await _caseService.GetCaseTagsAsync(id);
+            var tags = await _caseService.GetCaseTagsAsync(id);
 
             return Ok(tags);
-
         }
     }
 }
