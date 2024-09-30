@@ -23,7 +23,7 @@ namespace PCMS.API.BusinessLogic
         /// </summary>
         /// <param name="caseActionId">The ID of the case action.</param>
         /// <returns>DTO <see cref="GETCaseAction"/> or null if not found.</returns>
-        Task<GETCaseAction?> GetCaseActionByIdAsync(string caseActionId);
+        Task<GETCaseAction?> GetCaseActionByIdAsync(string caseActionId, string caseId);
 
         /// <summary>
         /// Get all case actions for a specific case.
@@ -39,13 +39,14 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user updating the case action.</param>
         /// <param name="request">The new data to update the case action.</param>
         /// <returns>DTO <see cref="GETCaseAction"/> or null if not found.</returns>
-        Task<GETCaseAction?> UpdateCaseActionByIdAsync(string caseActionId, string userId, PATCHCaseAction request);
+        Task<GETCaseAction?> UpdateCaseActionByIdAsync(string caseActionId, string caseId, string userId, PATCHCaseAction request);
 
         /// <summary>
         /// Delete a case action.
         /// </summary>
         /// <param name="caseActionId">The ID of the case action.</param>
+        /// <param name="caseId">The ID of the case.</param>
         /// <returns>True if deleted successfully, false if the case action does not exist.</returns>
-        Task<bool> DeleteCaseActionByIdAsync(string caseActionId);
+        Task<bool> DeleteCaseActionByIdAsync(string caseActionId, string caseId);
     }
 }

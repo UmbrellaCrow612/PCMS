@@ -34,24 +34,71 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<GETCaseAction>(createdCaseAction);
         }
 
-        public Task<bool> DeleteCaseActionByIdAsync(string caseActionId)
+        public async Task<bool> DeleteCaseActionByIdAsync(string caseActionId, string caseId)
         {
-            throw new NotImplementedException();
+            var caseActionToDelete = await _context.CaseActions
+                .Where(x => x.Id == caseActionId && x.CaseId == caseId)
+                .FirstOrDefaultAsync();
+
+            if (caseActionToDelete is null)
+            {
+                return false;
+            }
+
+            _context.CaseActions .Remove(caseActionToDelete);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        public Task<GETCaseAction?> GetCaseActionByIdAsync(string caseActionId)
+        public async Task<GETCaseAction?> GetCaseActionByIdAsync(string caseActionId, string caseId)
         {
-            throw new NotImplementedException();
+            var caseActionToGet = await _context.CaseActions
+                .Where(x => x.Id == caseActionId && x.CaseId == caseId)
+                .FirstOrDefaultAsync();
+
+            if (caseActionToGet is null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<GETCaseAction>(caseActionToGet);
         }
 
-        public Task<List<GETCaseAction>> GetCaseActionsForCaseIdAsync(string caseId)
+        public async Task<List<GETCaseAction>> GetCaseActionsForCaseIdAsync(string caseId)
         {
-            throw new NotImplementedException();
+            var caseActionsToGet = await _context.CaseActions
+                .Where(x => x.CaseId == caseId)
+                .ToListAsync();
+
+            return _mapper.Map<List<GETCaseAction>>(caseActionsToGet);
         }
 
-        public Task<GETCaseAction?> UpdateCaseActionByIdAsync(string caseActionId, string userId, PATCHCaseAction request)
+        public async Task<GETCaseAction?> UpdateCaseActionByIdAsync(string caseActionId, string caseId, string userId, PATCHCaseAction request)
         {
-            throw new NotImplementedException();
+            var caseActionToUpdate = await _context.CaseActions
+                .Where(x => x.Id == caseActionId && x.CaseId == caseId)
+                .FirstOrDefaultAsync();
+
+            if (caseActionToUpdate is null)
+            {
+                return null;
+            }
+
+            _mapper.Map(request, caseActionToUpdate);
+            caseActionToUpdate.LastEditedById = userId;
+            caseActionToUpdate.LastModifiedDate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            var updatedCaseAction = await _context.CaseActions
+                .Where(x => x.Id == caseActionId && x.CaseId == caseId)
+                .Include(x => x.Creator)
+                 .Include(x => x.LastEditor)
+                .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get updated case action.");
+
+            return _mapper.Map<GETCaseAction>(updatedCaseAction);
+
         }
     }
 }
