@@ -37,13 +37,8 @@ namespace PCMS.API.Models
         [DataType(DataType.DateTime)]
         public DateTime DateOpened { get; set; } = DateTime.UtcNow;
 
-
         [DataType(DataType.DateTime)]
         public DateTime? DateClosed { get; set; } = null;
-
-
-        [DataType(DataType.DateTime)]
-        public DateTime? LastModifiedDate { get; set; }
 
         [Required]
         [EnumDataType(typeof(CasePriority))]
@@ -57,19 +52,19 @@ namespace PCMS.API.Models
         [DataType(DataType.DateTime)]
         public DateTime? DeletedAtUtc { get; set; }
 
+        public required DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 
-
-        public string? DeletedById { get; set; }
-        public ApplicationUser? UserWhoDeleted { get; set; }
+        public DateTime? LastModifiedAtUtc { get; set; }
 
         [Required]
         public required string CreatedById { get; set; }
+        public ApplicationUser? Creator { get; set; } = null;
 
-        public ApplicationUser? Creator { get; set; } = null!;
+        public string? LastModifiedById { get; set; }
+        public ApplicationUser? LastModifiedBy { get; set; }
 
-        public string? LastEditedById { get; set; }
-
-        public ApplicationUser? LastEditor { get; set; } = null!;
+        public string? DeletedById { get; set; }
+        public ApplicationUser? UserWhoDeleted { get; set; }
 
         public string? DepartmentId { get; set; }
 
@@ -80,10 +75,6 @@ namespace PCMS.API.Models
         public List<Report> Reports { get; set; } = [];
 
         public List<Evidence> Evidences { get; set; } = [];
-
-        public List<CasePerson> PersonsInvolved { get; set; } = [];
-
-        public List<ApplicationUserCase> AssignedUsers { get; set; } = [];
 
         public ICollection<CaseNote> CaseNotes { get; set; } = [];
 
@@ -96,6 +87,9 @@ namespace PCMS.API.Models
 
         public ICollection<CaseVehicle> CaseVehicles { get; set; } = [];
 
+        public List<CasePerson> PersonsInvolved { get; set; } = [];
+
+        public List<ApplicationUserCase> AssignedUsers { get; set; } = [];
     }
 
     /// <summary>

@@ -3,7 +3,7 @@
 namespace PCMS.API.Models.Interfaces
 {
     /// <summary>
-    /// Audit fields we want on models we want basic audit trails.
+    /// Audit fields we want on models.
     /// </summary>
     public interface IAuditable
     {
@@ -15,9 +15,10 @@ namespace PCMS.API.Models.Interfaces
 
         ApplicationUser? Creator { get; set; }
 
-
         DateTime? LastModifiedAtUtc { get; set; }
+
         string? LastModifiedById { get; set; }
+
         ApplicationUser? LastModifiedBy { get; set; }
     }
 }
