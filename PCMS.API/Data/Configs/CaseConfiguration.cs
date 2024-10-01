@@ -10,6 +10,8 @@ namespace PCMS.API.Data.Configs
         {
             builder.HasKey(x => x.Id);
 
+            builder.HasIndex(x => x.IsDeleted).HasFilter("IsDeleted = 0");
+
             builder.HasOne(x => x.Creator).WithMany(x => x.CreatedCases).HasForeignKey(x => x.CreatedById);
 
             builder.HasOne(x => x.LastEditor).WithMany(x => x.EditedCases).HasForeignKey(x => x.LastEditedById);
@@ -35,6 +37,10 @@ namespace PCMS.API.Data.Configs
             builder.HasMany(x => x.CrimeSceneCases).WithOne(x => x.Case).HasForeignKey(x => x.CaseId);
 
             builder.HasMany(x => x.CaseVehicles).WithOne(x => x.Case).HasForeignKey(x => x.CaseId);
+
+            builder.HasOne(x => x.UserWhoDeleted).WithMany(x => x.DeletedCases).HasForeignKey(x => x.DeletedById);
+
+            builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }

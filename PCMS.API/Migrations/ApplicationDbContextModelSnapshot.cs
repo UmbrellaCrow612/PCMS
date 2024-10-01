@@ -311,12 +311,21 @@ namespace PCMS.API.Migrations
                     b.Property<DateTime>("DateOpened")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("DeletedAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeletedById")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("DepartmentId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("LastEditedById")
                         .HasColumnType("TEXT");
@@ -345,10 +354,15 @@ namespace PCMS.API.Migrations
 
                     b.HasIndex("CreatedById");
 
+                    b.HasIndex("DeletedById");
+
                     b.HasIndex("DepartmentId");
 
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("IsDeleted")
+                        .HasFilter("IsDeleted = 0");
 
                     b.HasIndex("LastEditedById");
 
@@ -1151,6 +1165,10 @@ namespace PCMS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PCMS.API.Models.ApplicationUser", "UserWhoDeleted")
+                        .WithMany("DeletedCases")
+                        .HasForeignKey("DeletedById");
+
                     b.HasOne("PCMS.API.Models.Department", "Department")
                         .WithMany("AssignedCases")
                         .HasForeignKey("DepartmentId");
@@ -1164,6 +1182,8 @@ namespace PCMS.API.Migrations
                     b.Navigation("Department");
 
                     b.Navigation("LastEditor");
+
+                    b.Navigation("UserWhoDeleted");
                 });
 
             modelBuilder.Entity("PCMS.API.Models.CaseAction", b =>
@@ -1465,6 +1485,8 @@ namespace PCMS.API.Migrations
                     b.Navigation("CreatedReleases");
 
                     b.Navigation("CreatedReports");
+
+                    b.Navigation("DeletedCases");
 
                     b.Navigation("EditedCaseActions");
 

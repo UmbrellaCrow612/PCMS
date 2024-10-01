@@ -347,6 +347,9 @@ namespace PCMS.API.Migrations
                     LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Priority = table.Column<int>(type: "INTEGER", nullable: false),
                     Type = table.Column<string>(type: "TEXT", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DeletedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DeletedById = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedById = table.Column<string>(type: "TEXT", nullable: false),
                     LastEditedById = table.Column<string>(type: "TEXT", nullable: true),
                     DepartmentId = table.Column<string>(type: "TEXT", nullable: true)
@@ -360,6 +363,11 @@ namespace PCMS.API.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Cases_AspNetUsers_DeletedById",
+                        column: x => x.DeletedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Cases_AspNetUsers_LastEditedById",
                         column: x => x.LastEditedById,
@@ -725,12 +733,12 @@ namespace PCMS.API.Migrations
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    LastEditedById = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Details = table.Column<string>(type: "TEXT", nullable: false),
-                    CaseId = table.Column<string>(type: "TEXT", nullable: false)
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    LastEditedById = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -903,6 +911,11 @@ namespace PCMS.API.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cases_DeletedById",
+                table: "Cases",
+                column: "DeletedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cases_DepartmentId",
                 table: "Cases",
                 column: "DepartmentId");
@@ -912,6 +925,12 @@ namespace PCMS.API.Migrations
                 table: "Cases",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cases_IsDeleted",
+                table: "Cases",
+                column: "IsDeleted",
+                filter: "IsDeleted = 0");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cases_LastEditedById",

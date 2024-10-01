@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PCMS.API.Models.Enums;
+using PCMS.API.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 
@@ -10,7 +11,7 @@ namespace PCMS.API.Models
     /// </summary>
     [Index(nameof(Id), IsUnique = true)]
     [Index(nameof(CaseNumber), IsUnique = true)]
-    public class Case
+    public class Case : ISoftDelete
     {
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -51,7 +52,15 @@ namespace PCMS.API.Models
         [Required]
         public required string Type { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
 
+        [DataType(DataType.DateTime)]
+        public DateTime? DeletedAtUtc { get; set; }
+
+
+
+        public string? DeletedById { get; set; }
+        public ApplicationUser? UserWhoDeleted { get; set; }
 
         [Required]
         public required string CreatedById { get; set; }
@@ -86,6 +95,7 @@ namespace PCMS.API.Models
         public ICollection<CrimeSceneCase> CrimeSceneCases = [];
 
         public ICollection<CaseVehicle> CaseVehicles { get; set; } = [];
+
     }
 
     /// <summary>

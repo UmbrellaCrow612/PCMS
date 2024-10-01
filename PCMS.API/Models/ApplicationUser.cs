@@ -53,6 +53,8 @@ namespace PCMS.API.Models
 
         public ICollection<CaseNote> CreatedCaseNotes { get; set; } = [];
 
+        public ICollection<Case> DeletedCases { get; set; } = [];
+
         public ApplicationUser() : base()
         {
         }
