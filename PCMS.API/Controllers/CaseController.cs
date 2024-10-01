@@ -7,6 +7,7 @@ using PCMS.API.DTOS.PATCH;
 using PCMS.API.DTOS.POST;
 using PCMS.API.Filters;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
@@ -71,14 +72,14 @@ namespace PCMS.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
+        [ServiceFilter(typeof(UserValidationFilter))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteCase(string id)
         {
-            var isDeleted = await _caseService.DeleteCaseByIdAsync(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            var isDeleted = await _caseService.DeleteCaseByIdAsync(id, userId);
             if (!isDeleted)
             {
                 return NotFound("Case to delete not found");

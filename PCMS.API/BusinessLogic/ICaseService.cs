@@ -37,8 +37,9 @@ namespace PCMS.API.BusinessLogic
         /// Deletes a case by its ID
         /// </summary>
         /// <param name="id">The ID of the case</param>
-        /// <returns>True if the case was deleted, false if it was not found.</returns>
-        Task<bool> DeleteCaseByIdAsync(string id);
+        /// <param name="userId">The ID of the user</param>
+        /// <returns>True if the case was soft deleted, false if it was not found.</returns>
+        Task<bool> DeleteCaseByIdAsync(string id, string userId);
 
         /// <summary>
         /// Gets Persons linked to this case

@@ -62,7 +62,7 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<GETCase>(caseToUpdate);
         }
 
-        public async Task<bool> DeleteCaseByIdAsync(string id)
+        public async Task<bool> DeleteCaseByIdAsync(string id, string userId)
         {
             var caseToDelete = await _context.Cases.FindAsync(id);
             if (caseToDelete == null)
@@ -70,7 +70,10 @@ namespace PCMS.API.BusinessLogic
                 return false;
             }
 
-            _context.Cases.Remove(caseToDelete);
+            caseToDelete.IsDeleted = true;
+            caseToDelete.DeletedAtUtc = DateTime.UtcNow;
+            caseToDelete.DeletedById = userId;
+
             await _context.SaveChangesAsync();
             return true;
         }
