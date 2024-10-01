@@ -3,7 +3,7 @@
     /// <summary>
     /// Apply to models who can only be soft deleted and you want them to stay in the DB.
     /// </summary>
-    public interface ISoftDelete
+    public interface ISoftDeletable
     {
         public bool IsDeleted { get; set; }
 

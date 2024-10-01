@@ -64,8 +64,8 @@ namespace PCMS.API.BusinessLogic
 
         public async Task<bool> DeleteCaseByIdAsync(string id, string userId)
         {
-            var caseToDelete = await _context.Cases.FindAsync(id);
-            if (caseToDelete == null)
+            var caseToDelete = await _context.Cases.FirstOrDefaultAsync(x => x.Id == id);
+            if (caseToDelete is null)
             {
                 return false;
             }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PCMS.API.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.Models
@@ -7,7 +8,7 @@ namespace PCMS.API.Models
     /// Represents a report in the system.
     /// </summary>
     [Index(nameof(Id), IsUnique = true)]
-    public class Report
+    public class Report : ISoftDeletable
     {
         [Key]
         public string Id { get; } = Guid.NewGuid().ToString();
@@ -25,6 +26,10 @@ namespace PCMS.API.Models
         [Required]
         public required string Details { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+
+        public DateTime? DeletedAtUtc { get; set; }
+
 
 
         [Required]
@@ -40,5 +45,8 @@ namespace PCMS.API.Models
         public string? LastEditedById { get; set; }
 
         public ApplicationUser? LastEditor { get; set; } = null;
+
+        public string? DeletedById { get; set; }
+        public ApplicationUser? UserWhoDeleted { get; set; }
     }
 }

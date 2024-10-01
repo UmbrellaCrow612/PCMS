@@ -29,17 +29,9 @@ namespace PCMS.API.Controllers
         private readonly ApplicationDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        /// <summary>
-        /// Creates a new evidence item for a specific case.
-        /// </summary>
-        /// <param name="caseId">The ID of the case.</param>
-        /// <param name="request">The DTO containing POST evidence information.</param>
-        /// <returns>The created evidence item.</returns>
         [HttpPost]
         [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<GETEvidence>> CreateEvidence(string caseId, POSTEvidence request)
         {
@@ -138,8 +130,6 @@ namespace PCMS.API.Controllers
             }
 
             _mapper.Map(request, evidence);
-
-            evidence.LastModifiedDate = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return NoContent();

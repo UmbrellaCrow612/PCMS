@@ -34,7 +34,7 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<GETReport>(createdReport);
         }
 
-        public async Task<bool> DeleteReportByIdAsync(string reportId, string caseId)
+        public async Task<bool> DeleteReportByIdAsync(string reportId, string caseId, string userId)
         {
             var caseExists = await _context.Cases.AnyAsync(x => x.Id == caseId);
             if (!caseExists)
@@ -51,7 +51,10 @@ namespace PCMS.API.BusinessLogic
                 return false;
             }
 
-            _context.Reports.Remove(report);
+            report.IsDeleted = true;
+            report.DeletedAtUtc = DateTime.UtcNow;
+            report.DeletedById = userId;
+
             await _context.SaveChangesAsync();
 
             return true;

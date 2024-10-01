@@ -47,7 +47,8 @@ namespace PCMS.API.BusinessLogic
         /// </summary>
         /// <param name="reportId">The ID of the report to delete.</param>
         /// <param name="caseId">The ID of the case.</param>
+        /// <param name="userId">The ID of the user.</param>
         /// <returns>True if the report was deleted, false if it does not exist.</returns>
-        Task<bool> DeleteReportByIdAsync(string reportId, string caseId);
+        Task<bool> DeleteReportByIdAsync(string reportId, string caseId, string userId);
     }
 }

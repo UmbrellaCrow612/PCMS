@@ -11,7 +11,7 @@ namespace PCMS.API.Models
     /// </summary>
     [Index(nameof(Id), IsUnique = true)]
     [Index(nameof(CaseNumber), IsUnique = true)]
-    public class Case : ISoftDelete
+    public class Case : ISoftDeletable, IAuditable
     {
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();

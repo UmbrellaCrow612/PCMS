@@ -21,8 +21,6 @@
 
         public required string CollectedByDetails { get; set; }
 
-        public required DateTime LastModifiedDate { get; set; }
-
-        public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public required DateTime CreatedAt { get; set; }
     }
 }
