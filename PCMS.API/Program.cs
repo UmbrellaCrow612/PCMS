@@ -58,6 +58,7 @@ builder.Host.UseSerilog((context, configuration) =>
 builder.Services.AddScoped<ICaseService, CaseService>();
 builder.Services.AddScoped<ICaseActionService, CaseActionService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IEvidenceService, EvidenceService>();
 
 var app = builder.Build();
 

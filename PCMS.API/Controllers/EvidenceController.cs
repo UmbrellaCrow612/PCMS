@@ -1,33 +1,21 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using PCMS.API.BusinessLogic;
 using PCMS.API.DTOS.GET;
 using PCMS.API.DTOS.PATCH;
 using PCMS.API.DTOS.POST;
 using PCMS.API.Filters;
-using PCMS.API.Models;
 using System.Security.Claims;
 
 namespace PCMS.API.Controllers
 {
-    /// <summary>
-    /// Controller for handling evidence-related actions.
-    /// </summary>
-    /// <remarks>
-    /// Initializes a new instance of the <see cref="EvidenceController"/> class.
-    /// </remarks>
-    /// <param name="context">The database context.</param>
-    /// <param name="mapper">Automapper instance</param>
+
     [ApiController]
     [Route("cases/{caseId}/evidences")]
     [Authorize]
-    public class EvidenceController(ApplicationDbContext context, IMapper mapper) : ControllerBase
+    public class EvidenceController(IEvidenceService evidenceService) : ControllerBase
     {
-        private readonly ApplicationDbContext _context = context;
-        private readonly IMapper _mapper = mapper;
+        private readonly IEvidenceService _evidenceService = evidenceService;
 
         [HttpPost]
         [ServiceFilter(typeof(UserValidationFilter))]
@@ -39,123 +27,79 @@ namespace PCMS.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            if (!await _context.Cases.AnyAsync(c => c.Id == caseId))
+            var evidence = await _evidenceService.CreateEvidenceAsync(caseId,userId,request);
+
+            if (evidence is null)
             {
-                return NotFound("Case not found");
+                return NotFound("Case not found.");
             }
 
-            var evidence = _mapper.Map<Evidence>(request, opts =>
-            {
-                opts.AfterMap((src, dest) =>
-                {
-                    dest.CaseId = caseId;
-                    dest.CreatedById = userId;
-                });
-            });
-
-            await _context.Evidences.AddAsync(evidence);
-            await _context.SaveChangesAsync();
-
-            var returnEvidence = _mapper.Map<GETEvidence>(evidence);
-            return CreatedAtAction(nameof(CreateEvidence), new { id = returnEvidence.Id }, returnEvidence);
+            return Created(nameof(CreateEvidence), evidence);
         }
 
-        /// <summary>
-        /// Gets all evidence items for a specific case.
-        /// </summary>
-        /// <param name="caseId">The ID of the case.</param>
-        /// <returns>The list of evidence items.</returns>
         [HttpGet]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GETEvidence>>> GetEvidences(string caseId)
         {
-            var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
-            if (!caseExists)
-            {
-                return NotFound("Case not found");
-            }
+            var evidences = await _evidenceService.GetEvidenceForCaseIdAsync(caseId);
 
-            var evidences = await _context.Evidences
-                .Where(e => e.CaseId == caseId)
-                .ProjectTo<GETEvidence>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            if (evidences is null)
+            {
+                return NotFound("Case not found.");
+            }
 
             return Ok(evidences);
         }
 
-
-        /// <summary>
-        /// Get a evidence item for a specific case.
-        /// </summary>
-        /// <param name="caseId">The ID of the case.</param>
-        /// <param name="id">The ID of the evidence</param>
-        /// <returns>The evidence item.</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<GETEvidence>> GetEvidence(string caseId, string id)
         {
-            var evidence = await _context.Evidences
-                .Where(e => e.Id == id && e.CaseId == caseId)
-                .ProjectTo<GETEvidence>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+            var evidence = await _evidenceService.GetEvidenceByIdAsync(id, caseId);
 
             if (evidence is null)
             {
-                return NotFound("Evidence not found or is not linked to this case");
+                return NotFound("Case not found.");
             }
 
             return Ok(evidence);
         }
 
-        /// <summary>
-        /// Patch a evidence item for a specific case.
-        /// </summary>
-        /// <param name="caseId">The ID of the case.</param>
-        /// <param name="id">The ID of the evidence</param>
-        /// <param name="request">The DTO PATCH data for the evidence item.</param>
-        /// <returns>No Content.</returns>
         [HttpPatch("{id}")]
         [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesDefaultResponseType]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> PatchEvidence(string caseId, string id, [FromBody] PATCHEvidence request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            var evidence = await _context.Evidences.Where(e => e.CaseId == caseId && e.Id == id).FirstOrDefaultAsync();
+            var evidence = await _evidenceService.UpdatetEvidenceByIdAsync(id, caseId, userId, request);
+
             if (evidence is null)
             {
-                return NotFound("Evidence not found or is not linked to this case.");
+                return NotFound();
             }
 
-            _mapper.Map(request, evidence);
-
-            await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(evidence);
+        
         }
 
-        /// <summary>
-        /// Delete a evidence item for a specific case.
-        /// </summary>
-        /// <param name="caseId">The ID of the case.</param>
-        /// <param name="id">The ID of the evidence</param>
-        /// <returns>No Content.</returns>
         [HttpDelete("{id}")]
+        [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteEvidence(string caseId, string id)
         {
-            var evidence = await _context.Evidences.Where(e => e.CaseId == caseId && e.Id == id).FirstOrDefaultAsync();
-            if (evidence is null)
-            {
-                return NotFound("Case not found or is linked to this case");
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            _context.Remove(evidence);
-            await _context.SaveChangesAsync();
+            var isDeleted = await _evidenceService.DeleteEvidenceByIdAsync(id,caseId,userId);
+            if (!isDeleted)
+            {
+                return NotFound("Evidence not found.");
+            }
 
             return NoContent();
         }

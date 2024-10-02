@@ -11,6 +11,7 @@ namespace PCMS.API.BusinessLogic
     {
         private readonly IMapper _mapper = mapper;
         private readonly ApplicationDbContext _context = context;
+
         public async Task<GETEvidence?> CreateEvidenceAsync(string caseId, string userId, POSTEvidence request)
         {
             var caseExists = await _context.Cases.AnyAsync(x => x.Id == caseId);
@@ -92,6 +93,8 @@ namespace PCMS.API.BusinessLogic
 
             var evidences = await _context.Evidences
                 .Where(x => x.CaseId == caseId)
+                .Include(x => x.Creator)
+                .Include(x => x.LastModifiedBy)
                 .ToListAsync();
 
             return _mapper.Map<List<GETEvidence>>(evidences);
