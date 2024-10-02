@@ -23,7 +23,9 @@ namespace PCMS.API.DTOS.GET
 
         public required DateTime? DateClosed { get; set; }
 
-        public DateTime? LastModifiedDate { get; set; }
+        public required DateTime CreatedAtUtc { get; set; }
+
+        public DateTime? LastModifiedAtUtc { get; set; }
 
         public required CasePriority Priority { get; set; }
 
@@ -31,7 +33,7 @@ namespace PCMS.API.DTOS.GET
 
         public required GETApplicationUser Creator { get; set; }
 
-        public GETApplicationUser? LastEditor { get; set; }
+        public GETApplicationUser? LastModifiedBy { get; set; }
 
         public required CaseComplexity Complexity { get; set; }
 

@@ -73,7 +73,7 @@ namespace PCMS.API.Controllers
                 return NotFound("Case not found.");
             }
 
-            var caseNotes = await _context.CaseNotes.Where(cn => cn.CaseId == caseId).ToListAsync();
+            var caseNotes = await _context.CaseNotes.Where(cn => cn.CaseId == caseId).Include(x => x.Creator).Include(x => x.LastModifiedBy).ToListAsync();
 
             var returnCaseNotes = _mapper.Map<List<GETCaseNote>>(caseNotes);
 
@@ -97,7 +97,7 @@ namespace PCMS.API.Controllers
                 return NotFound("Case not found.");
             }
 
-            var caseNote = await _context.CaseNotes.Where(cn => cn.CaseId == caseId && cn.Id == id).FirstOrDefaultAsync();
+            var caseNote = await _context.CaseNotes.Where(cn => cn.CaseId == caseId && cn.Id == id).Include(x => x.Creator).Include(x => x.LastModifiedBy).FirstOrDefaultAsync();
             if (caseNote is null)
             {
                 return NotFound("Case note not found or is linked to this case.");
@@ -137,6 +137,7 @@ namespace PCMS.API.Controllers
             }
 
             _mapper.Map(request, caseNote);
+            caseNote.LastModifiedById = userId;
             caseNote.LastModifiedAtUtc = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
@@ -151,11 +152,14 @@ namespace PCMS.API.Controllers
         /// <param name="id">The ID of the case note.</param>
         /// <returns>No Content.</returns>
         [HttpDelete("{id}")]
+        [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteCaseNote(string caseId, string id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
             var caseExists = await _context.Cases.AnyAsync(_ => _.Id == caseId);
             if (!caseExists)
             {
@@ -168,7 +172,10 @@ namespace PCMS.API.Controllers
                 return NotFound("Case note not found or is linked to this case");
             }
 
-            _context.CaseNotes.Remove(caseNote);
+            caseNote.IsDeleted = true;
+            caseNote.DeletedById = userId;
+            caseNote.DeletedAtUtc = DateTime.UtcNow;
+
             await _context.SaveChangesAsync();
 
             return NoContent();
