@@ -17,10 +17,15 @@
 
         public required DateTime CollectionDateTime { get; set; }
 
+        public required DateTime CreatedAtUtc { get; set; }
+
+        public DateTime? LastModifiedAtUtc { get; set; }
+
         public required GETApplicationUser Creator { get; set; }
+
+        public required GETApplicationUser LastModifiedBy { get; set; }
 
         public required string CollectedByDetails { get; set; }
 
-        public required DateTime CreatedAt { get; set; }
     }
 }
