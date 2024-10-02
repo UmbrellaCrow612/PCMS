@@ -1,7 +1,7 @@
 ﻿namespace PCMS.API.Models.Interfaces
 {
     /// <summary>
-    /// Apply to models who can only be soft deleted and you want them to stay in the DB.
+    /// Apply to models who can only be soft deleted.
     /// </summary>
     public interface ISoftDeletable
     {

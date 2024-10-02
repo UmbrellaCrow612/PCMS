@@ -61,6 +61,10 @@ namespace PCMS.API.Models
 
         public ICollection<Evidence> DeletedEvidences { get; set; } = [];
 
+        public ICollection<CaseNote> EditedCaseNotes { get; set; } = [];
+
+        public ICollection<CaseNote> DeletedCaseNotes { get; set; } = [];
+
         public ApplicationUser() : base()
         {
         }

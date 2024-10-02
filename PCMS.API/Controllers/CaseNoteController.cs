@@ -137,7 +137,7 @@ namespace PCMS.API.Controllers
             }
 
             _mapper.Map(request, caseNote);
-            caseNote.LastModifiedDate = DateTime.UtcNow;
+            caseNote.LastModifiedAtUtc = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 

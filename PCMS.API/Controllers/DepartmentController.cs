@@ -206,7 +206,7 @@ namespace PCMS.API.Controllers
             var cases = await _context.Cases
                 .Where(c => c.DepartmentId == id)
                 .Include(c => c.Creator)
-                .Include(c => c.LastEditor).ToListAsync();
+                .Include(c => c.LastModifiedBy).ToListAsync();
 
             var returnCases = _mapper.Map<List<GETCase>>(cases);
             return Ok(returnCases);

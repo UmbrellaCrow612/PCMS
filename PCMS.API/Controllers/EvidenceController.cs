@@ -33,6 +33,8 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<GETEvidence>> CreateEvidence(string caseId, POSTEvidence request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;

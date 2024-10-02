@@ -8,7 +8,7 @@ namespace PCMS.API.Models
     /// Represents a report in the system.
     /// </summary>
     [Index(nameof(Id), IsUnique = true)]
-    public class Report : ISoftDeletable
+    public class Report : ISoftDeletable, IAuditable
     {
         [Key]
         public string Id { get; } = Guid.NewGuid().ToString();
@@ -17,18 +17,16 @@ namespace PCMS.API.Models
         public required string Title { get; set; }
 
         [Required]
-        [DataType(DataType.DateTime)]
-        public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        [DataType(DataType.DateTime)]
-        public DateTime? LastModifiedDate { get; set; }
-
-        [Required]
         public required string Details { get; set; }
 
         public bool IsDeleted { get; set; } = false;
 
         public DateTime? DeletedAtUtc { get; set; }
+
+        public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
+
+        public DateTime? LastModifiedAtUtc { get; set; }
+
 
 
 
@@ -37,16 +35,15 @@ namespace PCMS.API.Models
 
         public Case? Case { get; set; } = null;
 
+        public string? DeletedById { get; set; }
+
+        public ApplicationUser? UserWhoDeleted { get; set; }
+
         [Required]
         public required string CreatedById { get; set; }
+        public ApplicationUser? Creator { get; set; }
 
-        public ApplicationUser? Creator { get; set; } = null;
-
-        public string? LastEditedById { get; set; }
-
-        public ApplicationUser? LastEditor { get; set; } = null;
-
-        public string? DeletedById { get; set; }
-        public ApplicationUser? UserWhoDeleted { get; set; }
+        public string? LastModifiedById { get; set; }
+        public ApplicationUser? LastModifiedBy { get; set; }
     }
 }

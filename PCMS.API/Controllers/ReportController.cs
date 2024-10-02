@@ -84,10 +84,13 @@ namespace PCMS.API.Controllers
 
         [HttpDelete("{id}")]
         [ProducesDefaultResponseType]
+        [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteReport(string caseId, string id)
         {
-            var isDeleted = await _reportService.DeleteReportByIdAsync(id, caseId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            var isDeleted = await _reportService.DeleteReportByIdAsync(id, caseId, userId);
             if (!isDeleted)
             {
                 return NotFound("Report not found.");

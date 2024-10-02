@@ -99,8 +99,8 @@ namespace PCMS.API.BusinessLogic
             }
 
             _mapper.Map(request, reportToUpdate);
-            reportToUpdate.LastEditedById = userId;
-            reportToUpdate.LastModifiedDate = DateTime.UtcNow;
+            reportToUpdate.LastModifiedById = userId;
+            reportToUpdate.LastModifiedAtUtc = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 

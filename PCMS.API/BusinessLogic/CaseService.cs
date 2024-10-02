@@ -33,7 +33,7 @@ namespace PCMS.API.BusinessLogic
         {
             var caseToGet = await _context.Cases
                 .Include(x => x.Creator)
-                .Include(x => x.LastEditor)
+                .Include(x => x.LastModifiedBy)
                 .Include(x => x.Department)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -42,7 +42,7 @@ namespace PCMS.API.BusinessLogic
 
         public async Task<GETCase?> UpdateCaseByIdAsync(string id,string userId, PATCHCase request)
         {
-            var caseToUpdate = await _context.Cases.FindAsync(id);
+            var caseToUpdate = await _context.Cases.FirstOrDefaultAsync(x => x.Id == id);
             if (caseToUpdate == null)
             {
                 return null;
@@ -53,8 +53,8 @@ namespace PCMS.API.BusinessLogic
             caseEdit.CaseId = id;
 
             _mapper.Map(request, caseToUpdate);
-            caseToUpdate.LastEditedById = userId;
-            caseToUpdate.LastModifiedDate = DateTime.UtcNow;
+            caseToUpdate.LastModifiedById = userId;
+            caseToUpdate.LastModifiedAtUtc = DateTime.UtcNow;
 
             await _context.CaseEdits.AddAsync(caseEdit);
             await _context.SaveChangesAsync();

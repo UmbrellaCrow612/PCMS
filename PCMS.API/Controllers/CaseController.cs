@@ -31,7 +31,7 @@ namespace PCMS.API.Controllers
 
             var _case = await _caseService.CreateCaseAsync(request, userId);
 
-            return CreatedAtAction(nameof(CreateCase), new { id = _case.Id }, _case);
+            return Created(nameof(CreateCase), _case);
         }
 
         [HttpGet("{id}")]
