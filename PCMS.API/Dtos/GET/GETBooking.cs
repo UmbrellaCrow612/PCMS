@@ -14,7 +14,13 @@ namespace PCMS.API.Dtos.GET
 
         public required string Notes { get; set; }
 
-        public required GETApplicationUser User { get; set; }
+        public DateTime CreatedAtUtc { get; set; }
+
+        public DateTime? LastModifiedAtUtc { get; set; }
+
+        public ApplicationUser? Creator { get; set; }
+
+        public ApplicationUser? LastModifiedBy { get; set; }
 
         public required GETPerson Person { get; set; }
 

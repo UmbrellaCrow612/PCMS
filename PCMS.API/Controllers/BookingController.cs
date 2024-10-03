@@ -45,14 +45,14 @@ namespace PCMS.API.Controllers
             }
 
             var booking = _mapper.Map<Booking>(request);
-            booking.UserId = userId;
+            booking.CreatedById = userId;
             booking.PersonId = id;
 
             await _context.Bookings.AddAsync(booking);
             await _context.SaveChangesAsync();
 
             var _booking = await _context.Bookings.Where(b => b.Id == booking.Id)
-                .Include(b => b.User)
+                .Include(b => b.Creator)
                 .Include(b => b.Person)
                 .Include(b => b.Release)
                 .Include(b => b.Charges)
@@ -77,7 +77,7 @@ namespace PCMS.API.Controllers
             }
 
             var bookings = await _context.Bookings.Where(b => b.PersonId == id)
-                .Include(b => b.User)
+                .Include(b => b.Creator)
                 .Include(b => b.Person)
                 .Include(b => b.Release)
                 .Include(b => b.Charges)
