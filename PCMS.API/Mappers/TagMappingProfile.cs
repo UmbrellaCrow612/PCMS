@@ -10,7 +10,7 @@ namespace PCMS.API.Mappers
     {
         public TagMappingProfile()
         {
-            CreateMap<POSTTag, Tag>();
+            CreateMap<CreateTagDto, Tag>();
             CreateMap<Tag, TagDto>();
             CreateMap<PATCHTag, Tag>();
         }

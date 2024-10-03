@@ -12,7 +12,7 @@ namespace PCMS.API.BusinessLogic
         private readonly IMapper _mapper = mapper;
         private readonly ApplicationDbContext _context = context;
 
-        public async Task<TagDto> CreateTag(string userId, POSTTag request)
+        public async Task<TagDto> CreateTag(string userId, CreateTagDto request)
         {
             var tagToCreate = _mapper.Map<Tag>(request);
             tagToCreate.CreatedById = userId;

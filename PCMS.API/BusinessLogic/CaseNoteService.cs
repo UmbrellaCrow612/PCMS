@@ -12,7 +12,7 @@ namespace PCMS.API.BusinessLogic
         private readonly ApplicationDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<CaseNoteDto?> CreateCaseNoteAsync(string caseId, string userId, POSTCaseNote request)
+        public async Task<CaseNoteDto?> CreateCaseNoteAsync(string caseId, string userId, CreateCaseNoteDto request)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
             if (!caseExists)

@@ -5,7 +5,7 @@ namespace PCMS.API.Dtos.POST
     /// <summary>
     /// DTO to POST a TAG
     /// </summary>
-    public class POSTTag
+    public class CreateTagDto
     {
         [Required]
         [MaxLength(100)]

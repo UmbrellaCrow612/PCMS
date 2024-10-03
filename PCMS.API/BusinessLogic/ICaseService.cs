@@ -14,7 +14,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="request">The data sent to create the case.</param>
         /// <param name="userId">The ID of the user who made the request to make the case.</param>
         /// <returns>DTO <see cref="CaseDto"/> of the created case.</returns>
-        Task<CaseDto> CreateCaseAsync(POSTCase request, string userId);
+        Task<CaseDto> CreateCaseAsync(CreateCaseDto request, string userId);
 
         /// <summary>
         /// Get a <see cref="Case"/> by its ID

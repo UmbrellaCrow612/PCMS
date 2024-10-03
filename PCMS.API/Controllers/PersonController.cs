@@ -178,7 +178,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> LinkPersonToCrimeScene(string id, string crimeSceneId, [FromBody] POSTCrimeScenePerson request)
+        public async Task<ActionResult> LinkPersonToCrimeScene(string id, string crimeSceneId, [FromBody] CreateCrimeScenePersonDto request)
         {
             var personExists = await _context.Persons.AnyAsync(x => x.Id == id);
             if (!personExists)

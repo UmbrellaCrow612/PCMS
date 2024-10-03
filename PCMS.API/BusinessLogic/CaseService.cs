@@ -14,7 +14,7 @@ namespace PCMS.API.BusinessLogic
         private readonly ApplicationDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<CaseDto> CreateCaseAsync(POSTCase request, string userId)
+        public async Task<CaseDto> CreateCaseAsync(CreateCaseDto request, string userId)
         {
             var newCase = _mapper.Map<Case>(request);
             newCase.CreatedById = userId;

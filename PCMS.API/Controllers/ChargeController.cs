@@ -28,7 +28,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> CreateCharge(string id, string bookingId, [FromBody] POSTCharge request)
+        public async Task<ActionResult> CreateCharge(string id, string bookingId, [FromBody] CreateChargeDto request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 

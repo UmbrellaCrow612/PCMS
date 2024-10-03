@@ -5,7 +5,7 @@ namespace PCMS.API.DTOS.POST
     /// <summary>
     /// DTO to POST a Evidence.
     /// </summary>
-    public class POSTEvidence
+    public class CreateEvidenceDto
     {
         [Required]
         public required string FileUrl { get; set; }

@@ -16,7 +16,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user.</param>
         /// <param name="request">The data for creating the case note.</param>
         /// <returns>The created case note or null if the case was not found.</returns>
-        Task<CaseNoteDto?> CreateCaseNoteAsync(string caseId, string userId, POSTCaseNote request);
+        Task<CaseNoteDto?> CreateCaseNoteAsync(string caseId, string userId, CreateCaseNoteDto request);
 
         /// <summary>
         /// Retrieves all case notes for a specific case.

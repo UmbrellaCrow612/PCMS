@@ -23,7 +23,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<EvidenceDto>> CreateEvidence(string caseId, POSTEvidence request)
+        public async Task<ActionResult<EvidenceDto>> CreateEvidence(string caseId, CreateEvidenceDto request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 

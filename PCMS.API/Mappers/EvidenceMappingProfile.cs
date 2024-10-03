@@ -10,7 +10,7 @@ namespace PCMS.API.Mappers
     {
         public EvidenceMappingProfile()
         {
-            CreateMap<POSTEvidence, Evidence>();
+            CreateMap<CreateEvidenceDto, Evidence>();
             CreateMap<Evidence, EvidenceDto>();
             CreateMap<PATCHEvidence, Evidence>();
         }

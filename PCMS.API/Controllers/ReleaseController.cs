@@ -30,7 +30,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<ReleaseDto>> CreateRelease(string id, string bookingId, [FromBody] POSTRelease request)
+        public async Task<ActionResult<ReleaseDto>> CreateRelease(string id, string bookingId, [FromBody] CreateReleaseDto request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 

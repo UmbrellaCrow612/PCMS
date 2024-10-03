@@ -3,12 +3,13 @@
 namespace PCMS.API.Dtos.POST
 {
     /// <summary>
-    /// DTO when POST a booking
+    /// DTO when you want to make a release for a booking
     /// </summary>
-    public class POSTBooking
+    public class CreateReleaseDto
     {
         [Required]
-        public required string LocationId { get; set; }
+        [StringLength(100)]
+        public required string ReleaseType { get; set; }
 
         [Required]
         [StringLength(300)]

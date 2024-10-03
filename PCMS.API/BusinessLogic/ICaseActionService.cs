@@ -16,7 +16,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user creating the case action.</param>
         /// <param name="request">The data used to create the case action.</param>
         /// <returns>DTO <see cref="CaseActionDto"/> representing the newly created case action or null if the case dose not exist.</returns>
-        Task<CaseActionDto?> CreateCaseActionAsync(string caseId, string userId, POSTCaseAction request);
+        Task<CaseActionDto?> CreateCaseActionAsync(string caseId, string userId, CreateCaseActionDto request);
 
         /// <summary>
         /// Get a case action by its ID.

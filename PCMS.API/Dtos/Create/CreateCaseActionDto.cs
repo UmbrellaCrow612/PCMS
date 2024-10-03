@@ -5,7 +5,7 @@ namespace PCMS.API.DTOS.POST
     /// <summary>
     /// DTO to POST a case action
     /// </summary>
-    public record POSTCaseAction
+    public record CreateCaseActionDto
     {
         [Required]
         public required string Name { get; set; }

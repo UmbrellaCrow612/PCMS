@@ -24,7 +24,7 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<CaseNoteDto>> CreateCaseNote(string caseId, [FromBody] POSTCaseNote request)
+        public async Task<ActionResult<CaseNoteDto>> CreateCaseNote(string caseId, [FromBody] CreateCaseNoteDto request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 

@@ -16,7 +16,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user.</param>
         /// <param name="request">The data.</param>
         /// <returns>Newly created Evidence or null if the case was not found.</returns>
-        Task<EvidenceDto?> CreateEvidenceAsync(string caseId, string userId, POSTEvidence request);
+        Task<EvidenceDto?> CreateEvidenceAsync(string caseId, string userId, CreateEvidenceDto request);
 
         /// <summary>
         /// Get Evidence item.

@@ -8,7 +8,7 @@ namespace PCMS.API.DTOS.POST
     /// <summary>
     /// DTO when you want to create a <see cref="Case"/>
     /// </summary>
-    public record POSTCase
+    public record CreateCaseDto
     {
         [Required]
         public required string Title { get; set; }

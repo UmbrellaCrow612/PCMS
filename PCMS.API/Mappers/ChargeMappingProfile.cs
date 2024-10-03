@@ -10,7 +10,7 @@ namespace PCMS.API.Mappers
     {
         public ChargeMappingProfile()
         {
-            CreateMap<POSTCharge, Charge>();
+            CreateMap<CreateChargeDto, Charge>();
             CreateMap<Charge, ChargeDto>();
             CreateMap<PATCHCharge, Charge>();
         }

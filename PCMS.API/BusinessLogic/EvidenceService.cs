@@ -12,7 +12,7 @@ namespace PCMS.API.BusinessLogic
         private readonly IMapper _mapper = mapper;
         private readonly ApplicationDbContext _context = context;
 
-        public async Task<EvidenceDto?> CreateEvidenceAsync(string caseId, string userId, POSTEvidence request)
+        public async Task<EvidenceDto?> CreateEvidenceAsync(string caseId, string userId, CreateEvidenceDto request)
         {
             var caseExists = await _context.Cases.AnyAsync(x => x.Id == caseId);
             if (!caseExists)

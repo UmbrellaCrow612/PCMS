@@ -19,7 +19,7 @@ namespace PCMS.API.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpPost]
-        public async Task<ActionResult<TagDto>> CreateTag([FromBody] POSTTag request)
+        public async Task<ActionResult<TagDto>> CreateTag([FromBody] CreateTagDto request)
         {
             var tag = _mapper.Map<Tag>(request);
 

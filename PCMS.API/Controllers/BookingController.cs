@@ -28,7 +28,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<BookingDto>> CreateBooking(string id, [FromBody] POSTBooking request)
+        public async Task<ActionResult<BookingDto>> CreateBooking(string id, [FromBody] CreateBookingDto request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 

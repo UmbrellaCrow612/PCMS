@@ -6,7 +6,7 @@ namespace PCMS.API.Dtos.POST
     /// <summary>
     /// DTO wen you want to link a person to a crime scene
     /// </summary>
-    public class POSTCrimeScenePerson
+    public class CreateCrimeScenePersonDto
     {
         [Required]
         [EnumDataType(typeof(CrimeSceneRole))]

@@ -15,7 +15,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user creating the tag.</param>
         /// <param name="request">The tag data.</param>
         /// <returns>The newly created tag.</returns>
-        Task<TagDto> CreateTag(string userId, POSTTag request);
+        Task<TagDto> CreateTag(string userId, CreateTagDto request);
 
         /// <summary>
         /// Retrieves a tag by its ID.

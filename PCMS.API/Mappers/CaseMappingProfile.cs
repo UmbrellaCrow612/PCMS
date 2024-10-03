@@ -10,7 +10,7 @@ namespace PCMS.API.Mappers
     {
         public CaseMappingProfile()
         {
-            CreateMap<POSTCase, Case>();
+            CreateMap<CreateCaseDto, Case>();
             CreateMap<Case, CaseDto>();
             CreateMap<PATCHCase, Case>();
         }

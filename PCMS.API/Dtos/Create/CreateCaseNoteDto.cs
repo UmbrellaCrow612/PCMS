@@ -5,7 +5,7 @@ namespace PCMS.API.Dtos.POST
     /// <summary>
     /// DTO to POST a Case Note.
     /// </summary>
-    public class POSTCaseNote
+    public class CreateCaseNoteDto
     {
         [Required]
         [MaxLength(1000)]
