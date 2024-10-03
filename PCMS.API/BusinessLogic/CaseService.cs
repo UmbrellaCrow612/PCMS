@@ -21,12 +21,7 @@ namespace PCMS.API.BusinessLogic
             await _context.Cases.AddAsync(newCase);
             await _context.SaveChangesAsync();
 
-            var createdCase = await _context.Cases
-                .Include(x => x.Creator)
-                .FirstOrDefaultAsync(c => c.Id == newCase.Id)
-                ?? throw new InvalidOperationException("Failed to retrieve the created case");
-
-            return _mapper.Map<GETCase>(createdCase);
+            return _mapper.Map<GETCase>(newCase);
         }
 
         public async Task<GETCase?> GetCaseByIdAsync(string id)
@@ -40,12 +35,12 @@ namespace PCMS.API.BusinessLogic
             return caseToGet != null ? _mapper.Map<GETCase>(caseToGet) : null;
         }
 
-        public async Task<GETCase?> UpdateCaseByIdAsync(string id,string userId, PATCHCase request)
+        public async Task<bool> UpdateCaseByIdAsync(string id,string userId, PATCHCase request)
         {
             var caseToUpdate = await _context.Cases.FirstOrDefaultAsync(x => x.Id == id);
             if (caseToUpdate == null)
             {
-                return null;
+                return false;
             }
 
             var caseEdit = _mapper.Map<CaseEdit>(caseToUpdate);
@@ -59,7 +54,7 @@ namespace PCMS.API.BusinessLogic
             await _context.CaseEdits.AddAsync(caseEdit);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<GETCase>(caseToUpdate);
+            return true;
         }
 
         public async Task<bool> DeleteCaseByIdAsync(string id, string userId)
@@ -78,7 +73,7 @@ namespace PCMS.API.BusinessLogic
             return true;
         }
 
-        public async Task<List<GETCasePerson>> GetCasePersonsAsync(string id)
+        public async Task<List<GETCasePerson>> GetLinkedPersonsForCaseIdAsync(string id)
         {
             var persons = await _context.CasePersons
                 .Where(x => x.CaseId == id)
@@ -88,7 +83,7 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<List<GETCasePerson>>(persons);
         }
 
-        public async Task<List<GETApplicationUser>> GetCaseUsersAsync(string id)
+        public async Task<List<GETApplicationUser>> GetLinkedUsersForCaseIdAsync(string id)
         {
             var users = await _context.ApplicationUserCases
                 .Where(x => x.CaseId == id)
@@ -99,7 +94,7 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<List<GETApplicationUser>>(users);
         }
 
-        public async Task<List<GETCaseEdit>> GetCaseEditsByIdAsync(string id)
+        public async Task<List<GETCaseEdit>> GetCaseEditsForCaseIdAsync(string id)
         {
             var edits = await _context.CaseEdits
                 .Where(x => x.CaseId == id)
@@ -109,7 +104,7 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<List<GETCaseEdit>>(edits);
         }
 
-        public async Task<List<GETTag>> GetCaseTagsAsync(string id)
+        public async Task<List<GETTag>> GetLinkedTagsForCaseIdAsync(string id)
         {
             var tags = await _context.CaseTags
                 .Where(x => x.CaseId == id)

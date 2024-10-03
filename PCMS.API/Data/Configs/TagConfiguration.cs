@@ -11,6 +11,10 @@ namespace PCMS.API.Data.Configs
             builder.HasKey(x => x.Id);
 
             builder.HasMany(x => x.CaseTags).WithOne(x => x.Tag).HasForeignKey(x => x.TagId);
+
+            builder.HasOne(x => x.Creator).WithMany(x => x.CreatedTags).HasForeignKey(x => x.CreatedById);
+
+            builder.HasOne(x => x.LastModifiedBy).WithMany(x => x.EditedTags).HasForeignKey(x => x.LastModifiedById);
         }
     }
 }

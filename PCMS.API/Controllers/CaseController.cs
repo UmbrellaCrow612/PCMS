@@ -61,9 +61,9 @@ namespace PCMS.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            var result = await _caseService.UpdateCaseByIdAsync(id, userId, request);
+            var isUpdated = await _caseService.UpdateCaseByIdAsync(id, userId, request);
 
-            if (result is null)
+            if (!isUpdated)
             {
                 return NotFound("Case not found");
             }
@@ -93,7 +93,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GETPerson>>> GetCasePersons(string id)
         {
-            var persons = await _caseService.GetCasePersonsAsync(id);
+            var persons = await _caseService.GetLinkedPersonsForCaseIdAsync(id);
 
             return Ok(persons);
         }
@@ -103,7 +103,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GETApplicationUser>>> GetUserCases(string id)
         {
-            var users = await _caseService.GetCaseUsersAsync(id);
+            var users = await _caseService.GetLinkedUsersForCaseIdAsync(id);
 
             return Ok(users);
         }
@@ -114,7 +114,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GETCaseEdit>>> GetCaseEdits(string id)
         {
-            var edits = await _caseService.GetCaseEditsByIdAsync(id);
+            var edits = await _caseService.GetCaseEditsForCaseIdAsync(id);
 
             return Ok(edits);
         }
@@ -125,7 +125,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<GETTag>>> GetCaseTags(string id)
         {
-            var tags = await _caseService.GetCaseTagsAsync(id);
+            var tags = await _caseService.GetLinkedTagsForCaseIdAsync(id);
 
             return Ok(tags);
         }

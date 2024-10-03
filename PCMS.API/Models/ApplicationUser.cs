@@ -65,6 +65,10 @@ namespace PCMS.API.Models
 
         public ICollection<CaseNote> DeletedCaseNotes { get; set; } = [];
 
+        public ICollection<Tag> CreatedTags { get; set; } = [];
+
+        public ICollection<Tag> EditedTags { get; set; } = [];
+
         public ApplicationUser() : base()
         {
         }
