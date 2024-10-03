@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.Dtos.GET;
+using PCMS.API.Dtos.POST;
 using PCMS.API.DTOS.GET;
 using PCMS.API.DTOS.PATCH;
 using PCMS.API.DTOS.POST;
@@ -113,6 +114,11 @@ namespace PCMS.API.BusinessLogic
                 .ToListAsync();
 
             return _mapper.Map<List<GETTag>>(tags);
+        }
+
+        public Task<List<GETCase>> SearchForCases(POSTCaseSearch request)
+        {
+            throw new NotImplementedException();
         }
     }
 

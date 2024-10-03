@@ -1,4 +1,5 @@
 ﻿using PCMS.API.Dtos.GET;
+using PCMS.API.Dtos.POST;
 using PCMS.API.DTOS.GET;
 using PCMS.API.DTOS.PATCH;
 using PCMS.API.DTOS.POST;
@@ -28,7 +29,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="id">The ID of the case</param>
         /// <param name="request">The new Case data sent across</param>
         /// <param name="userId">The ID of the user making the update.</param>
-        /// <returns>Updated <see cref="GETCase"/> if successful, null if the case was not found.</returns>
+        /// <returns>True if it was able to update the case else false if it could not find it.</returns>
         Task<bool> UpdateCaseByIdAsync(string id, string userId, PATCHCase request);
 
         /// <summary>
@@ -66,5 +67,12 @@ namespace PCMS.API.BusinessLogic
         /// <param name="id">The ID of the case</param>
         /// <returns>List of <see cref="GETTag"/> or empty.</returns>
         Task<List<GETTag>> GetLinkedTagsForCaseIdAsync(string id);
+
+        /// <summary>
+        /// Get cases based on search params.
+        /// </summary>
+        /// <param name="request">The data.</param>
+        /// <returns>List of cases</returns>
+        Task<List<GETCase>> SearchForCases(POSTCaseSearch request);
     }
 }
