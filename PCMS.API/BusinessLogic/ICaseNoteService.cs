@@ -1,0 +1,55 @@
+﻿using PCMS.API.Dtos.GET;
+using PCMS.API.Dtos.PATCH;
+using PCMS.API.Dtos.POST;
+
+namespace PCMS.API.BusinessLogic
+{
+    /// <summary>
+    /// Implementation standard for the case note service.
+    /// </summary>
+    public interface ICaseNoteService
+    {
+        /// <summary>
+        /// Creates a case note.
+        /// </summary>
+        /// <param name="caseId">The ID of the case.</param>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="request">The data for creating the case note.</param>
+        /// <returns>The created case note or null if the case was not found.</returns>
+        Task<GETCaseNote?> CreateCaseNoteAsync(string caseId, string userId, POSTCaseNote request);
+
+        /// <summary>
+        /// Retrieves all case notes for a specific case.
+        /// </summary>
+        /// <param name="caseId">The ID of the case.</param>
+        /// <returns>A list of case notes or null if the case was not found.</returns>
+        Task<List<GETCaseNote>?> GetCaseNotesForCaseIdAsync(string caseId);
+
+        /// <summary>
+        /// Retrieves a specific case note by its ID.
+        /// </summary>
+        /// <param name="caseNoteId">The ID of the case note.</param>
+        /// <param name="caseId">The ID of the case.</param>
+        /// <returns>The case note or null if it was not found.</returns>
+        Task<GETCaseNote?> GetCaseNoteByIdAsync(string caseNoteId, string caseId);
+
+        /// <summary>
+        /// Updates an existing case note.
+        /// </summary>
+        /// <param name="caseNoteId">The ID of the case note.</param>
+        /// <param name="caseId">The ID of the case.</param>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="request">The data for updating the case note.</param>
+        /// <returns>The updated case note or null if it was not found.</returns>
+        Task<GETCaseNote?> UpdateCaseNoteByIdAsync(string caseNoteId, string caseId, string userId, PATCHCaseNote request);
+
+        /// <summary>
+        /// Deletes a specific case note.
+        /// </summary>
+        /// <param name="caseNoteId">The ID of the case note.</param>
+        /// <param name="caseId">The ID of the case it is linked to.</param>
+        /// <param name="userId">The ID of the user performing the action.</param>
+        /// <returns>True if deletion was successful, otherwise false.</returns>
+        Task<bool> DeleteCaseNoteByIdAsync(string caseNoteId, string caseId, string userId);
+    }
+}
