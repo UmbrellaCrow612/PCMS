@@ -64,6 +64,8 @@ namespace PCMS.API.BusinessLogic
         {
             var reportToGet = await _context.Reports
                 .Where(x => x.Id == reportId && x.CaseId == caseId)
+                .Include(x => x.Creator)
+                .Include(x => x.LastModifiedBy)
                 .FirstOrDefaultAsync();
 
             if (reportToGet is null)
@@ -82,7 +84,11 @@ namespace PCMS.API.BusinessLogic
                 return null; 
             }
 
-            var reports = await _context.Reports.Where(x => x.CaseId == caseId).ToListAsync();
+            var reports = await _context.Reports
+                .Where(x => x.CaseId == caseId)
+                .Include(x => x.Creator)
+                .Include(x => x.LastModifiedBy)
+                .ToListAsync();
 
             return _mapper.Map<List<GETReport>>(reports);
         }
@@ -106,6 +112,8 @@ namespace PCMS.API.BusinessLogic
 
             var updatedReport = await _context.Reports
                 .Where(x => x.Id == reportId && x.CaseId == caseId)
+                .Include(x => x.Creator)
+                .Include(x => x.LastModifiedBy)
                 .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get updated report.");
 
             return _mapper.Map<GETReport>(updatedReport);
