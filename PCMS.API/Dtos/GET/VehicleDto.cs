@@ -1,6 +1,6 @@
 ﻿namespace PCMS.API.Dtos.GET
 {
-    public class GETVehicle
+    public class VehicleDto
     {
         public required string Id { get; set; }
 

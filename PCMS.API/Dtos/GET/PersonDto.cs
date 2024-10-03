@@ -3,7 +3,7 @@
     /// <summary>
     /// DTO when you want to get a Person
     /// </summary>
-    public class GETPerson
+    public class PersonDto
     {
         public required string Id { get; set; }
 

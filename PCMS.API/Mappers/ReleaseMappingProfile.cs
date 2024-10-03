@@ -11,7 +11,7 @@ namespace PCMS.API.Mappers
         public ReleaseMappingProfile()
         {
             CreateMap<POSTRelease, Release>();
-            CreateMap<Release, GETRelease>();
+            CreateMap<Release, ReleaseDto>();
             CreateMap<PATCHRelease, Release>();
         }
     }

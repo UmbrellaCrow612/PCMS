@@ -28,7 +28,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<GETBooking>> CreateBooking(string id, [FromBody] POSTBooking request)
+        public async Task<ActionResult<BookingDto>> CreateBooking(string id, [FromBody] POSTBooking request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -59,7 +59,7 @@ namespace PCMS.API.Controllers
                 .Include(b => b.Location)
                 .FirstOrDefaultAsync() ?? throw new ApplicationException("Failed to get created booking");
 
-            var returnBooking = _mapper.Map<GETBooking>(_booking);
+            var returnBooking = _mapper.Map<BookingDto>(_booking);
 
             return CreatedAtAction(nameof(CreateBooking), new { id = returnBooking.Id }, returnBooking);
         }
@@ -68,7 +68,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<List<GETBooking>>> GetBookings(string id)
+        public async Task<ActionResult<List<BookingDto>>> GetBookings(string id)
         {
             var personExists = await _context.Persons.AnyAsync(p => p.Id == id);
             if (!personExists)
@@ -84,7 +84,7 @@ namespace PCMS.API.Controllers
                 .Include(b => b.Location)
                 .ToListAsync();
 
-            var returnBookings = _mapper.Map<List<GETBooking>>(bookings);
+            var returnBookings = _mapper.Map<List<BookingDto>>(bookings);
             return Ok(returnBookings);
         }
 

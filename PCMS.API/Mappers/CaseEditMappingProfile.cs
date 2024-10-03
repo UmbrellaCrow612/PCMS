@@ -16,7 +16,7 @@ namespace PCMS.API.Mappers
                 .ForMember(dest => dest.PreviousComplexity, opt => opt.MapFrom(src => src.Complexity))
                 .ForMember(dest => dest.PreviousType, opt => opt.MapFrom(src => src.Type));
 
-            CreateMap<CaseEdit, GETCaseEdit>();
+            CreateMap<CaseEdit, CaseEditDto>();
         }
     }
 }

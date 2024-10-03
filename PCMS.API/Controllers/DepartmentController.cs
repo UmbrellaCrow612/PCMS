@@ -32,14 +32,14 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<GETDepartment>> CreateDepartment([FromBody] POSTDepartment request)
+        public async Task<ActionResult<DepartmentDto>> CreateDepartment([FromBody] POSTDepartment request)
         {
             var department = _mapper.Map<Department>(request);
 
             await _context.Departments.AddAsync(department);
             await _context.SaveChangesAsync();
 
-            var returnDepartment = _mapper.Map<GETDepartment>(department);
+            var returnDepartment = _mapper.Map<DepartmentDto>(department);
             return CreatedAtAction(nameof(CreateDepartment), new { id = returnDepartment.Id }, returnDepartment);
         }
 
@@ -51,7 +51,7 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETDepartment>> GetDepartment(string id)
+        public async Task<ActionResult<DepartmentDto>> GetDepartment(string id)
         {
             var department = await _context.Departments.Where(d => d.Id == id).FirstOrDefaultAsync();
             if (department is null)
@@ -59,7 +59,7 @@ namespace PCMS.API.Controllers
                 return NotFound("Department not found");
             }
 
-            var returnDepartment = _mapper.Map<GETDepartment>(department);
+            var returnDepartment = _mapper.Map<DepartmentDto>(department);
             return Ok(returnDepartment);
         }
 
@@ -116,7 +116,7 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}/users")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<GETApplicationUser>>> GetDepartmentUsers(string id)
+        public async Task<ActionResult<List<ApplicationUserDto>>> GetDepartmentUsers(string id)
         {
             var department = await _context.Departments.AnyAsync(d => d.Id == id);
             if (!department)
@@ -126,7 +126,7 @@ namespace PCMS.API.Controllers
 
             var users = await _context.Users.Where(u => u.DepartmentId == id).ToListAsync();
 
-            var returnUsers = _mapper.Map<List<GETApplicationUser>>(users);
+            var returnUsers = _mapper.Map<List<ApplicationUserDto>>(users);
             return Ok(returnUsers);
         }
 
@@ -208,7 +208,7 @@ namespace PCMS.API.Controllers
                 .Include(c => c.Creator)
                 .Include(c => c.LastModifiedBy).ToListAsync();
 
-            var returnCases = _mapper.Map<List<GETCase>>(cases);
+            var returnCases = _mapper.Map<List<CaseDto>>(cases);
             return Ok(returnCases);
         }
 

@@ -11,7 +11,7 @@ namespace PCMS.API.Mappers
         public BookingMappingProfile()
         {
             CreateMap<POSTBooking, Booking>();
-            CreateMap<Booking, GETBooking>();
+            CreateMap<Booking, BookingDto>();
             CreateMap<PATCHBooking, Booking>();
         }
     }

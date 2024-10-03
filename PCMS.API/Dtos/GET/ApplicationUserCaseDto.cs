@@ -3,7 +3,7 @@
     /// <summary>
     /// DTO when you want to get a ApplicationUserCase
     /// </summary>
-    public class GETApplicationUserCase
+    public class ApplicationUserCaseDto
     {
         public required string UserId { get; set; }
 

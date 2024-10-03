@@ -12,7 +12,7 @@ namespace PCMS.API.BusinessLogic
         private readonly IMapper _mapper = mapper;
         private readonly ApplicationDbContext _context = context;
 
-        public async Task<GETTag> CreateTag(string userId, POSTTag request)
+        public async Task<TagDto> CreateTag(string userId, POSTTag request)
         {
             var tagToCreate = _mapper.Map<Tag>(request);
             tagToCreate.CreatedById = userId;
@@ -20,7 +20,7 @@ namespace PCMS.API.BusinessLogic
             await _context.Tags.AddAsync(tagToCreate);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<GETTag>(tagToCreate);
+            return _mapper.Map<TagDto>(tagToCreate);
         }
 
         public async Task<bool> DeleteTagByIdAsync(string tagId)
@@ -37,12 +37,12 @@ namespace PCMS.API.BusinessLogic
             return true;
         }
 
-        public Task<GETTag?> GetTagByIdAsync(string tagId)
+        public Task<TagDto?> GetTagByIdAsync(string tagId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<GETTag>?> GetTagsForCaseIdAsync(string caseId)
+        public Task<List<TagDto>?> GetTagsForCaseIdAsync(string caseId)
         {
             throw new NotImplementedException();
         }
@@ -57,7 +57,7 @@ namespace PCMS.API.BusinessLogic
             throw new NotImplementedException();
         }
 
-        public Task<GETTag?> UpdateTagByIdAsync(string tagId, string userId, PATCHTag request)
+        public Task<TagDto?> UpdateTagByIdAsync(string tagId, string userId, PATCHTag request)
         {
             throw new NotImplementedException();
         }

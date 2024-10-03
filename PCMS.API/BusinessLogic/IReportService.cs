@@ -16,7 +16,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user creating the report.</param>
         /// <param name="request">The data to create the report.</param>
         /// <returns>The newly created report or null if the case dose not exist.</returns>
-        Task<GETReport?> CreateReportAsync(string caseId, string userId, POSTReport request);
+        Task<ReportDto?> CreateReportAsync(string caseId, string userId, POSTReport request);
 
         /// <summary>
         /// Retrieves a specific report.
@@ -24,14 +24,14 @@ namespace PCMS.API.BusinessLogic
         /// <param name="reportId">The ID of the report.</param>
         /// <param name="caseId">The ID of the case.</param>
         /// <returns>The requested report, or null if not found.</returns>
-        Task<GETReport?> GetReportByIdAsync(string reportId, string caseId);
+        Task<ReportDto?> GetReportByIdAsync(string reportId, string caseId);
 
         /// <summary>
         /// Get all reports for a case.
         /// </summary>
         /// <param name="caseId">The ID of the case.</param>
         /// <returns>List of reports or null if the case dose not exist.</returns>
-        Task<List<GETReport>?> GetReportsForCaseIdAsync(string caseId);
+        Task<List<ReportDto>?> GetReportsForCaseIdAsync(string caseId);
 
         /// <summary>
         /// Updates a report.
@@ -40,7 +40,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="caseId">The ID of the case.</param>
         /// <param name="request">The updated report data.</param>
         /// <returns>The updated report, or null if not found.</returns>
-        Task<GETReport?> UpdateReportByIdAsync(string reportId, string caseId, string userId, PATCHReport request);
+        Task<ReportDto?> UpdateReportByIdAsync(string reportId, string caseId, string userId, PATCHReport request);
 
         /// <summary>
         /// Deletes a report.

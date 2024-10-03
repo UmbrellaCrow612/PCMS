@@ -19,14 +19,14 @@ namespace PCMS.API.Controllers
         private readonly IMapper _mapper = mapper;
 
         [HttpPost]
-        public async Task<ActionResult<GETTag>> CreateTag([FromBody] POSTTag request)
+        public async Task<ActionResult<TagDto>> CreateTag([FromBody] POSTTag request)
         {
             var tag = _mapper.Map<Tag>(request);
 
             await _context.Tags.AddAsync(tag);
             await _context.SaveChangesAsync();
 
-            var returnTag = _mapper.Map<GETTag>(tag);
+            var returnTag = _mapper.Map<TagDto>(tag);
             return Ok(returnTag);
         }
 
@@ -34,7 +34,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETTag>> GetTag(string id)
+        public async Task<ActionResult<TagDto>> GetTag(string id)
         {
             var tag = await _context.Tags.Where(t => t.Id == id).FirstOrDefaultAsync();
             if (tag is null)
@@ -42,20 +42,20 @@ namespace PCMS.API.Controllers
                 return NotFound("Tag not found.");
             }
 
-            var returnTag = _mapper.Map<GETTag>(tag);
+            var returnTag = _mapper.Map<TagDto>(tag);
             return Ok(returnTag);
         }
 
         [HttpGet("search")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<IEnumerable<GETTag>>> SearchTags([FromQuery] string name)
+        public async Task<ActionResult<IEnumerable<TagDto>>> SearchTags([FromQuery] string name)
         {
             var tags = await _context.Tags
                 .Where(t => t.Name.Contains(name))
                 .ToListAsync();
 
-            var returnTags = _mapper.Map<IEnumerable<GETTag>>(tags);
+            var returnTags = _mapper.Map<IEnumerable<TagDto>>(tags);
             return Ok(returnTags);
         }
 

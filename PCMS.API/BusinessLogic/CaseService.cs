@@ -14,7 +14,7 @@ namespace PCMS.API.BusinessLogic
         private readonly ApplicationDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<GETCase> CreateCaseAsync(POSTCase request, string userId)
+        public async Task<CaseDto> CreateCaseAsync(POSTCase request, string userId)
         {
             var newCase = _mapper.Map<Case>(request);
             newCase.CreatedById = userId;
@@ -22,10 +22,10 @@ namespace PCMS.API.BusinessLogic
             await _context.Cases.AddAsync(newCase);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<GETCase>(newCase);
+            return _mapper.Map<CaseDto>(newCase);
         }
 
-        public async Task<GETCase?> GetCaseByIdAsync(string id)
+        public async Task<CaseDto?> GetCaseByIdAsync(string id)
         {
             var caseToGet = await _context.Cases
                 .Include(x => x.Creator)
@@ -33,7 +33,7 @@ namespace PCMS.API.BusinessLogic
                 .Include(x => x.Department)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            return caseToGet != null ? _mapper.Map<GETCase>(caseToGet) : null;
+            return caseToGet != null ? _mapper.Map<CaseDto>(caseToGet) : null;
         }
 
         public async Task<bool> UpdateCaseByIdAsync(string id,string userId, PATCHCase request)
@@ -74,17 +74,17 @@ namespace PCMS.API.BusinessLogic
             return true;
         }
 
-        public async Task<List<GETCasePerson>> GetLinkedPersonsForCaseIdAsync(string id)
+        public async Task<List<CasePersonDto>> GetLinkedPersonsForCaseIdAsync(string id)
         {
             var persons = await _context.CasePersons
                 .Where(x => x.CaseId == id)
                 .Include(x => x.Person)
                 .ToListAsync();
 
-            return _mapper.Map<List<GETCasePerson>>(persons);
+            return _mapper.Map<List<CasePersonDto>>(persons);
         }
 
-        public async Task<List<GETApplicationUser>> GetLinkedUsersForCaseIdAsync(string id)
+        public async Task<List<ApplicationUserDto>> GetLinkedUsersForCaseIdAsync(string id)
         {
             var users = await _context.ApplicationUserCases
                 .Where(x => x.CaseId == id)
@@ -92,20 +92,20 @@ namespace PCMS.API.BusinessLogic
                 .Select(x => x.User)
                 .ToListAsync();
 
-            return _mapper.Map<List<GETApplicationUser>>(users);
+            return _mapper.Map<List<ApplicationUserDto>>(users);
         }
 
-        public async Task<List<GETCaseEdit>> GetCaseEditsForCaseIdAsync(string id)
+        public async Task<List<CaseEditDto>> GetCaseEditsForCaseIdAsync(string id)
         {
             var edits = await _context.CaseEdits
                 .Where(x => x.CaseId == id)
                 .Include(x => x.Creator)
                 .ToListAsync();
 
-            return _mapper.Map<List<GETCaseEdit>>(edits);
+            return _mapper.Map<List<CaseEditDto>>(edits);
         }
 
-        public async Task<List<GETTag>> GetLinkedTagsForCaseIdAsync(string id)
+        public async Task<List<TagDto>> GetLinkedTagsForCaseIdAsync(string id)
         {
             var tags = await _context.CaseTags
                 .Where(x => x.CaseId == id)
@@ -113,10 +113,10 @@ namespace PCMS.API.BusinessLogic
                 .Select(x => x.Tag)
                 .ToListAsync();
 
-            return _mapper.Map<List<GETTag>>(tags);
+            return _mapper.Map<List<TagDto>>(tags);
         }
 
-        public Task<List<GETCase>> SearchForCases(POSTCaseSearch request)
+        public Task<List<CaseDto>> SearchForCases(POSTCaseSearch request)
         {
             throw new NotImplementedException();
         }

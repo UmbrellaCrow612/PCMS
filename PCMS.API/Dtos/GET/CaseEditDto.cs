@@ -7,11 +7,11 @@ namespace PCMS.API.Dtos.GET
     /// <summary>
     /// DTO when you want to get a <see cref="CaseEdit"/>
     /// </summary>
-    public class GETCaseEdit
+    public class CaseEditDto
     {
         public required string Id { get; set; }
 
-        public required GETApplicationUser Creator { get; set; }
+        public required ApplicationUserDto Creator { get; set; }
 
         public required DateTime CreatedAtUtc { get; set; }
 

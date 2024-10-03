@@ -23,7 +23,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<GETEvidence>> CreateEvidence(string caseId, POSTEvidence request)
+        public async Task<ActionResult<EvidenceDto>> CreateEvidence(string caseId, POSTEvidence request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -40,7 +40,7 @@ namespace PCMS.API.Controllers
         [HttpGet]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<GETEvidence>>> GetEvidences(string caseId)
+        public async Task<ActionResult<List<EvidenceDto>>> GetEvidences(string caseId)
         {
             var evidences = await _evidenceService.GetEvidenceForCaseIdAsync(caseId);
 
@@ -56,7 +56,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETEvidence>> GetEvidence(string caseId, string id)
+        public async Task<ActionResult<EvidenceDto>> GetEvidence(string caseId, string id)
         {
             var evidence = await _evidenceService.GetEvidenceByIdAsync(id, caseId);
 

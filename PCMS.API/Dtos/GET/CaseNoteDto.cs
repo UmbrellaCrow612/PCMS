@@ -6,7 +6,7 @@ namespace PCMS.API.Dtos.GET
     /// <summary>
     /// DTO when you want to get a CaseNote
     /// </summary>
-    public class GETCaseNote
+    public class CaseNoteDto
     {
         public required string Id { get; set; }
 
@@ -16,9 +16,9 @@ namespace PCMS.API.Dtos.GET
 
         public DateTime? LastModifiedAtUtc { get; set; }
 
-        public required GETApplicationUser Creator { get; set; }
+        public required ApplicationUserDto Creator { get; set; }
 
-        public required GETApplicationUser LastModifiedBy { get; set; }
+        public required ApplicationUserDto LastModifiedBy { get; set; }
 
     }
 }

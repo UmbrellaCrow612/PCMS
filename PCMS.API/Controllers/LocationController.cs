@@ -34,14 +34,14 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<GETLocation>> CreateLocation([FromBody] POSTLocation request)
+        public async Task<ActionResult<LocationDto>> CreateLocation([FromBody] POSTLocation request)
         {
             var location = _mapper.Map<Location>(request);
 
             await _context.Locations.AddAsync(location);
             await _context.SaveChangesAsync();
 
-            var returnLocation = _mapper.Map<GETLocation>(location);
+            var returnLocation = _mapper.Map<LocationDto>(location);
             return CreatedAtAction(nameof(CreateLocation), new { id = returnLocation.Id }, returnLocation);
         }
 
@@ -54,7 +54,7 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETLocation>> GetLocation(string id)
+        public async Task<ActionResult<LocationDto>> GetLocation(string id)
         {
             var location = await _context.Locations.Where(l => l.Id == id).FirstOrDefaultAsync();
             if (location is null)
@@ -62,7 +62,7 @@ namespace PCMS.API.Controllers
                 return NotFound("Location not found.");
             }
 
-            var returnLocation = _mapper.Map<GETLocation>(location);
+            var returnLocation = _mapper.Map<LocationDto>(location);
             return Ok(returnLocation);
         }
 

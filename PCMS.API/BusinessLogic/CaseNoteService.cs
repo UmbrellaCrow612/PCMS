@@ -12,7 +12,7 @@ namespace PCMS.API.BusinessLogic
         private readonly ApplicationDbContext _context = context;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<GETCaseNote?> CreateCaseNoteAsync(string caseId, string userId, POSTCaseNote request)
+        public async Task<CaseNoteDto?> CreateCaseNoteAsync(string caseId, string userId, POSTCaseNote request)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
             if (!caseExists)
@@ -31,7 +31,7 @@ namespace PCMS.API.BusinessLogic
                 .Include(x => x.Creator)
                 .FirstOrDefaultAsync(x => x.Id == caseNoteToAdd.Id) ?? throw new InvalidOperationException("Failed to get created case note.");
 
-            return _mapper.Map<GETCaseNote>(createdCaseNote);
+            return _mapper.Map<CaseNoteDto>(createdCaseNote);
 
         }
 
@@ -58,7 +58,7 @@ namespace PCMS.API.BusinessLogic
             return true;
         }
 
-        public async Task<GETCaseNote?> GetCaseNoteByIdAsync(string caseNoteId, string caseId)
+        public async Task<CaseNoteDto?> GetCaseNoteByIdAsync(string caseNoteId, string caseId)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
             if (!caseExists)
@@ -76,10 +76,10 @@ namespace PCMS.API.BusinessLogic
                 return null;
             }
 
-            return _mapper.Map<GETCaseNote>(caseNoteToGet);
+            return _mapper.Map<CaseNoteDto>(caseNoteToGet);
         }
 
-        public async Task<List<GETCaseNote>?> GetCaseNotesForCaseIdAsync(string caseId)
+        public async Task<List<CaseNoteDto>?> GetCaseNotesForCaseIdAsync(string caseId)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
             if (!caseExists)
@@ -93,10 +93,10 @@ namespace PCMS.API.BusinessLogic
                 .Include(x => x.LastModifiedBy)
                 .ToListAsync();
 
-            return _mapper.Map<List<GETCaseNote>>(caseNotes);
+            return _mapper.Map<List<CaseNoteDto>>(caseNotes);
         }
 
-        public async Task<GETCaseNote?> UpdateCaseNoteByIdAsync(string caseNoteId, string caseId, string userId, PATCHCaseNote request)
+        public async Task<CaseNoteDto?> UpdateCaseNoteByIdAsync(string caseNoteId, string caseId, string userId, PATCHCaseNote request)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
             if (!caseExists)
@@ -122,7 +122,7 @@ namespace PCMS.API.BusinessLogic
                 .FirstOrDefaultAsync(x => x.Id == caseNoteId) 
                 ?? throw new InvalidOperationException("Failed to get updated case note.");
 
-            return _mapper.Map<GETCaseNote>(updatedcaseNote);
+            return _mapper.Map<CaseNoteDto>(updatedcaseNote);
 
         }
     }

@@ -26,7 +26,7 @@ namespace PCMS.API.Controllers
             await _context.Vehicles.AddAsync(vehicle);
             await _context.SaveChangesAsync();
 
-            var returnVehicle = _mapper.Map<GETVehicle>(vehicle);
+            var returnVehicle = _mapper.Map<VehicleDto>(vehicle);
             return CreatedAtAction(nameof(CreateVehicle), new { id = returnVehicle.Id }, returnVehicle);
         }
 
@@ -42,7 +42,7 @@ namespace PCMS.API.Controllers
                 return NotFound("Vehicle not found.");
             }
 
-            var returnVehicle = _mapper.Map<GETVehicle>(vehicle);
+            var returnVehicle = _mapper.Map<VehicleDto>(vehicle);
             return Ok(returnVehicle);
         }
 

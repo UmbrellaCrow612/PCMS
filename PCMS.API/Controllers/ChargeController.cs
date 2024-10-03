@@ -52,7 +52,7 @@ namespace PCMS.API.Controllers
             await _context.Charges.AddAsync(charge);
             await _context.SaveChangesAsync();
 
-            var returnCharge = _mapper.Map<GETCharge>(charge);
+            var returnCharge = _mapper.Map<ChargeDto>(charge);
 
             return CreatedAtAction(nameof(CreateCharge), returnCharge);
         }
@@ -77,7 +77,7 @@ namespace PCMS.API.Controllers
 
             var charges = await _context.Charges.Where(x => x.BookingId == bookingId && x.PersonId == id).ToListAsync();
 
-            var returnCharges = _mapper.Map<List<GETCharge>>(charges);
+            var returnCharges = _mapper.Map<List<ChargeDto>>(charges);
             return Ok(returnCharges);
         }
 
@@ -106,7 +106,7 @@ namespace PCMS.API.Controllers
                 return NotFound("Charge not found.");
             }
 
-            var returnCharge = _mapper.Map<GETCharge>(charge);
+            var returnCharge = _mapper.Map<ChargeDto>(charge);
             return Ok(returnCharge);
         }
 

@@ -20,7 +20,7 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<GETCaseAction>> CreateAction(string caseId, [FromBody] POSTCaseAction request)
+        public async Task<ActionResult<CaseActionDto>> CreateAction(string caseId, [FromBody] POSTCaseAction request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -40,7 +40,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<GETCaseAction>> GetAction(string caseId, string id)
+        public async Task<ActionResult<CaseActionDto>> GetAction(string caseId, string id)
         {
             var caseAction = await _caseActionService.GetCaseActionByIdAsync(id, caseId);
 
@@ -58,7 +58,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<List<GETCaseAction>>> GetActions(string caseId)
+        public async Task<ActionResult<List<CaseActionDto>>> GetActions(string caseId)
         {
            var caseActions = await _caseActionService.GetCaseActionsForCaseIdAsync(caseId);
 

@@ -35,14 +35,14 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<GETPerson>> CreatePerson([FromBody] POSTPerson request)
+        public async Task<ActionResult<PersonDto>> CreatePerson([FromBody] POSTPerson request)
         {
             var person = _mapper.Map<Person>(request);
 
             await _context.Persons.AddAsync(person);
             await _context.SaveChangesAsync();
 
-            var returnPerson = _mapper.Map<GETPerson>(person);
+            var returnPerson = _mapper.Map<PersonDto>(person);
 
             return CreatedAtAction(nameof(CreatePerson), new { id = returnPerson.Id }, returnPerson);
         }
@@ -55,7 +55,7 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETPerson>> GetPerson(string id)
+        public async Task<ActionResult<PersonDto>> GetPerson(string id)
         {
             var person = await _context.Persons.Where(p => p.Id == id).FirstOrDefaultAsync();
             if (person is null)
@@ -63,7 +63,7 @@ namespace PCMS.API.Controllers
                 return NotFound("Person not found");
             }
 
-            var returnPerson = _mapper.Map<GETPerson>(person);
+            var returnPerson = _mapper.Map<PersonDto>(person);
             return Ok(returnPerson);
         }
 
@@ -148,7 +148,7 @@ namespace PCMS.API.Controllers
                 .Include(c => c.Person)
                 .FirstOrDefaultAsync() ?? throw new Exception("Failed to get created case person link.");
 
-            var returnCasePerson = _mapper.Map<GETCasePerson>(_casePerson);
+            var returnCasePerson = _mapper.Map<CasePersonDto>(_casePerson);
 
             return Ok(returnCasePerson);
         }

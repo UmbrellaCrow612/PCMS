@@ -41,7 +41,7 @@ namespace PCMS.API.Controllers
                 .Include(x => x.Location)
                 .FirstOrDefaultAsync() ?? throw new ApplicationException("Failed to get created crime scene");
 
-            var returnCrimeScene = _mapper.Map<GETCrimeScene>(_crimeScene);
+            var returnCrimeScene = _mapper.Map<CrimeSceneDto>(_crimeScene);
 
             return Created(nameof(CreateCrimeScene), returnCrimeScene);
         }
@@ -62,10 +62,10 @@ namespace PCMS.API.Controllers
             var persons = await _context.CrimeScenePersons
                 .Where(x => x.CrimeSceneId == id)
                 .Include(x => x.Person)
-                 .Select(x => new GETCrimeScenePerson
+                 .Select(x => new CrimeScenePersonDto
                  {
                      Id = x.Id,
-                     Person = _mapper.Map<GETPerson>(x.Person),
+                     Person = _mapper.Map<PersonDto>(x.Person),
                      Role = x.Role
                  })
                 .ToListAsync();

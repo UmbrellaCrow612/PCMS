@@ -15,22 +15,22 @@ namespace PCMS.API.BusinessLogic
         /// <param name="caseId">The ID of the case.</param>
         /// <param name="userId">The ID of the user creating the case action.</param>
         /// <param name="request">The data used to create the case action.</param>
-        /// <returns>DTO <see cref="GETCaseAction"/> representing the newly created case action or null if the case dose not exist.</returns>
-        Task<GETCaseAction?> CreateCaseActionAsync(string caseId, string userId, POSTCaseAction request);
+        /// <returns>DTO <see cref="CaseActionDto"/> representing the newly created case action or null if the case dose not exist.</returns>
+        Task<CaseActionDto?> CreateCaseActionAsync(string caseId, string userId, POSTCaseAction request);
 
         /// <summary>
         /// Get a case action by its ID.
         /// </summary>
         /// <param name="caseActionId">The ID of the case action.</param>
-        /// <returns>DTO <see cref="GETCaseAction"/> or null if not found.</returns>
-        Task<GETCaseAction?> GetCaseActionByIdAsync(string caseActionId, string caseId);
+        /// <returns>DTO <see cref="CaseActionDto"/> or null if not found.</returns>
+        Task<CaseActionDto?> GetCaseActionByIdAsync(string caseActionId, string caseId);
 
         /// <summary>
         /// Get all case actions for a specific case.
         /// </summary>
         /// <param name="caseId">The ID of the case.</param>
-        /// <returns>List of <see cref="GETCaseAction"/> associated with the case.</returns>
-        Task<List<GETCaseAction>> GetCaseActionsForCaseIdAsync(string caseId);
+        /// <returns>List of <see cref="CaseActionDto"/> associated with the case.</returns>
+        Task<List<CaseActionDto>> GetCaseActionsForCaseIdAsync(string caseId);
 
         /// <summary>
         /// Update a case action with new data.
@@ -38,8 +38,8 @@ namespace PCMS.API.BusinessLogic
         /// <param name="caseActionId">The ID of the case action.</param>
         /// <param name="userId">The ID of the user updating the case action.</param>
         /// <param name="request">The new data to update the case action.</param>
-        /// <returns>DTO <see cref="GETCaseAction"/> or null if not found.</returns>
-        Task<GETCaseAction?> UpdateCaseActionByIdAsync(string caseActionId, string caseId, string userId, PATCHCaseAction request);
+        /// <returns>DTO <see cref="CaseActionDto"/> or null if not found.</returns>
+        Task<CaseActionDto?> UpdateCaseActionByIdAsync(string caseActionId, string caseId, string userId, PATCHCaseAction request);
 
         /// <summary>
         /// Delete a case action.

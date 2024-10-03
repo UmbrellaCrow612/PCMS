@@ -3,7 +3,7 @@
     /// <summary>
     /// DTO when you want to get a Property
     /// </summary>
-    public class GETProperty
+    public class PropertyDto
     {
         public required string Id { get; set; }
 
@@ -29,6 +29,6 @@
 
         public DateTime? LastModifiedDate { get; set; }
 
-        public required GETLocation Location { get; set; }
+        public required LocationDto Location { get; set; }
     }
 }

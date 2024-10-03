@@ -11,7 +11,7 @@ namespace PCMS.API.Mappers
         public VehicleMappingProfile()
         {
             CreateMap<POSTVehicle, Vehicle>();
-            CreateMap<Vehicle, GETVehicle>();
+            CreateMap<Vehicle, VehicleDto>();
             CreateMap<PATCHVehicle, Vehicle>();
         }
     }

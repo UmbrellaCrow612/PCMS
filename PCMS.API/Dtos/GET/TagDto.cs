@@ -3,7 +3,7 @@
     /// <summary>
     /// DTO when you want to get a Tag
     /// </summary>
-    public class GETTag
+    public class TagDto
     {
         public required string Id { get; set; }
 

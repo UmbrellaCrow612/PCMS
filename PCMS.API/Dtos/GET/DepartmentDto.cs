@@ -3,7 +3,7 @@
     /// <summary>
     /// DTO when you want to get a Department
     /// </summary>
-    public class GETDepartment
+    public class DepartmentDto
     {
         public required string Id { get; set; }
 

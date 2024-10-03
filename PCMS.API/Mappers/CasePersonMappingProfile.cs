@@ -10,7 +10,7 @@ namespace PCMS.API.Mappers
         public CasePersonMappingProfile()
         {
             CreateMap<POSTCasePerson, CasePerson>();
-            CreateMap<CasePerson, GETCasePerson>();
+            CreateMap<CasePerson, CasePersonDto>();
         }
     }
 }

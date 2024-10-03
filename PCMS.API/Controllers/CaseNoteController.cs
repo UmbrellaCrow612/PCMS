@@ -24,7 +24,7 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<GETCaseNote>> CreateCaseNote(string caseId, [FromBody] POSTCaseNote request)
+        public async Task<ActionResult<CaseNoteDto>> CreateCaseNote(string caseId, [FromBody] POSTCaseNote request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -40,7 +40,7 @@ namespace PCMS.API.Controllers
         [HttpGet]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<GETCaseNote>>> GetCaseNotes(string caseId)
+        public async Task<ActionResult<List<CaseNoteDto>>> GetCaseNotes(string caseId)
         {
             var caseNotes = await _caseNoteService.GetCaseNotesForCaseIdAsync(caseId);
             if (caseNotes is null)
@@ -54,7 +54,7 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETCaseNote>> GetCaseNote(string caseId, string id)
+        public async Task<ActionResult<CaseNoteDto>> GetCaseNote(string caseId, string id)
         {
             var caseNote = await _caseNoteService.GetCaseNoteByIdAsync(id, caseId);
             if(caseNote is null)

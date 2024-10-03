@@ -25,7 +25,7 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<GETCase>> CreateCase([FromBody] POSTCase request)
+        public async Task<ActionResult<CaseDto>> CreateCase([FromBody] POSTCase request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -37,7 +37,7 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETCase>> GetCase(string id)
+        public async Task<ActionResult<CaseDto>> GetCase(string id)
         {
             var result = await _caseService.GetCaseByIdAsync(id);
 
@@ -91,7 +91,7 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}/persons")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<GETPerson>>> GetCasePersons(string id)
+        public async Task<ActionResult<List<PersonDto>>> GetCasePersons(string id)
         {
             var persons = await _caseService.GetLinkedPersonsForCaseIdAsync(id);
 
@@ -101,7 +101,7 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}/users")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<GETApplicationUser>>> GetUserCases(string id)
+        public async Task<ActionResult<List<ApplicationUserDto>>> GetUserCases(string id)
         {
             var users = await _caseService.GetLinkedUsersForCaseIdAsync(id);
 
@@ -112,7 +112,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<GETCaseEdit>>> GetCaseEdits(string id)
+        public async Task<ActionResult<List<CaseEditDto>>> GetCaseEdits(string id)
         {
             var edits = await _caseService.GetCaseEditsForCaseIdAsync(id);
 
@@ -123,7 +123,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<GETTag>>> GetCaseTags(string id)
+        public async Task<ActionResult<List<TagDto>>> GetCaseTags(string id)
         {
             var tags = await _caseService.GetLinkedTagsForCaseIdAsync(id);
 

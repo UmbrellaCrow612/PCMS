@@ -15,14 +15,14 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user creating the tag.</param>
         /// <param name="request">The tag data.</param>
         /// <returns>The newly created tag.</returns>
-        Task<GETTag> CreateTag(string userId, POSTTag request);
+        Task<TagDto> CreateTag(string userId, POSTTag request);
 
         /// <summary>
         /// Retrieves a tag by its ID.
         /// </summary>
         /// <param name="tagId">The ID of the tag.</param>
         /// <returns>The tag, or null if not found.</returns>
-        Task<GETTag?> GetTagByIdAsync(string tagId);
+        Task<TagDto?> GetTagByIdAsync(string tagId);
 
         /// <summary>
         /// Updates a tag by its ID.
@@ -31,7 +31,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user updating the tag.</param>
         /// <param name="request">The updated tag data.</param>
         /// <returns>The updated tag, or null if not found.</returns>
-        Task<GETTag?> UpdateTagByIdAsync(string tagId, string userId, PATCHTag request);
+        Task<TagDto?> UpdateTagByIdAsync(string tagId, string userId, PATCHTag request);
 
         /// <summary>
         /// Deletes a tag by its ID.
@@ -45,7 +45,7 @@ namespace PCMS.API.BusinessLogic
         /// </summary>
         /// <param name="caseId">The ID of the case.</param>
         /// <returns>A list of tags, or null if the case does not exist.</returns>
-        Task<List<GETTag>?> GetTagsForCaseIdAsync(string caseId);
+        Task<List<TagDto>?> GetTagsForCaseIdAsync(string caseId);
 
         /// <summary>
         /// Links a tag to a case.

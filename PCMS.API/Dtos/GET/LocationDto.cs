@@ -3,7 +3,7 @@
     /// <summary>
     /// DTO when you want to get a Location
     /// </summary>
-    public class GETLocation
+    public class LocationDto
     {
         public required string Id { get; set; }
 

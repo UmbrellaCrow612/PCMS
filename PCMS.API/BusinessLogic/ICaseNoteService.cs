@@ -16,14 +16,14 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user.</param>
         /// <param name="request">The data for creating the case note.</param>
         /// <returns>The created case note or null if the case was not found.</returns>
-        Task<GETCaseNote?> CreateCaseNoteAsync(string caseId, string userId, POSTCaseNote request);
+        Task<CaseNoteDto?> CreateCaseNoteAsync(string caseId, string userId, POSTCaseNote request);
 
         /// <summary>
         /// Retrieves all case notes for a specific case.
         /// </summary>
         /// <param name="caseId">The ID of the case.</param>
         /// <returns>A list of case notes or null if the case was not found.</returns>
-        Task<List<GETCaseNote>?> GetCaseNotesForCaseIdAsync(string caseId);
+        Task<List<CaseNoteDto>?> GetCaseNotesForCaseIdAsync(string caseId);
 
         /// <summary>
         /// Retrieves a specific case note by its ID.
@@ -31,7 +31,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="caseNoteId">The ID of the case note.</param>
         /// <param name="caseId">The ID of the case.</param>
         /// <returns>The case note or null if it was not found.</returns>
-        Task<GETCaseNote?> GetCaseNoteByIdAsync(string caseNoteId, string caseId);
+        Task<CaseNoteDto?> GetCaseNoteByIdAsync(string caseNoteId, string caseId);
 
         /// <summary>
         /// Updates an existing case note.
@@ -41,7 +41,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user.</param>
         /// <param name="request">The data for updating the case note.</param>
         /// <returns>The updated case note or null if it was not found.</returns>
-        Task<GETCaseNote?> UpdateCaseNoteByIdAsync(string caseNoteId, string caseId, string userId, PATCHCaseNote request);
+        Task<CaseNoteDto?> UpdateCaseNoteByIdAsync(string caseNoteId, string caseId, string userId, PATCHCaseNote request);
 
         /// <summary>
         /// Deletes a specific case note.

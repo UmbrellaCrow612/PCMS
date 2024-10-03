@@ -5,7 +5,7 @@ namespace PCMS.API.DTOS.GET
     /// <summary>
     /// DTO when you want to get a <see cref="CaseAction"/>
     /// </summary>
-    public record GETCaseAction
+    public record CaseActionDto
     {
         public required string Id { get; set; }
 
@@ -19,9 +19,9 @@ namespace PCMS.API.DTOS.GET
 
         public DateTime? LastModifiedAtUtc { get; set; }
 
-        public required GETApplicationUser Creator { get; set; }
+        public required ApplicationUserDto Creator { get; set; }
 
-        public GETApplicationUser? LastModifiedBy { get; set; }
+        public ApplicationUserDto? LastModifiedBy { get; set; }
 
     }
 }

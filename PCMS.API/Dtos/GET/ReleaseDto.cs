@@ -5,7 +5,7 @@ namespace PCMS.API.Dtos.GET
     /// <summary>
     /// DTO when you want to get a release
     /// </summary>
-    public class GETRelease
+    public class ReleaseDto
     {
         public required string Id { get; set; }
 

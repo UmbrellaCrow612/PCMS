@@ -11,7 +11,7 @@ namespace PCMS.API.Mappers
         public CaseActionMappingProfile()
         {
             CreateMap<POSTCaseAction, CaseAction>();
-            CreateMap<CaseAction, GETCaseAction>();
+            CreateMap<CaseAction, CaseActionDto>();
             CreateMap<PATCHCaseAction, CaseAction>();
         }
     }

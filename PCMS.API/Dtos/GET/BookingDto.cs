@@ -6,7 +6,7 @@ namespace PCMS.API.Dtos.GET
     /// <summary>
     /// DTO when you want to get a <see cref="Booking"/>
     /// </summary>
-    public class GETBooking
+    public class BookingDto
     {
         public required string Id { get; set; }
 
@@ -22,12 +22,12 @@ namespace PCMS.API.Dtos.GET
 
         public ApplicationUser? LastModifiedBy { get; set; }
 
-        public required GETPerson Person { get; set; }
+        public required PersonDto Person { get; set; }
 
-        public GETRelease? Release { get; set; }
+        public ReleaseDto? Release { get; set; }
 
-        public ICollection<GETCharge> Charges { get; set; } = [];
+        public ICollection<ChargeDto> Charges { get; set; } = [];
 
-        public required GETLocation Location { get; set; }
+        public required LocationDto Location { get; set; }
     }
 }

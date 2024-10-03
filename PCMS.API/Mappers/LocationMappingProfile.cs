@@ -11,7 +11,7 @@ namespace PCMS.API.Mappers
         public LocationMappingProfile()
         {
             CreateMap<POSTLocation, Location>();
-            CreateMap<Location, GETLocation>();
+            CreateMap<Location, LocationDto>();
             CreateMap<PATCHLocation, Location>();
         }
     }

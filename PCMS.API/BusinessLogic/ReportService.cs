@@ -11,7 +11,7 @@ namespace PCMS.API.BusinessLogic
     {
         private readonly IMapper _mapper = mapper;
         private readonly ApplicationDbContext _context = context;
-        public async Task<GETReport?> CreateReportAsync(string caseId, string userId, POSTReport request)
+        public async Task<ReportDto?> CreateReportAsync(string caseId, string userId, POSTReport request)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
             if (!caseExists)
@@ -31,7 +31,7 @@ namespace PCMS.API.BusinessLogic
                 .Include(x => x.Creator)
                 .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get the created report.");
 
-            return _mapper.Map<GETReport>(createdReport);
+            return _mapper.Map<ReportDto>(createdReport);
         }
 
         public async Task<bool> DeleteReportByIdAsync(string reportId, string caseId, string userId)
@@ -60,7 +60,7 @@ namespace PCMS.API.BusinessLogic
             return true;
         }
 
-        public async Task<GETReport?> GetReportByIdAsync(string reportId, string caseId)
+        public async Task<ReportDto?> GetReportByIdAsync(string reportId, string caseId)
         {
             var reportToGet = await _context.Reports
                 .Where(x => x.Id == reportId && x.CaseId == caseId)
@@ -73,10 +73,10 @@ namespace PCMS.API.BusinessLogic
                 return null;
             }
 
-            return _mapper.Map<GETReport>(reportToGet);
+            return _mapper.Map<ReportDto>(reportToGet);
         }
 
-        public async Task<List<GETReport>?> GetReportsForCaseIdAsync(string caseId)
+        public async Task<List<ReportDto>?> GetReportsForCaseIdAsync(string caseId)
         {
             var caseExists = await _context.Cases.AnyAsync(x => x.Id == caseId);
             if (!caseExists) 
@@ -90,10 +90,10 @@ namespace PCMS.API.BusinessLogic
                 .Include(x => x.LastModifiedBy)
                 .ToListAsync();
 
-            return _mapper.Map<List<GETReport>>(reports);
+            return _mapper.Map<List<ReportDto>>(reports);
         }
 
-        public async Task<GETReport?> UpdateReportByIdAsync(string reportId, string caseId, string userId, PATCHReport request)
+        public async Task<ReportDto?> UpdateReportByIdAsync(string reportId, string caseId, string userId, PATCHReport request)
         {
             var reportToUpdate = await _context.Reports
                 .Where(x => x.Id == reportId && x.CaseId == caseId)
@@ -116,7 +116,7 @@ namespace PCMS.API.BusinessLogic
                 .Include(x => x.LastModifiedBy)
                 .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get updated report.");
 
-            return _mapper.Map<GETReport>(updatedReport);
+            return _mapper.Map<ReportDto>(updatedReport);
         }
     }
 }

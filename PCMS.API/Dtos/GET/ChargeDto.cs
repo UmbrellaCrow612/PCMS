@@ -3,7 +3,7 @@
     /// <summary>
     /// DTO when you want to get a charge
     /// </summary>
-    public class GETCharge
+    public class ChargeDto
     {
         public required string Id { get; set; }
 

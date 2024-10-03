@@ -33,7 +33,7 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<GETProperty>> CreateProperty([FromBody] POSTProperty request)
+        public async Task<ActionResult<PropertyDto>> CreateProperty([FromBody] POSTProperty request)
         {
             var location = await _context.Locations.Where(l => l.Id == request.LocationId).FirstOrDefaultAsync();
             if (location is null)
@@ -50,7 +50,7 @@ namespace PCMS.API.Controllers
                 .Include(p => p.Location)
                 .FirstOrDefaultAsync() ?? throw new Exception("Could not fetch the property just made");
 
-            var returnProperty = _mapper.Map<GETProperty>(_property);
+            var returnProperty = _mapper.Map<PropertyDto>(_property);
 
             return CreatedAtAction(nameof(CreateProperty), new { id = returnProperty.Id }, returnProperty);
         }
@@ -63,7 +63,7 @@ namespace PCMS.API.Controllers
         [HttpGet("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<GETProperty>> GetProperty(string id)
+        public async Task<ActionResult<PropertyDto>> GetProperty(string id)
         {
             var property = await _context.Properties.Where(p => p.Id == id).Include(p => p.Location).FirstOrDefaultAsync();
             if (property is null)
@@ -71,7 +71,7 @@ namespace PCMS.API.Controllers
                 return NotFound("Property not found");
             }
 
-            var returnProperty = _mapper.Map<GETProperty>(property);
+            var returnProperty = _mapper.Map<PropertyDto>(property);
             return Ok(returnProperty);
         }
 

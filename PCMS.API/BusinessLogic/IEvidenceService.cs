@@ -16,7 +16,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user.</param>
         /// <param name="request">The data.</param>
         /// <returns>Newly created Evidence or null if the case was not found.</returns>
-        Task<GETEvidence?> CreateEvidenceAsync(string caseId, string userId, POSTEvidence request);
+        Task<EvidenceDto?> CreateEvidenceAsync(string caseId, string userId, POSTEvidence request);
 
         /// <summary>
         /// Get Evidence item.
@@ -24,14 +24,14 @@ namespace PCMS.API.BusinessLogic
         /// <param name="evidenceId">The ID of the Evidence.</param>
         /// <param name="caseId">The ID of the case.</param>
         /// <returns>The Evidence item or null if the case dose not exist.</returns>
-        Task<GETEvidence?> GetEvidenceByIdAsync(string evidenceId, string caseId);
+        Task<EvidenceDto?> GetEvidenceByIdAsync(string evidenceId, string caseId);
 
         /// <summary>
         /// The Evidence for a case.
         /// </summary>
         /// <param name="caseId">The ID of the case.</param>
         /// <returns>List of Evidence or null if the case dose not exist.</returns>
-        Task<List<GETEvidence>?> GetEvidenceForCaseIdAsync(string caseId);
+        Task<List<EvidenceDto>?> GetEvidenceForCaseIdAsync(string caseId);
 
         /// <summary>
         /// Update a Evidence
@@ -40,7 +40,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="caseId">The ID of the case.</param>
         /// <param name="request">The data.</param>
         /// <returns>The updated Evidence or null if it could not find it..</returns>
-        Task<GETEvidence?> UpdatetEvidenceByIdAsync(string evidenceId, string caseId, string userId,PATCHEvidence request);
+        Task<EvidenceDto?> UpdatetEvidenceByIdAsync(string evidenceId, string caseId, string userId,PATCHEvidence request);
 
         /// <summary>
         /// Delete an Evidence item.

@@ -3,7 +3,7 @@
     /// <summary>
     /// DTO when you want to get a user
     /// </summary>
-    public record GETApplicationUser
+    public record ApplicationUserDto
     {
         public required string Id { get; set; }
 

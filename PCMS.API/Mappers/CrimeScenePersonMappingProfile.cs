@@ -8,7 +8,7 @@ namespace PCMS.API.Mappers
     {
         public CrimeScenePersonMappingProfile()
         {
-            CreateMap<CrimeScenePerson, GETCrimeScenePerson>();
+            CreateMap<CrimeScenePerson, CrimeScenePersonDto>();
         }
     }
 }

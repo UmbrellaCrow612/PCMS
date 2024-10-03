@@ -11,7 +11,7 @@ namespace PCMS.API.Mappers
         public PersonMappingProfile()
         {
             CreateMap<POSTPerson, Person>();
-            CreateMap<Person, GETPerson>();
+            CreateMap<Person, PersonDto>();
             CreateMap<PATCHPerson, Person>();
         }
     }

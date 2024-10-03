@@ -11,7 +11,7 @@ namespace PCMS.API.BusinessLogic
     {
         private readonly IMapper _mapper = mapper;
         private readonly ApplicationDbContext _context = context;
-        public async Task<GETCaseAction?> CreateCaseActionAsync(string caseId, string userId, POSTCaseAction request)
+        public async Task<CaseActionDto?> CreateCaseActionAsync(string caseId, string userId, POSTCaseAction request)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
             if (!caseExists)
@@ -31,7 +31,7 @@ namespace PCMS.API.BusinessLogic
                 .Include(x => x.Creator)
                 .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to retrieve the created case action.");
 
-            return _mapper.Map<GETCaseAction>(createdCaseAction);
+            return _mapper.Map<CaseActionDto>(createdCaseAction);
         }
 
         public async Task<bool> DeleteCaseActionByIdAsync(string caseActionId, string caseId)
@@ -51,7 +51,7 @@ namespace PCMS.API.BusinessLogic
             return true;
         }
 
-        public async Task<GETCaseAction?> GetCaseActionByIdAsync(string caseActionId, string caseId)
+        public async Task<CaseActionDto?> GetCaseActionByIdAsync(string caseActionId, string caseId)
         {
             var caseActionToGet = await _context.CaseActions
                 .Where(x => x.Id == caseActionId && x.CaseId == caseId)
@@ -62,19 +62,19 @@ namespace PCMS.API.BusinessLogic
                 return null;
             }
 
-            return _mapper.Map<GETCaseAction>(caseActionToGet);
+            return _mapper.Map<CaseActionDto>(caseActionToGet);
         }
 
-        public async Task<List<GETCaseAction>> GetCaseActionsForCaseIdAsync(string caseId)
+        public async Task<List<CaseActionDto>> GetCaseActionsForCaseIdAsync(string caseId)
         {
             var caseActionsToGet = await _context.CaseActions
                 .Where(x => x.CaseId == caseId)
                 .ToListAsync();
 
-            return _mapper.Map<List<GETCaseAction>>(caseActionsToGet);
+            return _mapper.Map<List<CaseActionDto>>(caseActionsToGet);
         }
 
-        public async Task<GETCaseAction?> UpdateCaseActionByIdAsync(string caseActionId, string caseId, string userId, PATCHCaseAction request)
+        public async Task<CaseActionDto?> UpdateCaseActionByIdAsync(string caseActionId, string caseId, string userId, PATCHCaseAction request)
         {
             var caseActionToUpdate = await _context.CaseActions
                 .Where(x => x.Id == caseActionId && x.CaseId == caseId)
@@ -97,7 +97,7 @@ namespace PCMS.API.BusinessLogic
                  .Include(x => x.LastModifiedBy)
                 .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get updated case action.");
 
-            return _mapper.Map<GETCaseAction>(updatedCaseAction);
+            return _mapper.Map<CaseActionDto>(updatedCaseAction);
 
         }
     }

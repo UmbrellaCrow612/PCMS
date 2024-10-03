@@ -11,7 +11,7 @@ namespace PCMS.API.Mappers
         public CaseNoteMappingProfile()
         {
             CreateMap<POSTCaseNote, CaseNote>();
-            CreateMap<CaseNote, GETCaseNote>();
+            CreateMap<CaseNote, CaseNoteDto>();
             CreateMap<PATCHCaseNote, CaseNote>();
         }
     }

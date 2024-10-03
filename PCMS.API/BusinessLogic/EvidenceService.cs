@@ -12,7 +12,7 @@ namespace PCMS.API.BusinessLogic
         private readonly IMapper _mapper = mapper;
         private readonly ApplicationDbContext _context = context;
 
-        public async Task<GETEvidence?> CreateEvidenceAsync(string caseId, string userId, POSTEvidence request)
+        public async Task<EvidenceDto?> CreateEvidenceAsync(string caseId, string userId, POSTEvidence request)
         {
             var caseExists = await _context.Cases.AnyAsync(x => x.Id == caseId);
             if (!caseExists)
@@ -32,7 +32,7 @@ namespace PCMS.API.BusinessLogic
                 .Include(x => x.Creator)
                 .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get created evidence.");
 
-            return _mapper.Map<GETEvidence>(createdEvidence);
+            return _mapper.Map<EvidenceDto>(createdEvidence);
         }
 
         public async Task<bool> DeleteEvidenceByIdAsync(string evidenceId, string caseId, string userId)
@@ -61,7 +61,7 @@ namespace PCMS.API.BusinessLogic
             return true;
         }
 
-        public async Task<GETEvidence?> GetEvidenceByIdAsync(string evidenceId, string caseId)
+        public async Task<EvidenceDto?> GetEvidenceByIdAsync(string evidenceId, string caseId)
         {
             var caseExists = await _context.Cases.AnyAsync(x => x.Id == caseId);
             if (!caseExists)
@@ -80,10 +80,10 @@ namespace PCMS.API.BusinessLogic
                 return null;
             }
 
-            return _mapper.Map<GETEvidence>(_evidence);
+            return _mapper.Map<EvidenceDto>(_evidence);
         }
 
-        public async Task<List<GETEvidence>?> GetEvidenceForCaseIdAsync(string caseId)
+        public async Task<List<EvidenceDto>?> GetEvidenceForCaseIdAsync(string caseId)
         {
             var caseExists = await _context.Cases.AnyAsync (x => x.Id == caseId);
             if (!caseExists)
@@ -97,10 +97,10 @@ namespace PCMS.API.BusinessLogic
                 .Include(x => x.LastModifiedBy)
                 .ToListAsync();
 
-            return _mapper.Map<List<GETEvidence>>(evidences);
+            return _mapper.Map<List<EvidenceDto>>(evidences);
         }
 
-        public async Task<GETEvidence?> UpdatetEvidenceByIdAsync(string evidenceId, string caseId, string userId, PATCHEvidence request)
+        public async Task<EvidenceDto?> UpdatetEvidenceByIdAsync(string evidenceId, string caseId, string userId, PATCHEvidence request)
         {
             var caseExists = await _context.Cases.AnyAsync(x => x.Id == caseId);
             if (!caseExists)
@@ -129,7 +129,7 @@ namespace PCMS.API.BusinessLogic
                 .Include(x => x.LastModifiedBy)
                 .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get updated evidence.");
 
-            return _mapper.Map<GETEvidence>(updatedEvidence);
+            return _mapper.Map<EvidenceDto>(updatedEvidence);
         }
     }
 }

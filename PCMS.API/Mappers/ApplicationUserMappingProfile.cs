@@ -10,7 +10,7 @@ namespace PCMS.API.Mappers
     {
         public ApplicationUserMappingProfile()
         {
-            CreateMap<ApplicationUser, GETApplicationUser>();
+            CreateMap<ApplicationUser, ApplicationUserDto>();
             CreateMap<PCMSRegisterRequest, ApplicationUser>();
         }
     }

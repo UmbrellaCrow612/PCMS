@@ -8,7 +8,7 @@ namespace PCMS.API.Mappers
     {
         public ApplicationUserCaseMappingProfile()
         {
-            CreateMap<ApplicationUserCase, GETApplicationUserCase>();
+            CreateMap<ApplicationUserCase, ApplicationUserCaseDto>();
         }
     }
 }

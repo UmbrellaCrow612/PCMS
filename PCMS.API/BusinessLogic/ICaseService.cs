@@ -13,15 +13,15 @@ namespace PCMS.API.BusinessLogic
         /// </summary>
         /// <param name="request">The data sent to create the case.</param>
         /// <param name="userId">The ID of the user who made the request to make the case.</param>
-        /// <returns>DTO <see cref="GETCase"/> of the created case.</returns>
-        Task<GETCase> CreateCaseAsync(POSTCase request, string userId);
+        /// <returns>DTO <see cref="CaseDto"/> of the created case.</returns>
+        Task<CaseDto> CreateCaseAsync(POSTCase request, string userId);
 
         /// <summary>
         /// Get a <see cref="Case"/> by its ID
         /// </summary>
         /// <param name="id">The ID of the case</param>
-        /// <returns>DTO <see cref="GETCase"/> or null if it could not find it.</returns>
-        Task<GETCase?> GetCaseByIdAsync(string id);
+        /// <returns>DTO <see cref="CaseDto"/> or null if it could not find it.</returns>
+        Task<CaseDto?> GetCaseByIdAsync(string id);
 
         /// <summary>
         /// Update a case by its ID
@@ -44,35 +44,35 @@ namespace PCMS.API.BusinessLogic
         /// Gets Persons linked to this case
         /// </summary>
         /// <param name="id">The ID of the case</param>
-        /// <returns>List of <see cref="GETCasePerson"/> or empty array</returns>
-        Task<List<GETCasePerson>> GetLinkedPersonsForCaseIdAsync(string id);
+        /// <returns>List of <see cref="CasePersonDto"/> or empty array</returns>
+        Task<List<CasePersonDto>> GetLinkedPersonsForCaseIdAsync(string id);
 
         /// <summary>
         /// Get all users linked to this case
         /// </summary>
         /// <param name="id">The ID of the case.</param>
-        /// <returns>List of <see cref="GETApplicationUser"/> or empty</returns>
-        Task<List<GETApplicationUser>> GetLinkedUsersForCaseIdAsync(string id);
+        /// <returns>List of <see cref="ApplicationUserDto"/> or empty</returns>
+        Task<List<ApplicationUserDto>> GetLinkedUsersForCaseIdAsync(string id);
 
         /// <summary>
         /// Gets all the edits made on a case
         /// </summary>
         /// <param name="id">The ID of the case</param>
-        /// <returns>List of <see cref="GETCaseEdit"/> or empty</returns>
-        Task<List<GETCaseEdit>> GetCaseEditsForCaseIdAsync(string id);
+        /// <returns>List of <see cref="CaseEditDto"/> or empty</returns>
+        Task<List<CaseEditDto>> GetCaseEditsForCaseIdAsync(string id);
 
         /// <summary>
         /// Get all the tags linked to a case.
         /// </summary>
         /// <param name="id">The ID of the case</param>
-        /// <returns>List of <see cref="GETTag"/> or empty.</returns>
-        Task<List<GETTag>> GetLinkedTagsForCaseIdAsync(string id);
+        /// <returns>List of <see cref="TagDto"/> or empty.</returns>
+        Task<List<TagDto>> GetLinkedTagsForCaseIdAsync(string id);
 
         /// <summary>
         /// Get cases based on search params.
         /// </summary>
         /// <param name="request">The data.</param>
         /// <returns>List of cases</returns>
-        Task<List<GETCase>> SearchForCases(POSTCaseSearch request);
+        Task<List<CaseDto>> SearchForCases(POSTCaseSearch request);
     }
 }

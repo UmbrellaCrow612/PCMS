@@ -30,7 +30,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<GETRelease>> CreateRelease(string id, string bookingId, [FromBody] POSTRelease request)
+        public async Task<ActionResult<ReleaseDto>> CreateRelease(string id, string bookingId, [FromBody] POSTRelease request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -59,7 +59,7 @@ namespace PCMS.API.Controllers
             await _context.Releases.AddAsync(release);
             await _context.SaveChangesAsync();
 
-            var returnRelease = _mapper.Map<GETRelease>(release);
+            var returnRelease = _mapper.Map<ReleaseDto>(release);
             return CreatedAtAction(nameof(CreateRelease), returnRelease);
         }
 
@@ -86,7 +86,7 @@ namespace PCMS.API.Controllers
                 return NotFound("This booking dose have a release.");
             }
 
-            var returnRelease = _mapper.Map<GETRelease>((booking.Release));
+            var returnRelease = _mapper.Map<ReleaseDto>((booking.Release));
 
             return Ok(returnRelease);
         }

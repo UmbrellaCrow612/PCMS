@@ -11,7 +11,7 @@ namespace PCMS.API.Mappers
         public PropertyMappingProfile()
         {
             CreateMap<POSTProperty, Property>();
-            CreateMap<Property, GETProperty>();
+            CreateMap<Property, PropertyDto>();
             CreateMap<PATCHProperty, Property>();
         }
     }

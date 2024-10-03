@@ -7,7 +7,7 @@ namespace PCMS.API.DTOS.GET
     /// <summary>
     /// DTO when you want to get a <see cref="Case"/>
     /// </summary>
-    public record GETCase
+    public record CaseDto
     {
         public required string Id { get; set; }
 
@@ -31,12 +31,12 @@ namespace PCMS.API.DTOS.GET
 
         public required string Type { get; set; } = string.Empty;
 
-        public required GETApplicationUser Creator { get; set; }
+        public required ApplicationUserDto Creator { get; set; }
 
-        public GETApplicationUser? LastModifiedBy { get; set; }
+        public ApplicationUserDto? LastModifiedBy { get; set; }
 
         public required CaseComplexity Complexity { get; set; }
 
-        public required GETDepartment Department { get; set; }
+        public required DepartmentDto Department { get; set; }
     }
 }

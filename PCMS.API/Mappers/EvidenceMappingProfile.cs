@@ -11,7 +11,7 @@ namespace PCMS.API.Mappers
         public EvidenceMappingProfile()
         {
             CreateMap<POSTEvidence, Evidence>();
-            CreateMap<Evidence, GETEvidence>();
+            CreateMap<Evidence, EvidenceDto>();
             CreateMap<PATCHEvidence, Evidence>();
         }
     }

@@ -5,7 +5,7 @@ namespace PCMS.API.Dtos.GET
     /// <summary>
     /// Dto when you want to get a crime scene
     /// </summary>
-    public class GETCrimeScene
+    public class CrimeSceneDto
     {
         public required string Id { get; set; }
 
@@ -17,6 +17,6 @@ namespace PCMS.API.Dtos.GET
 
         public required DateTime DiscoveredDateTime { get; set; }
 
-        public required GETLocation Location { get; set; }
+        public required LocationDto Location { get; set; }
     }
 }
