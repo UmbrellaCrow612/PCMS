@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PCMS.API.Models.Enums;
+using PCMS.API.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.Models
@@ -8,20 +9,23 @@ namespace PCMS.API.Models
     /// Represents a Edit on a case in the system.
     /// </summary>
     [Index(nameof(Id), IsUnique = true)]
-    public class CaseEdit
+    public class CaseEdit : IAuditCreator
     {
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
-        public required string UserId { get; set; }
+        public required string CreatedById { get; set; }
 
-        public ApplicationUser? User { get; set; } = null!;
+        public ApplicationUser? Creator { get; set; }
 
         [Required]
         public required string CaseId { get; set; }
 
         public Case? Case { get; set; } = null!;
+
+        [Required]
+        public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 
         [Required]
         public required string PreviousTitle { get; set; }
@@ -39,8 +43,6 @@ namespace PCMS.API.Models
         public required string PreviousType { get; set; }
 
         public required CaseComplexity PreviousComplexity { get; set; }
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     }
 }

@@ -11,7 +11,9 @@ namespace PCMS.API.Dtos.GET
     {
         public required string Id { get; set; }
 
-        public required GETApplicationUser User { get; set; }
+        public required GETApplicationUser Creator { get; set; }
+
+        public required DateTime CreatedAtUtc { get; set; }
 
         public required string PreviousTitle { get; set; }
 
@@ -24,7 +26,5 @@ namespace PCMS.API.Dtos.GET
         public required CasePriority PreviousPriority { get; set; }
 
         public required string PreviousType { get; set; }
-
-        public required DateTime CreatedAt { get; set; }
     }
 }

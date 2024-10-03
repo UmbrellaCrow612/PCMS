@@ -10,7 +10,7 @@ namespace PCMS.API.Data.Configs
         {
             builder.HasKey(x => x.Id);
 
-            builder.HasOne(x => x.User).WithMany(x => x.CaseEdits).HasForeignKey(x => x.UserId);
+            builder.HasOne(x => x.Creator).WithMany(x => x.CaseEdits).HasForeignKey(x => x.CreatedById);
 
             builder.HasOne(x => x.Case).WithMany(x => x.CaseEdits).HasForeignKey(x => x.CaseId);
         }

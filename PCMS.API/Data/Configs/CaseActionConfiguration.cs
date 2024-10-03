@@ -12,7 +12,7 @@ namespace PCMS.API.Data.Configs
 
             builder.HasOne(x => x.Creator).WithMany(x => x.CreatedCaseActions).HasForeignKey(x => x.CreatedById);
 
-            builder.HasOne(x => x.LastEditor).WithMany(x => x.EditedCaseActions).HasForeignKey(x => x.LastEditedById);
+            builder.HasOne(x => x.LastModifiedBy).WithMany(x => x.EditedCaseActions).HasForeignKey(x => x.LastModifiedById);
 
             builder.HasOne(x => x.Case).WithMany(x => x.CaseActions).HasForeignKey(x => x.CaseId);
         }

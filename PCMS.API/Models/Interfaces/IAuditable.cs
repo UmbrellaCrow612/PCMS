@@ -1,24 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PCMS.API.Models.Interfaces
+﻿namespace PCMS.API.Models.Interfaces
 {
     /// <summary>
-    /// Audit fields we want on models.
+    /// All Audit fields on a model.
     /// </summary>
-    public interface IAuditable
+    public interface IAuditable : IAuditCreator, IAuditModifier
     {
-        [Required]
-        DateTime CreatedAtUtc { get; set; }
-
-        [Required]
-        string CreatedById { get; set; }
-
-        ApplicationUser? Creator { get; set; }
-
-        DateTime? LastModifiedAtUtc { get; set; }
-
-        string? LastModifiedById { get; set; }
-
-        ApplicationUser? LastModifiedBy { get; set; }
+ 
     }
 }

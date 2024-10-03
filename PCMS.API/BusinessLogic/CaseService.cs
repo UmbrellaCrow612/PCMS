@@ -49,7 +49,7 @@ namespace PCMS.API.BusinessLogic
             }
 
             var caseEdit = _mapper.Map<CaseEdit>(caseToUpdate);
-            caseEdit.UserId = userId;
+            caseEdit.CreatedById = userId;
             caseEdit.CaseId = id;
 
             _mapper.Map(request, caseToUpdate);
@@ -103,7 +103,7 @@ namespace PCMS.API.BusinessLogic
         {
             var edits = await _context.CaseEdits
                 .Where(x => x.CaseId == id)
-                .Include(x => x.User)
+                .Include(x => x.Creator)
                 .ToListAsync();
 
             return _mapper.Map<List<GETCaseEdit>>(edits);
