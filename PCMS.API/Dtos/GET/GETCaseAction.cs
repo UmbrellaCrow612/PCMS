@@ -15,13 +15,13 @@ namespace PCMS.API.DTOS.GET
 
         public required string Type { get; set; }
 
-        public required DateTime CreatedAt { get; set; }
+        public DateTime CreatedAtUtc { get; set; }
 
-        public DateTime? LastModifiedDate { get; set; }
+        public DateTime? LastModifiedAtUtc { get; set; }
 
         public required GETApplicationUser Creator { get; set; }
 
-        public GETApplicationUser? LastEditor { get; set; }
+        public GETApplicationUser? LastModifiedBy { get; set; }
 
     }
 }

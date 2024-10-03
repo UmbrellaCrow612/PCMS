@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PCMS.API.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.Models
@@ -7,7 +8,7 @@ namespace PCMS.API.Models
     /// Represents a specific action taken on a case.
     /// </summary>
     [Index(nameof(Id), IsUnique = true)]
-    public class CaseAction
+    public class CaseAction : IAuditable
     {
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -21,27 +22,24 @@ namespace PCMS.API.Models
         [Required]
         public required string Type { get; set; }
 
-        [Required]
-        [DataType(DataType.DateTime)]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAtUtc { get; set; }
 
-        [DataType(DataType.DateTime)]
-        public DateTime? LastModifiedDate { get; set; }
-
-
+        public DateTime? LastModifiedAtUtc { get; set; }
 
         [Required]
         public required string CreatedById { get; set; }
 
-        public required ApplicationUser Creator { get; set; }
+        public ApplicationUser? Creator { get; set; }
 
-        public string? LastEditedById { get; set; }
+        public string? LastModifiedById { get; set; }
 
-        public ApplicationUser? LastEditor { get; set; }
+        public ApplicationUser? LastModifiedBy { get; set; }
 
         [Required]
         public required string CaseId { get; set; }
 
         public Case? Case { get; set; } = null;
+
+
     }
 }

@@ -86,15 +86,15 @@ namespace PCMS.API.BusinessLogic
             }
 
             _mapper.Map(request, caseActionToUpdate);
-            caseActionToUpdate.LastEditedById = userId;
-            caseActionToUpdate.LastModifiedDate = DateTime.UtcNow;
+            caseActionToUpdate.LastModifiedById = userId;
+            caseActionToUpdate.LastModifiedAtUtc = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
             var updatedCaseAction = await _context.CaseActions
                 .Where(x => x.Id == caseActionId && x.CaseId == caseId)
                 .Include(x => x.Creator)
-                 .Include(x => x.LastEditor)
+                 .Include(x => x.LastModifiedBy)
                 .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get updated case action.");
 
             return _mapper.Map<GETCaseAction>(updatedCaseAction);
