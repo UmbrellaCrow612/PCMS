@@ -27,11 +27,7 @@ namespace PCMS.API.BusinessLogic
             await _context.CaseNotes.AddAsync(caseNoteToAdd);
             await _context.SaveChangesAsync();
 
-            var createdCaseNote = await _context.CaseNotes
-                .Include(x => x.Creator)
-                .FirstOrDefaultAsync(x => x.Id == caseNoteToAdd.Id) ?? throw new InvalidOperationException("Failed to get created case note.");
-
-            return _mapper.Map<CaseNoteDto>(createdCaseNote);
+            return _mapper.Map<CaseNoteDto>(caseNoteToAdd);
 
         }
 
@@ -116,13 +112,7 @@ namespace PCMS.API.BusinessLogic
 
             await _context.SaveChangesAsync();
 
-            var updatedcaseNote = await _context.CaseNotes
-                .Include(x => x.Creator)
-                .Include(x => x.LastModifiedBy)
-                .FirstOrDefaultAsync(x => x.Id == caseNoteId) 
-                ?? throw new InvalidOperationException("Failed to get updated case note.");
-
-            return _mapper.Map<CaseNoteDto>(updatedcaseNote);
+            return _mapper.Map<CaseNoteDto>(caseNoteToUpdate);
 
         }
     }

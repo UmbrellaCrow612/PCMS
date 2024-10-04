@@ -26,12 +26,7 @@ namespace PCMS.API.BusinessLogic
             await _context.Reports.AddAsync(reportToCreate);
             await _context.SaveChangesAsync();
 
-            var createdReport = await _context.Reports
-                .Where(x => x.Id == reportToCreate.Id)
-                .Include(x => x.Creator)
-                .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get the created report.");
-
-            return _mapper.Map<ReportDto>(createdReport);
+            return _mapper.Map<ReportDto>(reportToCreate);
         }
 
         public async Task<bool> DeleteReportByIdAsync(string reportId, string caseId, string userId)
@@ -110,13 +105,7 @@ namespace PCMS.API.BusinessLogic
 
             await _context.SaveChangesAsync();
 
-            var updatedReport = await _context.Reports
-                .Where(x => x.Id == reportId && x.CaseId == caseId)
-                .Include(x => x.Creator)
-                .Include(x => x.LastModifiedBy)
-                .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get updated report.");
-
-            return _mapper.Map<ReportDto>(updatedReport);
+            return _mapper.Map<ReportDto>(reportToUpdate);
         }
     }
 }

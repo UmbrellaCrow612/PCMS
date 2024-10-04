@@ -27,12 +27,7 @@ namespace PCMS.API.BusinessLogic
             await _context.Evidences.AddAsync(_evidence);
             await _context.SaveChangesAsync();
 
-            var createdEvidence = await _context.Evidences
-                .Where(x => x.Id == _evidence.Id)
-                .Include(x => x.Creator)
-                .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get created evidence.");
-
-            return _mapper.Map<EvidenceDto>(createdEvidence);
+            return _mapper.Map<EvidenceDto>(_evidence);
         }
 
         public async Task<bool> DeleteEvidenceByIdAsync(string evidenceId, string caseId, string userId)
@@ -123,13 +118,7 @@ namespace PCMS.API.BusinessLogic
 
             await _context.SaveChangesAsync();
 
-           var updatedEvidence = await _context.Evidences
-                .Where(x => x.Id == evidenceId)
-                .Include(x => x.Creator)
-                .Include(x => x.LastModifiedBy)
-                .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get updated evidence.");
-
-            return _mapper.Map<EvidenceDto>(updatedEvidence);
+            return _mapper.Map<EvidenceDto>(_evidence);
         }
     }
 }

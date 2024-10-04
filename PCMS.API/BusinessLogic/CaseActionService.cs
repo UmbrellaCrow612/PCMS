@@ -26,12 +26,7 @@ namespace PCMS.API.BusinessLogic
             await _context.CaseActions.AddAsync(caseActionToCreate);
             await _context.SaveChangesAsync();
 
-            var createdCaseAction = await _context.CaseActions
-                .Where(x => x.Id == caseActionToCreate.Id)
-                .Include(x => x.Creator)
-                .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to retrieve the created case action.");
-
-            return _mapper.Map<CaseActionDto>(createdCaseAction);
+            return _mapper.Map<CaseActionDto>(caseActionToCreate);
         }
 
         public async Task<bool> DeleteCaseActionByIdAsync(string caseActionId, string caseId)
@@ -55,6 +50,8 @@ namespace PCMS.API.BusinessLogic
         {
             var caseActionToGet = await _context.CaseActions
                 .Where(x => x.Id == caseActionId && x.CaseId == caseId)
+                .Include(x => x.Creator)
+                .Include(x => x.LastModifiedBy)
                 .FirstOrDefaultAsync();
 
             if (caseActionToGet is null)
@@ -69,6 +66,8 @@ namespace PCMS.API.BusinessLogic
         {
             var caseActionsToGet = await _context.CaseActions
                 .Where(x => x.CaseId == caseId)
+                .Include(x => x.Creator)
+                .Include(x => x.LastModifiedBy)
                 .ToListAsync();
 
             return _mapper.Map<List<CaseActionDto>>(caseActionsToGet);
@@ -91,13 +90,7 @@ namespace PCMS.API.BusinessLogic
 
             await _context.SaveChangesAsync();
 
-            var updatedCaseAction = await _context.CaseActions
-                .Where(x => x.Id == caseActionId && x.CaseId == caseId)
-                .Include(x => x.Creator)
-                 .Include(x => x.LastModifiedBy)
-                .FirstOrDefaultAsync() ?? throw new InvalidOperationException("Failed to get updated case action.");
-
-            return _mapper.Map<CaseActionDto>(updatedCaseAction);
+            return _mapper.Map<CaseActionDto>(caseActionToUpdate);
 
         }
     }
