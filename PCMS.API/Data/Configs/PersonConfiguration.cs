@@ -10,6 +10,10 @@ namespace PCMS.API.Data.Configs
         {
             builder.HasKey(x => x.Id);
 
+            builder.HasIndex(x => x.IsDeleted).HasFilter("IsDeleted = 0");
+
+            builder.HasQueryFilter(x => !x.IsDeleted);
+
             builder.HasMany(x => x.CasesInvolved).WithOne(x => x.Person).HasForeignKey(x => x.PersonId);
 
             builder.HasMany(x => x.Bookings).WithOne(x => x.Person).HasForeignKey(x => x.PersonId);
@@ -17,6 +21,8 @@ namespace PCMS.API.Data.Configs
             builder.HasMany(x => x.Releases).WithOne(x => x.Person).HasForeignKey(x => x.PersonId);
 
             builder.HasMany(x => x.Charges).WithOne(x => x.Person).HasForeignKey(x => x.PersonId);
+
+            builder.HasOne(x => x.UserWhoDeleted).WithMany(x => x.DeletedPersons).HasForeignKey(x => x.DeletedById);
         }
     }
 }

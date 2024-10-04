@@ -69,6 +69,8 @@ namespace PCMS.API.BusinessLogic.Models
 
         public ICollection<Tag> EditedTags { get; set; } = [];
 
+        public ICollection<Person> DeletedPersons { get; set; } = [];
+
         public ApplicationUser() : base()
         {
         }

@@ -1,7 +1,5 @@
 ﻿using PCMS.API.BusinessLogic.Models.Enums;
 using PCMS.API.Dtos.Create;
-using PCMS.API.Dtos.Read;
-using PCMS.API.Dtos.Update;
 using PCMS.API.DTOS.Read;
 using PCMS.API.DTOS.Update;
 
@@ -37,8 +35,9 @@ namespace PCMS.API.BusinessLogic.Interfaces
         /// Deletes a person by their ID.
         /// </summary>
         /// <param name="personId">The ID of the person.</param>
+        /// <param name="userId">The ID of the user</param>
         /// <returns>True if the deletion was successful, false if the person does not exist.</returns>
-        Task<bool> DeletePersonByIdAsync(string personId);
+        Task<bool> DeletePersonByIdAsync(string personId, string userId);
 
         /// <summary>
         /// Searches for people based on parameters.
