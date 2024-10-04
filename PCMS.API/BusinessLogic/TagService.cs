@@ -57,7 +57,7 @@ namespace PCMS.API.BusinessLogic
             throw new NotImplementedException();
         }
 
-        public Task<TagDto?> UpdateTagByIdAsync(string tagId, string userId, PATCHTag request)
+        public Task<TagDto?> UpdateTagByIdAsync(string tagId, string userId, UpdateTagDto request)
         {
             throw new NotImplementedException();
         }

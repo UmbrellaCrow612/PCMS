@@ -33,7 +33,7 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<PropertyDto>> CreateProperty([FromBody] POSTProperty request)
+        public async Task<ActionResult<PropertyDto>> CreateProperty([FromBody] CreatePropertyDto request)
         {
             var location = await _context.Locations.Where(l => l.Id == request.LocationId).FirstOrDefaultAsync();
             if (location is null)
@@ -83,7 +83,7 @@ namespace PCMS.API.Controllers
         [HttpPatch("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> PatchProperty(string id, [FromBody] PATCHProperty request)
+        public async Task<ActionResult> PatchProperty(string id, [FromBody] UpdatePropertyDto request)
         {
             var property = await _context.Properties.Where(p => p.Id == id).FirstOrDefaultAsync();
             if (property is null)

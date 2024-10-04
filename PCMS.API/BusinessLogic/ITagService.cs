@@ -31,7 +31,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user updating the tag.</param>
         /// <param name="request">The updated tag data.</param>
         /// <returns>The updated tag, or null if not found.</returns>
-        Task<TagDto?> UpdateTagByIdAsync(string tagId, string userId, PATCHTag request);
+        Task<TagDto?> UpdateTagByIdAsync(string tagId, string userId, UpdateTagDto request);
 
         /// <summary>
         /// Deletes a tag by its ID.

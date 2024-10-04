@@ -5,7 +5,7 @@ namespace PCMS.API.Dtos.POST
     /// <summary>
     /// DTO when you want to create a crime scene
     /// </summary>
-    public class POSTCrimeScene
+    public class CreateCrimeSceneDto
     {
         [Required]
         public required string Type { get; set; }

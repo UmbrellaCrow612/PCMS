@@ -3,7 +3,7 @@
     /// <summary>
     /// Dto when you want to search for a case
     /// </summary>
-    public class POSTCaseSearch
+    public class CreateCaseSearchDto
     {
     }
 }

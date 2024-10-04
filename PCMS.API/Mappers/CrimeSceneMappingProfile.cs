@@ -10,9 +10,9 @@ namespace PCMS.API.Mappers
     {
         public CrimeSceneMappingProfile()
         {
-            CreateMap<POSTCrimeScene, CrimeScene>();
+            CreateMap<CreateCrimeSceneDto, CrimeScene>();
             CreateMap<CrimeScene, CrimeSceneDto>();
-            CreateMap<PATCHCrimeScene, CrimeScene>();
+            CreateMap<UpdateCrimeSceneDto, CrimeScene>();
         }
     }
 }

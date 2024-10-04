@@ -72,7 +72,7 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> PatchEvidence(string caseId, string id, [FromBody] PATCHEvidence request)
+        public async Task<ActionResult> PatchEvidence(string caseId, string id, [FromBody] UpdateEvidenceDto request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 

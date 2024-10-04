@@ -35,7 +35,7 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<PersonDto>> CreatePerson([FromBody] POSTPerson request)
+        public async Task<ActionResult<PersonDto>> CreatePerson([FromBody] CreatePersonDto request)
         {
             var person = _mapper.Map<Person>(request);
 
@@ -76,7 +76,7 @@ namespace PCMS.API.Controllers
         [HttpPatch("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> PatchPerson(string id, [FromBody] PATCHPerson request)
+        public async Task<ActionResult> PatchPerson(string id, [FromBody] UpdatePersonDto request)
         {
             var person = await _context.Persons.Where(p => p.Id == id).FirstOrDefaultAsync();
             if (person is null)
@@ -119,7 +119,7 @@ namespace PCMS.API.Controllers
         [HttpPost("{id}/cases/{caseId}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> CreateCasePerson(string id, string caseId, POSTCasePerson request)
+        public async Task<ActionResult> CreateCasePerson(string id, string caseId, CreateCasePersonDto request)
         {
             var existingCase = await _context.Cases.AnyAsync(c => c.Id == caseId);
             if (!existingCase)

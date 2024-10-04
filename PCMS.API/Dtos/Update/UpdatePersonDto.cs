@@ -1,14 +1,13 @@
 ﻿using PCMS.API.Filters;
 using System.ComponentModel.DataAnnotations;
 
-namespace PCMS.API.DTOS.POST
+namespace PCMS.API.DTOS.PATCH
 {
     /// <summary>
-    /// DTO for POST a person.
-    /// </summary>
-    public class POSTPerson
+    /// DTO for when you want to update a Person
+    /// </summary
+    public class UpdatePersonDto
     {
-
         [Required]
         public required string FullName { get; set; }
 

@@ -100,7 +100,7 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<List<EvidenceDto>>(evidences);
         }
 
-        public async Task<EvidenceDto?> UpdatetEvidenceByIdAsync(string evidenceId, string caseId, string userId, PATCHEvidence request)
+        public async Task<EvidenceDto?> UpdatetEvidenceByIdAsync(string evidenceId, string caseId, string userId, UpdateEvidenceDto request)
         {
             var caseExists = await _context.Cases.AnyAsync(x => x.Id == caseId);
             if (!caseExists)

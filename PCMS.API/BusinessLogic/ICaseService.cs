@@ -30,7 +30,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="request">The new Case data sent across</param>
         /// <param name="userId">The ID of the user making the update.</param>
         /// <returns>True if it was able to update the case else false if it could not find it.</returns>
-        Task<bool> UpdateCaseByIdAsync(string id, string userId, PATCHCase request);
+        Task<bool> UpdateCaseByIdAsync(string id, string userId, UpdateCaseDto request);
 
         /// <summary>
         /// Deletes a case by its ID
@@ -73,6 +73,6 @@ namespace PCMS.API.BusinessLogic
         /// </summary>
         /// <param name="request">The data.</param>
         /// <returns>List of cases</returns>
-        Task<List<CaseDto>> SearchForCases(POSTCaseSearch request);
+        Task<List<CaseDto>> SearchForCases(CreateCaseSearchDto request);
     }
 }

@@ -12,7 +12,7 @@ namespace PCMS.API.Mappers
         {
             CreateMap<CreateCaseNoteDto, CaseNote>();
             CreateMap<CaseNote, CaseNoteDto>();
-            CreateMap<PATCHCaseNote, CaseNote>();
+            CreateMap<UpdateCaseNoteDto, CaseNote>();
         }
     }
 }

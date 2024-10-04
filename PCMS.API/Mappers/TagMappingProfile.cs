@@ -12,7 +12,7 @@ namespace PCMS.API.Mappers
         {
             CreateMap<CreateTagDto, Tag>();
             CreateMap<Tag, TagDto>();
-            CreateMap<PATCHTag, Tag>();
+            CreateMap<UpdateTagDto, Tag>();
         }
     }
 }

@@ -5,7 +5,7 @@ namespace PCMS.API.Dtos.PATCH
     /// <summary>
     /// DTO when you want to update a Vehicle
     /// </summary>
-    public class PATCHVehicle
+    public class UpdateVehicleDto
     {
         [Required]
         [MaxLength(100)]

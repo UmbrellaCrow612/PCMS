@@ -5,7 +5,7 @@ namespace PCMS.API.Dtos.POST
     /// <summary>
     /// DTO for POST a department object
     /// </summary>
-    public class POSTDepartment
+    public class CreateDepartmentDto
     {
         [Required]
         [StringLength(50)]

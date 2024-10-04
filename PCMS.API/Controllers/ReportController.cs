@@ -20,7 +20,7 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ServiceFilter(typeof(UserValidationFilter))]
-        public async Task<ActionResult<ReportDto>> CreateReport(string caseId, [FromBody] POSTReport request)
+        public async Task<ActionResult<ReportDto>> CreateReport(string caseId, [FromBody] CreateReportDto request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
@@ -68,7 +68,7 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> PatchReport(string caseId, string id, [FromBody] PATCHReport request)
+        public async Task<ActionResult> PatchReport(string caseId, string id, [FromBody] UpdateReportDto request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 

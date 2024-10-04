@@ -1,22 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PCMS.API.Dtos.PATCH
+namespace PCMS.API.DTOS.PATCH
 {
     /// <summary>
-    /// DTO for when you want to update a department
+    /// DTO for when you want to update a case action
     /// </summary
-    public class PATCHDepartment
+    public record UpdateCaseActionDto
     {
         [Required]
-        [StringLength(50)]
         public required string Name { get; set; }
 
         [Required]
-        [StringLength(250)]
         public required string Description { get; set; }
 
         [Required]
-        [StringLength(20)]
-        public required string ShortCode { get; set; }
+        public required string Type { get; set; }
     }
 }

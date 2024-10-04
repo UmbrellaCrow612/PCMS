@@ -12,7 +12,7 @@ namespace PCMS.API.Mappers
         {
             CreateMap<CreateEvidenceDto, Evidence>();
             CreateMap<Evidence, EvidenceDto>();
-            CreateMap<PATCHEvidence, Evidence>();
+            CreateMap<UpdateEvidenceDto, Evidence>();
         }
     }
 }

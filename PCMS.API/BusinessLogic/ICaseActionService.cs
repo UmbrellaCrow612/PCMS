@@ -39,7 +39,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user updating the case action.</param>
         /// <param name="request">The new data to update the case action.</param>
         /// <returns>DTO <see cref="CaseActionDto"/> or null if not found.</returns>
-        Task<CaseActionDto?> UpdateCaseActionByIdAsync(string caseActionId, string caseId, string userId, PATCHCaseAction request);
+        Task<CaseActionDto?> UpdateCaseActionByIdAsync(string caseActionId, string caseId, string userId, UpdateCaseActionDto request);
 
         /// <summary>
         /// Delete a case action.

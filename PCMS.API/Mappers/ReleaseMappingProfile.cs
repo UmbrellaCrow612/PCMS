@@ -12,7 +12,7 @@ namespace PCMS.API.Mappers
         {
             CreateMap<CreateReleaseDto, Release>();
             CreateMap<Release, ReleaseDto>();
-            CreateMap<PATCHRelease, Release>();
+            CreateMap<UpdateReleaseDto, Release>();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace PCMS.API.Mappers
         {
             CreateMap<CreateBookingDto, Booking>();
             CreateMap<Booking, BookingDto>();
-            CreateMap<PATCHBooking, Booking>();
+            CreateMap<UpdateBookingDto, Booking>();
         }
     }
 }

@@ -34,7 +34,7 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<LocationDto>> CreateLocation([FromBody] POSTLocation request)
+        public async Task<ActionResult<LocationDto>> CreateLocation([FromBody] CreateLocationDto request)
         {
             var location = _mapper.Map<Location>(request);
 
@@ -74,7 +74,7 @@ namespace PCMS.API.Controllers
         [HttpPatch("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> PatchLocation(string id, [FromBody] PATCHLocation request)
+        public async Task<ActionResult> PatchLocation(string id, [FromBody] UpdateLocationDto request)
         {
             var location = await _context.Locations.Where(l => l.Id == id).FirstOrDefaultAsync();
             if (location is null)

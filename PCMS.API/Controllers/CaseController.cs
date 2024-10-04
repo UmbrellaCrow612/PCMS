@@ -57,7 +57,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [ProducesDefaultResponseType]
         [ServiceFilter(typeof(UserValidationFilter))]
-        public async Task<ActionResult> PatchCase(string id, [FromBody] PATCHCase request)
+        public async Task<ActionResult> PatchCase(string id, [FromBody] UpdateCaseDto request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 

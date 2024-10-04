@@ -22,7 +22,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> CreateCrimeScene(string id, [FromBody] POSTCrimeScene request)
+        public async Task<ActionResult> CreateCrimeScene(string id, [FromBody] CreateCrimeSceneDto request)
         {
             var locationExists = await _context.Locations.AnyAsync(x => x.Id == id);
             if (!locationExists)

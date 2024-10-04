@@ -7,7 +7,7 @@ namespace PCMS.API.DTOS.POST
     /// DTO for the user registration request.
     /// This excludes the AssignedCases property and is our own implementation based on ASP.Net Core Identity Routes Source Code.
     /// </summary>
-    public record PCMSRegisterRequest
+    public record CreateRegisterRequestDto
     {
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email address format.")]

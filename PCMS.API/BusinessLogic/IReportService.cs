@@ -16,7 +16,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user creating the report.</param>
         /// <param name="request">The data to create the report.</param>
         /// <returns>The newly created report or null if the case dose not exist.</returns>
-        Task<ReportDto?> CreateReportAsync(string caseId, string userId, POSTReport request);
+        Task<ReportDto?> CreateReportAsync(string caseId, string userId, CreateReportDto request);
 
         /// <summary>
         /// Retrieves a specific report.
@@ -40,7 +40,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="caseId">The ID of the case.</param>
         /// <param name="request">The updated report data.</param>
         /// <returns>The updated report, or null if not found.</returns>
-        Task<ReportDto?> UpdateReportByIdAsync(string reportId, string caseId, string userId, PATCHReport request);
+        Task<ReportDto?> UpdateReportByIdAsync(string reportId, string caseId, string userId, UpdateReportDto request);
 
         /// <summary>
         /// Deletes a report.

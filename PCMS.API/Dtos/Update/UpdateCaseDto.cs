@@ -7,7 +7,7 @@ namespace PCMS.API.DTOS.PATCH
     /// <summary>
     /// DTO for when you want to update a Case
     /// </summary
-    public record PATCHCase
+    public record UpdateCaseDto
     {
         [Required]
         public required string Title { get; set; }

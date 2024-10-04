@@ -5,7 +5,7 @@ namespace PCMS.API.DTOS.POST
     /// <summary>
     /// DTO for POST a report
     /// </summary>
-    public class POSTReport
+    public class CreateReportDto
     {
 
         [Required]

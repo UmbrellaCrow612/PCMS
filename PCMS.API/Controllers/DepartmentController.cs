@@ -32,7 +32,7 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<DepartmentDto>> CreateDepartment([FromBody] POSTDepartment request)
+        public async Task<ActionResult<DepartmentDto>> CreateDepartment([FromBody] CreateDepartmentDto request)
         {
             var department = _mapper.Map<Department>(request);
 
@@ -72,7 +72,7 @@ namespace PCMS.API.Controllers
         [HttpPatch("{id}")]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> PatchDepartment(string id, [FromBody] PATCHDepartment request)
+        public async Task<ActionResult> PatchDepartment(string id, [FromBody] UpdateDepartmentDto request)
         {
             var department = await _context.Departments.Where(d => d.Id == id).FirstOrDefaultAsync();
             if (department is null)

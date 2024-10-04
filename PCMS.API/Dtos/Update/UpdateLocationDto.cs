@@ -5,7 +5,7 @@ namespace PCMS.API.DTOS.PATCH
     /// <summary>
     /// DTO for when you want to update a Location
     /// </summary
-    public class PATCHLocation
+    public class UpdateLocationDto
     {
         [Required]
         public required string Name { get; set; }

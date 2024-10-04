@@ -40,7 +40,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="caseId">The ID of the case.</param>
         /// <param name="request">The data.</param>
         /// <returns>The updated Evidence or null if it could not find it..</returns>
-        Task<EvidenceDto?> UpdatetEvidenceByIdAsync(string evidenceId, string caseId, string userId,PATCHEvidence request);
+        Task<EvidenceDto?> UpdatetEvidenceByIdAsync(string evidenceId, string caseId, string userId,UpdateEvidenceDto request);
 
         /// <summary>
         /// Delete an Evidence item.

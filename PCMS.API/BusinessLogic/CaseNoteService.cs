@@ -96,7 +96,7 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<List<CaseNoteDto>>(caseNotes);
         }
 
-        public async Task<CaseNoteDto?> UpdateCaseNoteByIdAsync(string caseNoteId, string caseId, string userId, PATCHCaseNote request)
+        public async Task<CaseNoteDto?> UpdateCaseNoteByIdAsync(string caseNoteId, string caseId, string userId, UpdateCaseNoteDto request)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
             if (!caseExists)

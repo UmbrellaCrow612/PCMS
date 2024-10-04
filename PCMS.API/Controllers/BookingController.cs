@@ -92,7 +92,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> UpdateBooking(string id, string bookingId, [FromBody] PATCHBooking request)
+        public async Task<ActionResult> UpdateBooking(string id, string bookingId, [FromBody] UpdateBookingDto request)
         {
             var personExists = await _context.Persons.AnyAsync(p => p.Id == id);
             if (!personExists)

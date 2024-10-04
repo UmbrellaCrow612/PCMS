@@ -74,7 +74,7 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<List<CaseActionDto>>(caseActionsToGet);
         }
 
-        public async Task<CaseActionDto?> UpdateCaseActionByIdAsync(string caseActionId, string caseId, string userId, PATCHCaseAction request)
+        public async Task<CaseActionDto?> UpdateCaseActionByIdAsync(string caseActionId, string caseId, string userId, UpdateCaseActionDto request)
         {
             var caseActionToUpdate = await _context.CaseActions
                 .Where(x => x.Id == caseActionId && x.CaseId == caseId)

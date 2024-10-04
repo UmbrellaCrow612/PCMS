@@ -11,7 +11,7 @@ namespace PCMS.API.BusinessLogic
     {
         private readonly IMapper _mapper = mapper;
         private readonly ApplicationDbContext _context = context;
-        public async Task<ReportDto?> CreateReportAsync(string caseId, string userId, POSTReport request)
+        public async Task<ReportDto?> CreateReportAsync(string caseId, string userId, CreateReportDto request)
         {
             var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
             if (!caseExists)
@@ -93,7 +93,7 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<List<ReportDto>>(reports);
         }
 
-        public async Task<ReportDto?> UpdateReportByIdAsync(string reportId, string caseId, string userId, PATCHReport request)
+        public async Task<ReportDto?> UpdateReportByIdAsync(string reportId, string caseId, string userId, UpdateReportDto request)
         {
             var reportToUpdate = await _context.Reports
                 .Where(x => x.Id == reportId && x.CaseId == caseId)

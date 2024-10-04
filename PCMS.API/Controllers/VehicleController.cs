@@ -19,7 +19,7 @@ namespace PCMS.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> CreateVehicle([FromBody] POSTVehicle request)
+        public async Task<ActionResult> CreateVehicle([FromBody] CreateVehicleDto request)
         {
             var vehicle = _mapper.Map<Vehicle>(request);
 
@@ -50,7 +50,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult> UpdateVehicle(string id, [FromBody] PATCHVehicle request)
+        public async Task<ActionResult> UpdateVehicle(string id, [FromBody] UpdateVehicleDto request)
         {
             var vehicle = await _context.Vehicles.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (vehicle is null)

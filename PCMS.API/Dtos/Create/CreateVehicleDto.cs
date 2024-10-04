@@ -5,7 +5,7 @@ namespace PCMS.API.Dtos.POST
     /// <summary>
     /// DTO when you want to create a Vehicle
     /// </summary>
-    public class POSTVehicle
+    public class CreateVehicleDto
     {
         [Required]
         [MaxLength(100)]

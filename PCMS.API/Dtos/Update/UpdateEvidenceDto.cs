@@ -6,7 +6,7 @@ namespace PCMS.API.DTOS.PATCH
     /// <summary>
     /// DTO for when you want to update a Evidence
     /// </summary
-    public class PATCHEvidence
+    public class UpdateEvidenceDto
     {
         [Required]
         public required string FileUrl { get; set; }

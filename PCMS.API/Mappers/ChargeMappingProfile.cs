@@ -12,7 +12,7 @@ namespace PCMS.API.Mappers
         {
             CreateMap<CreateChargeDto, Charge>();
             CreateMap<Charge, ChargeDto>();
-            CreateMap<PATCHCharge, Charge>();
+            CreateMap<UpdateChargeDto, Charge>();
         }
     }
 }

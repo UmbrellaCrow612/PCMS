@@ -36,7 +36,7 @@ namespace PCMS.API.BusinessLogic
             return caseToGet != null ? _mapper.Map<CaseDto>(caseToGet) : null;
         }
 
-        public async Task<bool> UpdateCaseByIdAsync(string id,string userId, PATCHCase request)
+        public async Task<bool> UpdateCaseByIdAsync(string id,string userId, UpdateCaseDto request)
         {
             var caseToUpdate = await _context.Cases.FirstOrDefaultAsync(x => x.Id == id);
             if (caseToUpdate == null)
@@ -116,7 +116,7 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<List<TagDto>>(tags);
         }
 
-        public Task<List<CaseDto>> SearchForCases(POSTCaseSearch request)
+        public Task<List<CaseDto>> SearchForCases(CreateCaseSearchDto request)
         {
             throw new NotImplementedException();
         }

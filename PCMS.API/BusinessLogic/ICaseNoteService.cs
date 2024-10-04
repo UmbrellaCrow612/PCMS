@@ -41,7 +41,7 @@ namespace PCMS.API.BusinessLogic
         /// <param name="userId">The ID of the user.</param>
         /// <param name="request">The data for updating the case note.</param>
         /// <returns>The updated case note or null if it was not found.</returns>
-        Task<CaseNoteDto?> UpdateCaseNoteByIdAsync(string caseNoteId, string caseId, string userId, PATCHCaseNote request);
+        Task<CaseNoteDto?> UpdateCaseNoteByIdAsync(string caseNoteId, string caseId, string userId, UpdateCaseNoteDto request);
 
         /// <summary>
         /// Deletes a specific case note.

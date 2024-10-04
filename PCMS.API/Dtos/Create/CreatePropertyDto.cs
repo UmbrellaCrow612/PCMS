@@ -5,7 +5,7 @@ namespace PCMS.API.DTOS.POST
     /// <summary>
     /// DTO to POST a Property.
     /// </summary>
-    public class POSTProperty
+    public class CreatePropertyDto
     {
         [Required]
         [StringLength(100)]

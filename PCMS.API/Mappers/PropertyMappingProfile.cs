@@ -10,9 +10,9 @@ namespace PCMS.API.Mappers
     {
         public PropertyMappingProfile()
         {
-            CreateMap<POSTProperty, Property>();
+            CreateMap<CreatePropertyDto, Property>();
             CreateMap<Property, PropertyDto>();
-            CreateMap<PATCHProperty, Property>();
+            CreateMap<UpdatePropertyDto, Property>();
         }
     }
 }

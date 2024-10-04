@@ -5,7 +5,7 @@ namespace PCMS.API.Dtos.PATCH
     /// <summary>
     /// DTO for when you want to update a case note
     /// </summary
-    public class PATCHCaseNote
+    public class UpdateCaseNoteDto
     {
         [Required]
         [MaxLength(1000)]

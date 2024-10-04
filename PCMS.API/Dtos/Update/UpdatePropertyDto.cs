@@ -5,7 +5,7 @@ namespace PCMS.API.DTOS.PATCH
     /// <summary>
     /// DTO when you want to update a property
     /// </summary>
-    public class PATCHProperty
+    public class UpdatePropertyDto
     {
         [Required]
         [StringLength(100)]

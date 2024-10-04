@@ -27,7 +27,7 @@ namespace PCMS.API.Controllers
 
         [HttpPost("register")]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<Results<Ok,BadRequest, ValidationProblem>> Register([FromBody] PCMSRegisterRequest request)
+        public async Task<Results<Ok,BadRequest, ValidationProblem>> Register([FromBody] CreateRegisterRequestDto request)
         {
             var roleExists = await _rolesManager.RoleExistsAsync(request.Role);
             if (!roleExists)
@@ -49,7 +49,7 @@ namespace PCMS.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>> Login([FromBody] PCMSLoginRequest request, [FromQuery] bool? useCookies, [FromQuery] bool? useSessionCookies)
+        public async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>> Login([FromBody] CreateLoginRequestDto request, [FromQuery] bool? useCookies, [FromQuery] bool? useSessionCookies)
         {
             var useCookieScheme = (useCookies == true) || (useSessionCookies == true);
             var isPersistent = (useCookies == true) && (useSessionCookies != true);

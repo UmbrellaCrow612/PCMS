@@ -10,9 +10,9 @@ namespace PCMS.API.Mappers
     {
         public ReportMappingProfile()
         {
-            CreateMap<POSTReport, Report>();
+            CreateMap<CreateReportDto, Report>();
             CreateMap<Report, ReportDto>();
-            CreateMap<PATCHReport, Report>();
+            CreateMap<UpdateReportDto, Report>();
         }
     }
 }

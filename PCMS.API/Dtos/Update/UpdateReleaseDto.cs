@@ -1,6 +1,6 @@
 ﻿namespace PCMS.API.Dtos.PATCH
 {
-    public class PATCHCharge
+    public class UpdateReleaseDto
     {
     }
 }

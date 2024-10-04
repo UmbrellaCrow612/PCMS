@@ -69,7 +69,7 @@ namespace PCMS.API.Controllers
         [ServiceFilter(typeof(UserValidationFilter))]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> PatchCaseNote(string caseId, string id, [FromBody] PATCHCaseNote request)
+        public async Task<ActionResult> PatchCaseNote(string caseId, string id, [FromBody] UpdateCaseNoteDto request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 

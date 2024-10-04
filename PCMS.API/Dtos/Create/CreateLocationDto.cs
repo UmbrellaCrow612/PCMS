@@ -5,7 +5,7 @@ namespace PCMS.API.DTOS.POST
     /// <summary>
     /// DTO to POST a location.
     /// </summary>
-    public class POSTLocation
+    public class CreateLocationDto
     {
         [Required]
         public required string Name { get; set; }

@@ -5,7 +5,7 @@ namespace PCMS.API.Dtos.PATCH
     /// <summary>
     /// DTO when you want to update a tag
     /// </summary>
-    public class PATCHTag
+    public class UpdateTagDto
     {
         [Required]
         [MaxLength(100)]

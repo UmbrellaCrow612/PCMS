@@ -10,9 +10,9 @@ namespace PCMS.API.Mappers
     {
         public DepartmentMappingProfile()
         {
-            CreateMap<POSTDepartment, Department>();
+            CreateMap<CreateDepartmentDto, Department>();
             CreateMap<Department, DepartmentDto>();
-            CreateMap<PATCHDepartment, Department>();
+            CreateMap<UpdateDepartmentDto, Department>();
         }
     }
 }

@@ -63,7 +63,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> UpdateTag(string id, [FromBody] PATCHTag request)
+        public async Task<ActionResult> UpdateTag(string id, [FromBody] UpdateTagDto request)
         {
             var tag = await _context.Tags.Where(t => t.Id == id).FirstOrDefaultAsync();
             if (tag is null)
