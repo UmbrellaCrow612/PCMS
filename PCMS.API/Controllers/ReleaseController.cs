@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PCMS.API.BusinessLogic.Models;
 using PCMS.API.Dtos.Create;
 using PCMS.API.Dtos.Read;
 using PCMS.API.Filters;
-using PCMS.API.Models;
 using System.Security.Claims;
 
 namespace PCMS.API.Controllers

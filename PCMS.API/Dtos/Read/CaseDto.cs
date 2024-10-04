@@ -1,6 +1,6 @@
-﻿using PCMS.API.Dtos.Read;
-using PCMS.API.Models;
-using PCMS.API.Models.Enums;
+﻿using PCMS.API.BusinessLogic.Models;
+using PCMS.API.BusinessLogic.Models.Enums;
+using PCMS.API.Dtos.Read;
 
 namespace PCMS.API.DTOS.Read
 {

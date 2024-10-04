@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using PCMS.API.Dtos.Read;
-using PCMS.API.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using PCMS.API.Dtos.Update;
+using PCMS.API.BusinessLogic.Models;
 using PCMS.API.Dtos.Create;
+using PCMS.API.Dtos.Read;
+using PCMS.API.Dtos.Update;
 
 namespace PCMS.API.Controllers
 {
@@ -106,7 +105,7 @@ namespace PCMS.API.Controllers
             {
                 return BadRequest("Vehicle is already linked to this case");
             }
-            
+
             var link = new CaseVehicle
             {
                 CaseId = caseId,

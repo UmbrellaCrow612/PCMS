@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PCMS.API.BusinessLogic;
+using PCMS.API.BusinessLogic.Interfaces;
 using PCMS.API.DTOS.Create;
 using PCMS.API.DTOS.Read;
 using PCMS.API.DTOS.Update;
@@ -27,7 +27,7 @@ namespace PCMS.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            var evidence = await _evidenceService.CreateEvidenceAsync(caseId,userId,request);
+            var evidence = await _evidenceService.CreateEvidenceAsync(caseId, userId, request);
 
             if (evidence is null)
             {
@@ -84,7 +84,7 @@ namespace PCMS.API.Controllers
             }
 
             return Ok(evidence);
-        
+
         }
 
         [HttpDelete("{id}")]
@@ -95,7 +95,7 @@ namespace PCMS.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            var isDeleted = await _evidenceService.DeleteEvidenceByIdAsync(id,caseId,userId);
+            var isDeleted = await _evidenceService.DeleteEvidenceByIdAsync(id, caseId, userId);
             if (!isDeleted)
             {
                 return NotFound("Evidence not found.");

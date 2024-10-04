@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using PCMS.API.Auth;
-using PCMS.API.Models;
+using PCMS.API.BusinessLogic.Models;
 
 namespace PCMS.API.Data
 {

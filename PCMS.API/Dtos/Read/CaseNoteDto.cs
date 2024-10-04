@@ -1,5 +1,4 @@
 ﻿using PCMS.API.DTOS.Read;
-using PCMS.API.Models;
 
 namespace PCMS.API.Dtos.Read
 {

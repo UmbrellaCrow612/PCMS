@@ -1,5 +1,4 @@
-﻿using PCMS.API.Models;
-using PCMS.API.Models.Enums;
+﻿using PCMS.API.BusinessLogic.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.DTOS.Update

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PCMS.API.Models;
+using PCMS.API.BusinessLogic.Models;
 
 namespace PCMS.API.Data.Configs
 {
@@ -8,7 +8,7 @@ namespace PCMS.API.Data.Configs
     {
         public void Configure(EntityTypeBuilder<Vehicle> builder)
         {
-           builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.Id);
         }
     }
 }

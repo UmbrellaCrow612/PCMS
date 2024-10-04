@@ -1,4 +1,4 @@
-﻿using PCMS.API.Models;
+﻿using PCMS.API.BusinessLogic.Models;
 
 namespace PCMS.API.DTOS.Read
 {

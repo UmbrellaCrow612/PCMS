@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PCMS.API.Models;
+using PCMS.API.BusinessLogic.Models;
 
 namespace PCMS.API.Data.Configs
 {

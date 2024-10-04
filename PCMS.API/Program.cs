@@ -1,10 +1,11 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using PCMS.API.BusinessLogic;
+using PCMS.API.BusinessLogic.Interfaces;
+using PCMS.API.BusinessLogic.Models;
+using PCMS.API.BusinessLogic.Services;
 using PCMS.API.Data;
 using PCMS.API.Filters;
-using PCMS.API.Models;
 using PCMS.API.OpenApi;
 using Serilog;
 

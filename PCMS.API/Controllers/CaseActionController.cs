@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PCMS.API.BusinessLogic.Interfaces;
+using PCMS.API.Dtos.Create;
 using PCMS.API.DTOS.Read;
 using PCMS.API.DTOS.Update;
 using PCMS.API.Filters;
 using System.Security.Claims;
-using PCMS.API.BusinessLogic;
-using PCMS.API.Dtos.Create;
 
 namespace PCMS.API.Controllers
 {
@@ -60,7 +60,7 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<List<CaseActionDto>>> GetActions(string caseId)
         {
-           var caseActions = await _caseActionService.GetCaseActionsForCaseIdAsync(caseId);
+            var caseActions = await _caseActionService.GetCaseActionsForCaseIdAsync(caseId);
 
             if (caseActions is null)
             {
@@ -96,7 +96,7 @@ namespace PCMS.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> DeleteCaseAction(string caseId, string id)
         {
-           var isDeleted = await _caseActionService.DeleteCaseActionByIdAsync(id, caseId);
+            var isDeleted = await _caseActionService.DeleteCaseActionByIdAsync(id, caseId);
             if (!isDeleted)
             {
                 return NotFound("Case action not found or is linked to this case.");

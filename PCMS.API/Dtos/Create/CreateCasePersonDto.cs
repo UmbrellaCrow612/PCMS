@@ -1,4 +1,4 @@
-﻿using PCMS.API.Models.Enums;
+﻿using PCMS.API.BusinessLogic.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace PCMS.API.Dtos.Create

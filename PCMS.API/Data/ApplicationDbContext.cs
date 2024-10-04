@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using PCMS.API.Models;
+using PCMS.API.BusinessLogic.Models;
 using System.Reflection;
 
 /// <summary>

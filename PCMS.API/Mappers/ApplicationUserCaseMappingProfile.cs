@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using PCMS.API.BusinessLogic.Models;
 using PCMS.API.DTOS.Read;
-using PCMS.API.Models;
 
 namespace PCMS.API.Mappers
 {

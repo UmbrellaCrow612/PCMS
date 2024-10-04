@@ -1,14 +1,10 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PCMS.API.BusinessLogic;
+using PCMS.API.BusinessLogic.Interfaces;
 using PCMS.API.Dtos.Create;
 using PCMS.API.Dtos.Read;
 using PCMS.API.Dtos.Update;
 using PCMS.API.Filters;
-using PCMS.API.Models;
 using System.Security.Claims;
 
 namespace PCMS.API.Controllers
@@ -57,7 +53,7 @@ namespace PCMS.API.Controllers
         public async Task<ActionResult<CaseNoteDto>> GetCaseNote(string caseId, string id)
         {
             var caseNote = await _caseNoteService.GetCaseNoteByIdAsync(id, caseId);
-            if(caseNote is null)
+            if (caseNote is null)
             {
                 return NotFound("Case or case note not found.");
             }

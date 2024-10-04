@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PCMS.API.BusinessLogic;
+using PCMS.API.BusinessLogic.Interfaces;
 using PCMS.API.Dtos.Create;
 using PCMS.API.DTOS.Read;
 using PCMS.API.DTOS.Update;
@@ -39,7 +39,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<ReportDto>>> GetReports(string caseId)
         {
-           var reports = await _reportService.GetReportsForCaseIdAsync(caseId);
+            var reports = await _reportService.GetReportsForCaseIdAsync(caseId);
 
             if (reports is null)
             {

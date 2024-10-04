@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PCMS.API.Auth;
+using PCMS.API.BusinessLogic.Models;
 using PCMS.API.Dtos.Create;
-using PCMS.API.Models;
 using System.Diagnostics;
 
 namespace PCMS.API.Controllers
@@ -18,7 +18,7 @@ namespace PCMS.API.Controllers
     /// <param name="mapper"></param>
     [ApiController]
     [Route("auth")]
-    public class AuthenticationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager ,IMapper mapper, RoleManager<IdentityRole> rolesManager) : ControllerBase
+    public class AuthenticationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IMapper mapper, RoleManager<IdentityRole> rolesManager) : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
@@ -27,7 +27,7 @@ namespace PCMS.API.Controllers
 
         [HttpPost("register")]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<Results<Ok,BadRequest, ValidationProblem>> Register([FromBody] CreateRegisterRequestDto request)
+        public async Task<Results<Ok, BadRequest, ValidationProblem>> Register([FromBody] CreateRegisterRequestDto request)
         {
             var roleExists = await _rolesManager.RoleExistsAsync(request.Role);
             if (!roleExists)
