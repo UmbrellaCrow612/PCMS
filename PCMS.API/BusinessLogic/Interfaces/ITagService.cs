@@ -15,7 +15,7 @@ namespace PCMS.API.BusinessLogic.Interfaces
         /// <param name="userId">The ID of the user creating the tag.</param>
         /// <param name="request">The tag data.</param>
         /// <returns>The newly created tag.</returns>
-        Task<TagDto> CreateTag(string userId, CreateTagDto request);
+        Task<TagDto> CreateTagAsync(string userId, CreateTagDto request);
 
         /// <summary>
         /// Retrieves a tag by its ID.
@@ -30,8 +30,8 @@ namespace PCMS.API.BusinessLogic.Interfaces
         /// <param name="tagId">The ID of the tag.</param>
         /// <param name="userId">The ID of the user updating the tag.</param>
         /// <param name="request">The updated tag data.</param>
-        /// <returns>The updated tag, or null if not found.</returns>
-        Task<TagDto?> UpdateTagByIdAsync(string tagId, string userId, UpdateTagDto request);
+        /// <returns>True if it did, or false if not found.</returns>
+        Task<bool> UpdateTagByIdAsync(string tagId, string userId, UpdateTagDto request);
 
         /// <summary>
         /// Deletes a tag by its ID.

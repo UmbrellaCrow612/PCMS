@@ -1,32 +1,30 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PCMS.API.BusinessLogic.Models;
+using PCMS.API.BusinessLogic.Interfaces;
 using PCMS.API.Dtos.Create;
 using PCMS.API.Dtos.Read;
 using PCMS.API.Dtos.Update;
+using PCMS.API.Filters;
+using System.Security.Claims;
 
 namespace PCMS.API.Controllers
 {
     [ApiController]
     [Route("tags")]
     [Authorize]
-    public class TagController(ApplicationDbContext context, IMapper mapper) : ControllerBase
+    public class TagController(ITagService tagService) : ControllerBase
     {
-        private readonly ApplicationDbContext _context = context;
-        private readonly IMapper _mapper = mapper;
+        private readonly ITagService _tagService = tagService;
 
         [HttpPost]
+        [ServiceFilter(typeof(UserValidationFilter))]
         public async Task<ActionResult<TagDto>> CreateTag([FromBody] CreateTagDto request)
         {
-            var tag = _mapper.Map<Tag>(request);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            await _context.Tags.AddAsync(tag);
-            await _context.SaveChangesAsync();
+            var tag = await _tagService.CreateTagAsync(userId, request);
 
-            var returnTag = _mapper.Map<TagDto>(tag);
-            return Ok(returnTag);
+            return Ok(tag);
         }
 
         [HttpGet("{id}")]
@@ -35,27 +33,10 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<TagDto>> GetTag(string id)
         {
-            var tag = await _context.Tags.Where(t => t.Id == id).FirstOrDefaultAsync();
-            if (tag is null)
-            {
-                return NotFound("Tag not found.");
-            }
+           var tag = await _tagService.GetTagByIdAsync(id);
+            if (tag is null) return NotFound("Tag not found.");
 
-            var returnTag = _mapper.Map<TagDto>(tag);
-            return Ok(returnTag);
-        }
-
-        [HttpGet("search")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult<IEnumerable<TagDto>>> SearchTags([FromQuery] string name)
-        {
-            var tags = await _context.Tags
-                .Where(t => t.Name.Contains(name))
-                .ToListAsync();
-
-            var returnTags = _mapper.Map<IEnumerable<TagDto>>(tags);
-            return Ok(returnTags);
+            return Ok(tag);
         }
 
         [HttpPatch("{id}")]
@@ -64,15 +45,11 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> UpdateTag(string id, [FromBody] UpdateTagDto request)
         {
-            var tag = await _context.Tags.Where(t => t.Id == id).FirstOrDefaultAsync();
-            if (tag is null)
-            {
-                return NotFound("Tag not found.");
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
-            _mapper.Map(request, tag);
+            var isUpdated = await _tagService.UpdateTagByIdAsync(id, userId, request);
+            if (!isUpdated) return NotFound("Tag not found");
 
-            await _context.SaveChangesAsync();
             return NoContent();
         }
 
@@ -82,21 +59,8 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteTag(string id)
         {
-            var tag = await _context.Tags.Where(t => t.Id == id).FirstOrDefaultAsync();
-            if (tag is null)
-            {
-                return NotFound("Tag not found.");
-            }
-
-            var caseTags = await _context.CaseTags.Where(ct => ct.TagId == id).ToListAsync();
-
-            if (caseTags.Count is not 0)
-            {
-                return BadRequest("Tag is associated with cases through case tags.");
-            }
-
-            _context.Tags.Remove(tag);
-            await _context.SaveChangesAsync();
+            var isDeleted = await _tagService.DeleteTagByIdAsync(id);
+            if (!isDeleted) return BadRequest("Tag not found or is linked to a case.");
 
             return NoContent();
         }
@@ -107,32 +71,8 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> CreateCaseTags(string id, string caseId)
         {
-            var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
-            if (!caseExists)
-            {
-                return NotFound("Case not found.");
-            }
-
-            var tagExists = await _context.Tags.AnyAsync(t => t.Id == id);
-            if (!tagExists)
-            {
-                return NotFound("Tag not found.");
-            }
-
-            var caseTagExists = await _context.CaseTags.AnyAsync(_ => _.CaseId == caseId && _.TagId == id);
-            if (caseTagExists)
-            {
-                return BadRequest("Tag is already linked to this case");
-            }
-
-            var caseTag = new CaseTag
-            {
-                CaseId = caseId,
-                TagId = id
-            };
-
-            await _context.CaseTags.AddAsync(caseTag);
-            await _context.SaveChangesAsync();
+           var linked = await _tagService.LinkTagToCase(id, caseId);
+            if (!linked) return BadRequest("Tag or case dose not exist or is already linked to this case.");
 
             return NoContent();
         }
@@ -144,26 +84,8 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteCaseTag(string id, string caseId)
         {
-            var caseExists = await _context.Cases.AnyAsync(c => c.Id == caseId);
-            if (!caseExists)
-            {
-                return NotFound("Case not found.");
-            }
-
-            var tagExists = await _context.Tags.AnyAsync(t => t.Id == id);
-            if (!tagExists)
-            {
-                return NotFound("Tag not found.");
-            }
-
-            var caseTag = await _context.CaseTags.Where(ct => ct.CaseId == caseId && ct.TagId == id).FirstOrDefaultAsync();
-            if (caseTag is null)
-            {
-                return BadRequest("Case tag dose not exist.");
-            }
-
-            _context.CaseTags.Remove(caseTag);
-            await _context.SaveChangesAsync();
+            var unLinked = await _tagService.UnLinkTagFromCase(id, caseId);
+            if (!unLinked) return BadRequest("Case or tag dose not exist or they are not linked already.");
 
             return NoContent();
         }
