@@ -1,4 +1,4 @@
-﻿namespace PCMS.API.Dtos.GET
+﻿namespace PCMS.API.Dtos.Read
 {
     public class VehicleDto
     {

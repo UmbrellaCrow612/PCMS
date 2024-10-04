@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PCMS.API.Auth;
-using PCMS.API.DTOS.POST;
+using PCMS.API.Dtos.Create;
 using PCMS.API.Models;
 using System.Diagnostics;
 

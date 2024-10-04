@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using PCMS.API.Dtos.GET;
+using PCMS.API.Dtos.Create;
+using PCMS.API.Dtos.Read;
 using PCMS.API.Dtos.PATCH;
-using PCMS.API.Dtos.POST;
 using PCMS.API.Models;
 
 namespace PCMS.API.BusinessLogic

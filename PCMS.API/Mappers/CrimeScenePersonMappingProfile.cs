@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using PCMS.API.Dtos.GET;
+using PCMS.API.Dtos.Read;
 using PCMS.API.Models;
 
 namespace PCMS.API.Mappers

@@ -1,4 +1,4 @@
-﻿namespace PCMS.API.Dtos.POST
+﻿namespace PCMS.API.Dtos.Create
 {
     /// <summary>
     /// Dto when you want to search for a case

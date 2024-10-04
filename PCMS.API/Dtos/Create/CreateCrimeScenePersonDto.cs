@@ -1,7 +1,7 @@
 ﻿using PCMS.API.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace PCMS.API.Dtos.POST
+namespace PCMS.API.Dtos.Create
 {
     /// <summary>
     /// DTO wen you want to link a person to a crime scene

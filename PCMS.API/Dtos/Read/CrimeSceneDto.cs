@@ -1,6 +1,6 @@
-﻿using PCMS.API.DTOS.GET;
+﻿using PCMS.API.DTOS.Read;
 
-namespace PCMS.API.Dtos.GET
+namespace PCMS.API.Dtos.Read
 {
     /// <summary>
     /// Dto when you want to get a crime scene

@@ -1,6 +1,6 @@
 ﻿using PCMS.API.Models;
 
-namespace PCMS.API.DTOS.GET
+namespace PCMS.API.DTOS.Read
 {
     /// <summary>
     /// DTO when you want to get a <see cref="CaseAction"/>

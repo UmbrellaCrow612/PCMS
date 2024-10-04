@@ -1,6 +1,6 @@
-﻿using PCMS.API.Dtos.GET;
+﻿using PCMS.API.Dtos.Create;
+using PCMS.API.Dtos.Read;
 using PCMS.API.Dtos.PATCH;
-using PCMS.API.Dtos.POST;
 
 namespace PCMS.API.BusinessLogic
 {

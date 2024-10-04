@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PCMS.API.DTOS.POST
+namespace PCMS.API.Dtos.Create
 {
     /// <summary>
     /// DTO to POST a Property.

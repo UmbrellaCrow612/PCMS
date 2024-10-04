@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PCMS.API.DTOS.GET;
+using PCMS.API.Dtos.Create;
+using PCMS.API.DTOS.Read;
 using PCMS.API.DTOS.PATCH;
-using PCMS.API.DTOS.POST;
 using PCMS.API.Models;
 
 namespace PCMS.API.Controllers

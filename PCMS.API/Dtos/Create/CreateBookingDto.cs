@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PCMS.API.Dtos.POST
+namespace PCMS.API.Dtos.Create
 {
     /// <summary>
     /// DTO when POST a booking

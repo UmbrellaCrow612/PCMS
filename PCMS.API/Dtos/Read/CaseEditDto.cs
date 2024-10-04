@@ -1,8 +1,8 @@
-﻿using PCMS.API.DTOS.GET;
+﻿using PCMS.API.DTOS.Read;
 using PCMS.API.Models;
 using PCMS.API.Models.Enums;
 
-namespace PCMS.API.Dtos.GET
+namespace PCMS.API.Dtos.Read
 {
     /// <summary>
     /// DTO when you want to get a <see cref="CaseEdit"/>

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PCMS.API.BusinessLogic;
-using PCMS.API.DTOS.GET;
+using PCMS.API.DTOS.Create;
+using PCMS.API.DTOS.Read;
 using PCMS.API.DTOS.PATCH;
-using PCMS.API.DTOS.POST;
 using PCMS.API.Filters;
 using System.Security.Claims;
 
