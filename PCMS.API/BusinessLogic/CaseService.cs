@@ -24,20 +24,20 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<CaseDto>(newCase);
         }
 
-        public async Task<CaseDto?> GetCaseByIdAsync(string id)
+        public async Task<CaseDto?> GetCaseByIdAsync(string caseId)
         {
             var caseToGet = await _context.Cases
                 .Include(x => x.Creator)
                 .Include(x => x.LastModifiedBy)
                 .Include(x => x.Department)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == caseId);
 
             return caseToGet != null ? _mapper.Map<CaseDto>(caseToGet) : null;
         }
 
-        public async Task<bool> UpdateCaseByIdAsync(string id,string userId, UpdateCaseDto request)
+        public async Task<bool> UpdateCaseByIdAsync(string caseId,string userId, UpdateCaseDto request)
         {
-            var caseToUpdate = await _context.Cases.FirstOrDefaultAsync(x => x.Id == id);
+            var caseToUpdate = await _context.Cases.FirstOrDefaultAsync(x => x.Id == caseId);
             if (caseToUpdate == null)
             {
                 return false;
@@ -45,7 +45,7 @@ namespace PCMS.API.BusinessLogic
 
             var caseEdit = _mapper.Map<CaseEdit>(caseToUpdate);
             caseEdit.CreatedById = userId;
-            caseEdit.CaseId = id;
+            caseEdit.CaseId = caseId;
 
             _mapper.Map(request, caseToUpdate);
             caseToUpdate.LastModifiedById = userId;
@@ -57,9 +57,9 @@ namespace PCMS.API.BusinessLogic
             return true;
         }
 
-        public async Task<bool> DeleteCaseByIdAsync(string id, string userId)
+        public async Task<bool> DeleteCaseByIdAsync(string caseId, string userId)
         {
-            var caseToDelete = await _context.Cases.FirstOrDefaultAsync(x => x.Id == id);
+            var caseToDelete = await _context.Cases.FirstOrDefaultAsync(x => x.Id == caseId);
             if (caseToDelete is null)
             {
                 return false;
@@ -73,20 +73,20 @@ namespace PCMS.API.BusinessLogic
             return true;
         }
 
-        public async Task<List<CasePersonDto>> GetLinkedPersonsForCaseIdAsync(string id)
+        public async Task<List<CasePersonDto>> GetLinkedPersonsForCaseIdAsync(string caseId)
         {
             var persons = await _context.CasePersons
-                .Where(x => x.CaseId == id)
+                .Where(x => x.CaseId == caseId)
                 .Include(x => x.Person)
                 .ToListAsync();
 
             return _mapper.Map<List<CasePersonDto>>(persons);
         }
 
-        public async Task<List<ApplicationUserDto>> GetLinkedUsersForCaseIdAsync(string id)
+        public async Task<List<ApplicationUserDto>> GetLinkedUsersForCaseIdAsync(string caseId)
         {
             var users = await _context.ApplicationUserCases
-                .Where(x => x.CaseId == id)
+                .Where(x => x.CaseId == caseId)
                 .Include(x => x.User)
                 .Select(x => x.User)
                 .ToListAsync();
@@ -94,20 +94,20 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<List<ApplicationUserDto>>(users);
         }
 
-        public async Task<List<CaseEditDto>> GetCaseEditsForCaseIdAsync(string id)
+        public async Task<List<CaseEditDto>> GetCaseEditsForCaseIdAsync(string caseId)
         {
             var edits = await _context.CaseEdits
-                .Where(x => x.CaseId == id)
+                .Where(x => x.CaseId == caseId)
                 .Include(x => x.Creator)
                 .ToListAsync();
 
             return _mapper.Map<List<CaseEditDto>>(edits);
         }
 
-        public async Task<List<TagDto>> GetLinkedTagsForCaseIdAsync(string id)
+        public async Task<List<TagDto>> GetLinkedTagsForCaseIdAsync(string caseId)
         {
             var tags = await _context.CaseTags
-                .Where(x => x.CaseId == id)
+                .Where(x => x.CaseId == caseId)
                 .Include(x => x.Tag)
                 .Select(x => x.Tag)
                 .ToListAsync();
