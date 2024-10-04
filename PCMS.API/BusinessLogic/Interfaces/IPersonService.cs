@@ -50,8 +50,26 @@ namespace PCMS.API.BusinessLogic.Interfaces
         /// </summary>
         /// <param name="personId">The ID of the person.</param>
         /// <param name="caseId">The ID of the case.</param>
-        /// <returns>True if they were linked, false if either the person or case does not exist or they are already linked.</returns>
-        Task<bool> AddPersonToCaseAsync(string personId, string caseId);
+        /// <param name="role">The type of role they have on the case.</param>
+        /// <returns>True if they were linked, false if either the person or case does not exist or they are already linked with the same role.</returns>
+        Task<bool> AddPersonToCaseAsync(string personId, string caseId, CaseRole role);
+
+        /// <summary>
+        /// Unlinks a person from a case.
+        /// </summary>
+        /// <param name="personId">The ID of the person.</param>
+        /// <param name="caseId">The ID of the case.</param>
+        /// <param name="linkId">The unique link between the person and case. </param>
+        /// <returns>True if the linked was removed, false if either the person or case does not exist or they were not linked to begin with.</returns>
+        Task<bool> DeletePersonCaseLinkAsync(string personId, string caseId, string linkId);
+
+        /// <summary>
+        /// Deletes all links a person has to a case through there roles.
+        /// </summary>
+        /// <param name="personId">The ID of the person.</param>
+        /// <param name="caseId">The ID of the case =.</param>
+        /// <returns>True if it was successful or there where no links, false if either the person or case did not exist.</returns>
+        Task<bool> DeleteAllPersonCaseLinksAsync(string personId, string caseId);
 
         /// <summary>
         /// Links a person to a crime scene.
@@ -64,14 +82,6 @@ namespace PCMS.API.BusinessLogic.Interfaces
         /// A person can be linked to a crime scene multiple times through different roles they have in it.
         /// </remarks>
         Task<bool> AddPersonToCrimeSceneAsync(string personId, string crimeSceneId, CrimeSceneRole role);
-
-        /// <summary>
-        /// Unlinks a person from a case.
-        /// </summary>
-        /// <param name="personId">The ID of the person.</param>
-        /// <param name="caseId">The ID of the case.</param>
-        /// <returns>True if they were unlinked, false if either the person or case does not exist or they were not linked to begin with.</returns>
-        Task<bool> DeletePersonFromCaseAsync(string personId, string caseId);
 
         /// <summary>
         /// Unlinks all links a person has to a crime scene.
