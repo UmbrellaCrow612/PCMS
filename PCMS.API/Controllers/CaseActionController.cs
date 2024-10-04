@@ -62,6 +62,11 @@ namespace PCMS.API.Controllers
         {
            var caseActions = await _caseActionService.GetCaseActionsForCaseIdAsync(caseId);
 
+            if (caseActions is null)
+            {
+                return NotFound("Case not found.");
+            }
+
             return Ok(caseActions);
         }
 

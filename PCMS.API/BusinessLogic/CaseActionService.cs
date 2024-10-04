@@ -62,8 +62,14 @@ namespace PCMS.API.BusinessLogic
             return _mapper.Map<CaseActionDto>(caseActionToGet);
         }
 
-        public async Task<List<CaseActionDto>> GetCaseActionsForCaseIdAsync(string caseId)
+        public async Task<List<CaseActionDto>?> GetCaseActionsForCaseIdAsync(string caseId)
         {
+            var caseExists = await _context.Cases.AnyAsync(x => x.Id == caseId);
+            if (!caseExists)
+            {
+                return null;
+            }
+
             var caseActionsToGet = await _context.CaseActions
                 .Where(x => x.CaseId == caseId)
                 .Include(x => x.Creator)

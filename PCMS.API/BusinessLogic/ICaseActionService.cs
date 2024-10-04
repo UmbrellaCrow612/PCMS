@@ -29,8 +29,8 @@ namespace PCMS.API.BusinessLogic
         /// Get all case actions for a specific case.
         /// </summary>
         /// <param name="caseId">The ID of the case.</param>
-        /// <returns>List of <see cref="CaseActionDto"/> associated with the case.</returns>
-        Task<List<CaseActionDto>> GetCaseActionsForCaseIdAsync(string caseId);
+        /// <returns>List of <see cref="CaseActionDto"/> associated with the case or null if the case dose not exist.</returns>
+        Task<List<CaseActionDto>?> GetCaseActionsForCaseIdAsync(string caseId);
 
         /// <summary>
         /// Update a case action with new data.
