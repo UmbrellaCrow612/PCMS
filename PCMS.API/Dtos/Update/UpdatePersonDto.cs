@@ -1,7 +1,7 @@
 ﻿using PCMS.API.Filters;
 using System.ComponentModel.DataAnnotations;
 
-namespace PCMS.API.DTOS.PATCH
+namespace PCMS.API.DTOS.Update
 {
     /// <summary>
     /// DTO for when you want to update a Person

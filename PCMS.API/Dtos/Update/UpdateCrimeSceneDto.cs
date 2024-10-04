@@ -1,4 +1,4 @@
-﻿namespace PCMS.API.Dtos.PATCH
+﻿namespace PCMS.API.Dtos.Update
 {
     public class UpdateCrimeSceneDto
     {

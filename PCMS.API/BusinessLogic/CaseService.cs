@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PCMS.API.Dtos.Create;
 using PCMS.API.Dtos.Read;
 using PCMS.API.DTOS.Read;
-using PCMS.API.DTOS.PATCH;
+using PCMS.API.DTOS.Update;
 using PCMS.API.Models;
 
 namespace PCMS.API.BusinessLogic

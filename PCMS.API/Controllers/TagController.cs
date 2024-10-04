@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PCMS.API.Dtos.Create;
 using PCMS.API.Dtos.Read;
-using PCMS.API.Dtos.PATCH;
+using PCMS.API.Dtos.Update;
 using PCMS.API.Models;
 
 namespace PCMS.API.Controllers

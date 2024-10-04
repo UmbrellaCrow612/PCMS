@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PCMS.API.Dtos.PATCH
+namespace PCMS.API.Dtos.Update
 {
     /// <summary>
     /// DTO for when you want to update a case note
