@@ -29,7 +29,7 @@ namespace PCMS.API.BusinessLogic.Interfaces
         /// </summary>
         /// <param name="request">The new data for the update.</param>
         /// <returns>True if the update was successful, false if the person does not exist.</returns>
-        Task<bool> UpdatePersonByIdAsync(UpdatePersonDto request);
+        Task<bool> UpdatePersonByIdAsync(string personId, UpdatePersonDto request);
 
         /// <summary>
         /// Deletes a person by their ID.
