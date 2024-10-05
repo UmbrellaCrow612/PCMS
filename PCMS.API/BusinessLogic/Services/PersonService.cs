@@ -58,7 +58,7 @@ namespace PCMS.API.BusinessLogic.Services
                 Role = role
             };
 
-            await _context.CrimeScenePersons.AddAsync (link);
+            await _context.CrimeScenePersons.AddAsync(link);
             await _context.SaveChangesAsync();
 
             return true;

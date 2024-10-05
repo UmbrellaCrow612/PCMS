@@ -77,7 +77,7 @@ namespace PCMS.API.BusinessLogic.Interfaces
         /// <param name="personId">The ID of the person.</param>
         /// <param name="crimeSceneId">The ID of the crime scene.</param>
         /// <param name="role">The role they have in the link.</param>
-        /// <returns>True if they were linked, false if either the person or crime scene does not exist.</returns>
+        /// <returns>True if they were linked, false if either the person or crime scene does not exist or linked already with the same role..</returns>
         /// <remarks>
         /// A person can be linked to a crime scene multiple times through different roles they have in it.
         /// </remarks>
@@ -100,7 +100,7 @@ namespace PCMS.API.BusinessLogic.Interfaces
         /// <param name="personId">The ID of the person.</param>
         /// <param name="crimeSceneId">The ID of the crime scene.</param>
         /// <param name="linkId">The ID of the specific link.</param>
-        /// <returns>True if it was deleted, false if the models do not exist.</returns>
+        /// <returns>True if it was deleted, false if the models do not exist or the link dose not exist..</returns>
         Task<bool> DeletePersonCrimeSceneLink(string personId, string crimeSceneId, string linkId);
     }
 }
