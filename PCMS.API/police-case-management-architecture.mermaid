@@ -1,0 +1,16 @@
+graph TD
+    A[API Gateway] --> B[Authentication Service]
+    A --> C[Case Management Service]
+    A --> D[Evidence Management Service]
+    A --> E[Reporting Service]
+    A --> F[Notification Service]
+    A --> G[User Management Service]
+    A --> H[Audit Trail Service]
+
+    C <--> I[(Case Database)]
+    D <--> J[(Evidence Database)]
+    E <--> K[(Reporting Database)]
+    G <--> L[(User Database)]
+    H <--> M[(Audit Database)]
+
+    N[External Systems] <--> A

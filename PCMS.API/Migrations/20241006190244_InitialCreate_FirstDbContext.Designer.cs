@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241006091649_Init")]
-    partial class Init
+    [Migration("20241006190244_InitialCreate_FirstDbContext")]
+    partial class InitialCreate_FirstDbContext
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -271,10 +271,6 @@ namespace PCMS.API.Migrations
                     b.Property<string>("LastModifiedById")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("LocationId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasMaxLength(300)
@@ -295,8 +291,6 @@ namespace PCMS.API.Migrations
                         .IsUnique();
 
                     b.HasIndex("LastModifiedById");
-
-                    b.HasIndex("LocationId");
 
                     b.HasIndex("PersonId");
 
@@ -1239,12 +1233,6 @@ namespace PCMS.API.Migrations
                         .WithMany()
                         .HasForeignKey("LastModifiedById");
 
-                    b.HasOne("PCMS.API.BusinessLogic.Models.Location", "Location")
-                        .WithMany("Bookings")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("PCMS.API.BusinessLogic.Models.Person", "Person")
                         .WithMany("Bookings")
                         .HasForeignKey("PersonId")
@@ -1254,8 +1242,6 @@ namespace PCMS.API.Migrations
                     b.Navigation("Creator");
 
                     b.Navigation("LastModifiedBy");
-
-                    b.Navigation("Location");
 
                     b.Navigation("Person");
                 });
@@ -1716,8 +1702,6 @@ namespace PCMS.API.Migrations
 
             modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Location", b =>
                 {
-                    b.Navigation("Bookings");
-
                     b.Navigation("CrimeScenes");
 
                     b.Navigation("Properties");

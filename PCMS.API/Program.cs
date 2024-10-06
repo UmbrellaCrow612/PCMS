@@ -15,6 +15,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddDbContext<AuditDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("AuditDbConnection")));
+
+builder.Services.AddDbContext<UserDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("UserDbConnection")));
+
+builder.Services.AddDbContext<ReportingDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("ReportingDbConnection")));
+
+builder.Services.AddDbContext<EvidenceDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("EvidenceDbConnection")));
+
+builder.Services.AddDbContext<CaseDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("CaseDbConnection")));
+
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>(option =>
 {
     option.User.RequireUniqueEmail = true;

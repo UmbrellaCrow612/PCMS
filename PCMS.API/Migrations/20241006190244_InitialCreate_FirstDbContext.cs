@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PCMS.API.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitialCreate_FirstDbContext : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -651,7 +651,6 @@ namespace PCMS.API.Migrations
                     CreatedById = table.Column<string>(type: "TEXT", nullable: false),
                     PersonId = table.Column<string>(type: "TEXT", nullable: false),
                     ReleaseId = table.Column<string>(type: "TEXT", nullable: true),
-                    LocationId = table.Column<string>(type: "TEXT", nullable: false),
                     Notes = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
                     LastModifiedById = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -669,12 +668,6 @@ namespace PCMS.API.Migrations
                         column: x => x.LastModifiedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Bookings_Locations_LocationId",
-                        column: x => x.LocationId,
-                        principalTable: "Locations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Bookings_Persons_PersonId",
                         column: x => x.PersonId,
@@ -891,11 +884,6 @@ namespace PCMS.API.Migrations
                 name: "IX_Bookings_LastModifiedById",
                 table: "Bookings",
                 column: "LastModifiedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_LocationId",
-                table: "Bookings",
-                column: "LocationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_PersonId",

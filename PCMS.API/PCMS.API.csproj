@@ -40,4 +40,8 @@
     <None Include="C:\dev\PCMS\PCMS.API\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Databases\" />
+  </ItemGroup>
+
 </Project>
