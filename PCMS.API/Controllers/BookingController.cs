@@ -37,12 +37,6 @@ namespace PCMS.API.Controllers
                 return NotFound("Person not found");
             }
 
-            var locationExists = await _context.Locations.AnyAsync(l => l.Id == request.LocationId);
-            if (!locationExists)
-            {
-                return NotFound("Location not found");
-            }
-
             var booking = _mapper.Map<Booking>(request);
             booking.CreatedById = userId;
             booking.PersonId = id;
@@ -55,7 +49,6 @@ namespace PCMS.API.Controllers
                 .Include(b => b.Person)
                 .Include(b => b.Release)
                 .Include(b => b.Charges)
-                .Include(b => b.Location)
                 .FirstOrDefaultAsync() ?? throw new ApplicationException("Failed to get created booking");
 
             var returnBooking = _mapper.Map<BookingDto>(_booking);
@@ -80,7 +73,6 @@ namespace PCMS.API.Controllers
                 .Include(b => b.Person)
                 .Include(b => b.Release)
                 .Include(b => b.Charges)
-                .Include(b => b.Location)
                 .ToListAsync();
 
             var returnBookings = _mapper.Map<List<BookingDto>>(bookings);

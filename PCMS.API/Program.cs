@@ -63,6 +63,7 @@ builder.Services.AddScoped<IEvidenceService, EvidenceService>();
 builder.Services.AddScoped<ICaseNoteService, CaseNoteService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 var app = builder.Build();
 

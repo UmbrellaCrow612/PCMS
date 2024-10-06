@@ -8,9 +8,6 @@ namespace PCMS.API.Dtos.Create
     public class CreateBookingDto
     {
         [Required]
-        public required string LocationId { get; set; }
-
-        [Required]
         [StringLength(300)]
         public required string Notes { get; set; }
     }

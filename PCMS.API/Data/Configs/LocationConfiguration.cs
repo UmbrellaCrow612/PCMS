@@ -11,8 +11,6 @@ namespace PCMS.API.Data.Configs
             builder.HasKey(x => x.Id);
 
             builder.HasMany(x => x.Properties).WithOne(x => x.Location).HasForeignKey(x => x.LocationId);
-
-            builder.HasMany(x => x.Bookings).WithOne(x => x.Location).HasForeignKey(x => x.LocationId);
         }
     }
 }

@@ -37,17 +37,12 @@ namespace PCMS.API.BusinessLogic.Models
 
         public Release? Release { get; set; } = null!;
 
-
-        [Required]
-        public required string LocationId { get; set; }
-
-        public Location? Location { get; set; } = null!;
-
         [Required]
         [StringLength(300)]
         public required string Notes { get; set; }
 
         public string? LastModifiedById { get; set; }
+
         public ApplicationUser? LastModifiedBy { get; set; }
     }
 }

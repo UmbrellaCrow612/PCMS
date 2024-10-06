@@ -75,8 +75,6 @@ namespace PCMS.API.BusinessLogic.Models
         /// </summary>
         public ICollection<Property> Properties { get; set; } = [];
 
-        public List<Booking> Bookings { get; set; } = [];
-
         public ICollection<CrimeScene> CrimeScenes { get; set; } = [];
     }
 }
