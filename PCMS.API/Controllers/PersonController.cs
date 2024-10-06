@@ -6,6 +6,7 @@ using PCMS.API.DTOS.Read;
 using PCMS.API.DTOS.Update;
 using PCMS.API.Filters;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
@@ -110,15 +111,27 @@ namespace PCMS.API.Controllers
         }
 
         [HttpDelete("{id}/cases/{caseId}/all")]
-        public async Task<ActionResult> UnLinkAllPersonCases()
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> UnLinkAllPersonCases(string id, string caseId)
         {
-            return Ok();
+            var completed = await _personService.DeleteAllPersonCaseLinksAsync(id,caseId);
+            if (!completed) return NotFound("Case or person dose not exist.");
+
+            return NoContent();
         }
 
         [HttpDelete("{id}/crime-scenes/{crimeSceneId}/all")]
-        public async Task<ActionResult> UnLinkAllPersonCrimeScenes()
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> UnLinkAllPersonCrimeScenes(string id, string crimeSceneId)
         {
-            return Ok();
+            var completed = await _personService.DeleteAllPersonCrimeSceneLinks(id, crimeSceneId);
+            if (!completed) return NotFound("Person or crime scene not found.");
+
+            return NoContent();
         }
 
         [HttpPost("search")]

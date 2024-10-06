@@ -88,7 +88,7 @@ namespace PCMS.API.BusinessLogic.Interfaces
         /// </summary>
         /// <param name="personId">The ID of the person.</param>
         /// <param name="crimeSceneId">The ID of the crime scene.</param>
-        /// <returns>True if all links were removed, false if either the person or crime scene does not exist or there were no links to unlink.</returns>
+        /// <returns>True if all links were removed or none to begin with, false if either the person or crime scene does not exist or there were no links to unlink.</returns>
         /// <remarks>
         /// A person can be linked to a crime scene multiple times with different roles for those links. This will remove all links they have to this crime scene.
         /// </remarks>
