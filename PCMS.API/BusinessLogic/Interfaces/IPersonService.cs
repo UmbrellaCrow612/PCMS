@@ -43,7 +43,7 @@ namespace PCMS.API.BusinessLogic.Interfaces
         /// Searches for people based on parameters.
         /// </summary>
         /// <returns>A list of people matching the search criteria.</returns>
-        Task<List<PersonDto>> SearchPersonsAsync();
+        Task<List<PersonDto>> SearchPersonsAsync(CreateSearchPersonsQueryDto request);
 
         /// <summary>
         /// Links a person to a case.

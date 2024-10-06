@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PCMS.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241002091235_kjsnew")]
-    partial class kjsnew
+    [Migration("20241006091649_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -147,7 +147,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.ApplicationUser", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -235,7 +235,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.ApplicationUserCase", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.ApplicationUserCase", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
@@ -250,12 +250,25 @@ namespace PCMS.API.Migrations
                     b.ToTable("ApplicationUserCases");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Booking", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Booking", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("BookingDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModifiedAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedById")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LocationId")
@@ -274,25 +287,23 @@ namespace PCMS.API.Migrations
                     b.Property<string>("ReleaseId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
 
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("LastModifiedById");
 
                     b.HasIndex("LocationId");
 
                     b.HasIndex("PersonId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Case", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Case", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -375,7 +386,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("Cases");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CaseAction", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CaseAction", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -384,7 +395,7 @@ namespace PCMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CreatedById")
@@ -395,10 +406,10 @@ namespace PCMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("LastEditedById")
+                    b.Property<DateTime?>("LastModifiedAtUtc")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("LastModifiedDate")
+                    b.Property<string>("LastModifiedById")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -418,12 +429,12 @@ namespace PCMS.API.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("LastEditedById");
+                    b.HasIndex("LastModifiedById");
 
                     b.ToTable("CaseActions");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CaseEdit", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CaseEdit", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -432,7 +443,11 @@ namespace PCMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PreviousComplexity")
@@ -456,23 +471,19 @@ namespace PCMS.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CaseId");
 
+                    b.HasIndex("CreatedById");
+
                     b.HasIndex("Id")
                         .IsUnique();
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("CaseEdits");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CaseNote", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CaseNote", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -527,7 +538,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("CaseNotes");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CasePerson", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CasePerson", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -555,7 +566,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("CasePersons");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CaseTag", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CaseTag", b =>
                 {
                     b.Property<string>("TagId")
                         .HasColumnType("TEXT");
@@ -570,7 +581,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("CaseTags");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CaseVehicle", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CaseVehicle", b =>
                 {
                     b.Property<string>("CaseId")
                         .HasColumnType("TEXT");
@@ -585,7 +596,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("CaseVehicles");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Charge", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Charge", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -629,7 +640,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("Charges");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CrimeScene", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CrimeScene", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -662,7 +673,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("CrimeScenes");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CrimeSceneCase", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CrimeSceneCase", b =>
                 {
                     b.Property<string>("CaseId")
                         .HasColumnType("TEXT");
@@ -677,7 +688,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("CrimeSceneCases");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CrimeScenePerson", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CrimeScenePerson", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -705,7 +716,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("CrimeScenePersons");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Department", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Department", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -733,7 +744,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("Departments");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Evidence", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Evidence", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -806,7 +817,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("Evidences");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Location", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Location", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -851,7 +862,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Person", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Person", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -863,22 +874,36 @@ namespace PCMS.API.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("DeletedAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeletedById")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("DeletedById");
 
                     b.HasIndex("FullName");
 
                     b.HasIndex("Id")
                         .IsUnique();
 
+                    b.HasIndex("IsDeleted")
+                        .HasFilter("IsDeleted = 0");
+
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Property", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Property", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -937,7 +962,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("Properties");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Release", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Release", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -982,7 +1007,7 @@ namespace PCMS.API.Migrations
                     b.ToTable("Releases");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Report", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Report", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -1040,16 +1065,26 @@ namespace PCMS.API.Migrations
                     b.ToTable("Reports");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Tag", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Tag", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModifiedAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedById")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -1059,13 +1094,17 @@ namespace PCMS.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedById");
+
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("LastModifiedById");
 
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Vehicle", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Vehicle", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -1120,7 +1159,7 @@ namespace PCMS.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("PCMS.API.Models.ApplicationUser", null)
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1129,7 +1168,7 @@ namespace PCMS.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("PCMS.API.Models.ApplicationUser", null)
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1144,7 +1183,7 @@ namespace PCMS.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", null)
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1153,31 +1192,31 @@ namespace PCMS.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("PCMS.API.Models.ApplicationUser", null)
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.ApplicationUser", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Department", "Department")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Department", "Department")
                         .WithMany("AssignedUsers")
                         .HasForeignKey("DepartmentId");
 
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.ApplicationUserCase", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.ApplicationUserCase", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Case", "Case")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Case", "Case")
                         .WithMany("AssignedUsers")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "User")
                         .WithMany("AssignedCases")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1188,50 +1227,56 @@ namespace PCMS.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Booking", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Booking", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Location", "Location")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "Creator")
+                        .WithMany("CreatedBookings")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "LastModifiedBy")
+                        .WithMany()
+                        .HasForeignKey("LastModifiedById");
+
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Location", "Location")
                         .WithMany("Bookings")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.Person", "Person")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Person", "Person")
                         .WithMany("Bookings")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
-                        .WithMany("CreatedBookings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Creator");
+
+                    b.Navigation("LastModifiedBy");
 
                     b.Navigation("Location");
 
                     b.Navigation("Person");
-
-                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Case", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Case", b =>
                 {
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "Creator")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "Creator")
                         .WithMany("CreatedCases")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "UserWhoDeleted")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "UserWhoDeleted")
                         .WithMany("DeletedCases")
                         .HasForeignKey("DeletedById");
 
-                    b.HasOne("PCMS.API.Models.Department", "Department")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Department", "Department")
                         .WithMany("AssignedCases")
                         .HasForeignKey("DepartmentId");
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "LastModifiedBy")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "LastModifiedBy")
                         .WithMany("EditedCases")
                         .HasForeignKey("LastModifiedById");
 
@@ -1244,69 +1289,69 @@ namespace PCMS.API.Migrations
                     b.Navigation("UserWhoDeleted");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CaseAction", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CaseAction", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Case", "Case")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Case", "Case")
                         .WithMany("CaseActions")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "Creator")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "Creator")
                         .WithMany("CreatedCaseActions")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "LastEditor")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "LastModifiedBy")
                         .WithMany("EditedCaseActions")
-                        .HasForeignKey("LastEditedById");
+                        .HasForeignKey("LastModifiedById");
 
                     b.Navigation("Case");
 
                     b.Navigation("Creator");
 
-                    b.Navigation("LastEditor");
+                    b.Navigation("LastModifiedBy");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CaseEdit", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CaseEdit", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Case", "Case")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Case", "Case")
                         .WithMany("CaseEdits")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "Creator")
                         .WithMany("CaseEdits")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Case");
 
-                    b.Navigation("User");
+                    b.Navigation("Creator");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CaseNote", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CaseNote", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Case", "Case")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Case", "Case")
                         .WithMany("CaseNotes")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "Creator")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "Creator")
                         .WithMany("CreatedCaseNotes")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "UserWhoDeleted")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "UserWhoDeleted")
                         .WithMany("DeletedCaseNotes")
                         .HasForeignKey("DeletedById");
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "LastModifiedBy")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "LastModifiedBy")
                         .WithMany("EditedCaseNotes")
                         .HasForeignKey("LastModifiedById");
 
@@ -1319,15 +1364,15 @@ namespace PCMS.API.Migrations
                     b.Navigation("UserWhoDeleted");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CasePerson", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CasePerson", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Case", "Case")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Case", "Case")
                         .WithMany("PersonsInvolved")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.Person", "Person")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Person", "Person")
                         .WithMany("CasesInvolved")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1338,15 +1383,15 @@ namespace PCMS.API.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CaseTag", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CaseTag", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Case", "Case")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Case", "Case")
                         .WithMany("CaseTags")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.Tag", "Tag")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Tag", "Tag")
                         .WithMany("CaseTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1357,15 +1402,15 @@ namespace PCMS.API.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CaseVehicle", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CaseVehicle", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Case", "Case")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Case", "Case")
                         .WithMany("CaseVehicles")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.Vehicle", "Vehicle")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Vehicle", "Vehicle")
                         .WithMany("CaseVehicles")
                         .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1376,21 +1421,21 @@ namespace PCMS.API.Migrations
                     b.Navigation("Vehicle");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Charge", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Charge", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Booking", "Booking")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Booking", "Booking")
                         .WithMany("Charges")
                         .HasForeignKey("BookingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.Person", "Person")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Person", "Person")
                         .WithMany("Charges")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "User")
                         .WithMany("CreatedCharges")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1403,9 +1448,9 @@ namespace PCMS.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CrimeScene", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CrimeScene", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Location", "Location")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Location", "Location")
                         .WithMany("CrimeScenes")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1414,15 +1459,15 @@ namespace PCMS.API.Migrations
                     b.Navigation("Location");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CrimeSceneCase", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CrimeSceneCase", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Case", "Case")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Case", "Case")
                         .WithMany("CrimeSceneCases")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.CrimeScene", "CrimeScene")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.CrimeScene", "CrimeScene")
                         .WithMany("CrimeSceneCases")
                         .HasForeignKey("CrimeSceneId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1433,15 +1478,15 @@ namespace PCMS.API.Migrations
                     b.Navigation("CrimeScene");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CrimeScenePerson", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CrimeScenePerson", b =>
                 {
-                    b.HasOne("PCMS.API.Models.CrimeScene", "CrimeScene")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.CrimeScene", "CrimeScene")
                         .WithMany("CrimeScenePersons")
                         .HasForeignKey("CrimeSceneId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.Person", "Person")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Person", "Person")
                         .WithMany("CrimeScenePersons")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1452,25 +1497,25 @@ namespace PCMS.API.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Evidence", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Evidence", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Case", "Case")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Case", "Case")
                         .WithMany("Evidences")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "Creator")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "Creator")
                         .WithMany("CreatedEvidence")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "UserWhoDeleted")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "UserWhoDeleted")
                         .WithMany("DeletedEvidences")
                         .HasForeignKey("DeletedById");
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "LastModifiedBy")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "LastModifiedBy")
                         .WithMany("EditedEvidences")
                         .HasForeignKey("LastModifiedById");
 
@@ -1483,9 +1528,18 @@ namespace PCMS.API.Migrations
                     b.Navigation("UserWhoDeleted");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Property", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Person", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Location", "Location")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "UserWhoDeleted")
+                        .WithMany("DeletedPersons")
+                        .HasForeignKey("DeletedById");
+
+                    b.Navigation("UserWhoDeleted");
+                });
+
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Property", b =>
+                {
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Location", "Location")
                         .WithMany("Properties")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1494,21 +1548,21 @@ namespace PCMS.API.Migrations
                     b.Navigation("Location");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Release", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Release", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Booking", "Booking")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Booking", "Booking")
                         .WithOne("Release")
-                        .HasForeignKey("PCMS.API.Models.Release", "BookingId")
+                        .HasForeignKey("PCMS.API.BusinessLogic.Models.Release", "BookingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.Person", "Person")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Person", "Person")
                         .WithMany("Releases")
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "User")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "User")
                         .WithMany("CreatedReleases")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1521,25 +1575,25 @@ namespace PCMS.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Report", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Report", b =>
                 {
-                    b.HasOne("PCMS.API.Models.Case", "Case")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.Case", "Case")
                         .WithMany("Reports")
                         .HasForeignKey("CaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "Creator")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "Creator")
                         .WithMany("CreatedReports")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "UserWhoDeleted")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "UserWhoDeleted")
                         .WithMany("DeletedReports")
                         .HasForeignKey("DeletedById");
 
-                    b.HasOne("PCMS.API.Models.ApplicationUser", "LastModifiedBy")
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "LastModifiedBy")
                         .WithMany("EditedReports")
                         .HasForeignKey("LastModifiedById");
 
@@ -1552,7 +1606,24 @@ namespace PCMS.API.Migrations
                     b.Navigation("UserWhoDeleted");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.ApplicationUser", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Tag", b =>
+                {
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "Creator")
+                        .WithMany("CreatedTags")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PCMS.API.BusinessLogic.Models.ApplicationUser", "LastModifiedBy")
+                        .WithMany("EditedTags")
+                        .HasForeignKey("LastModifiedById");
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("LastModifiedBy");
+                });
+
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.ApplicationUser", b =>
                 {
                     b.Navigation("AssignedCases");
 
@@ -1574,11 +1645,15 @@ namespace PCMS.API.Migrations
 
                     b.Navigation("CreatedReports");
 
+                    b.Navigation("CreatedTags");
+
                     b.Navigation("DeletedCaseNotes");
 
                     b.Navigation("DeletedCases");
 
                     b.Navigation("DeletedEvidences");
+
+                    b.Navigation("DeletedPersons");
 
                     b.Navigation("DeletedReports");
 
@@ -1591,16 +1666,18 @@ namespace PCMS.API.Migrations
                     b.Navigation("EditedEvidences");
 
                     b.Navigation("EditedReports");
+
+                    b.Navigation("EditedTags");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Booking", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Booking", b =>
                 {
                     b.Navigation("Charges");
 
                     b.Navigation("Release");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Case", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Case", b =>
                 {
                     b.Navigation("AssignedUsers");
 
@@ -1623,21 +1700,21 @@ namespace PCMS.API.Migrations
                     b.Navigation("Reports");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.CrimeScene", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.CrimeScene", b =>
                 {
                     b.Navigation("CrimeSceneCases");
 
                     b.Navigation("CrimeScenePersons");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Department", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Department", b =>
                 {
                     b.Navigation("AssignedCases");
 
                     b.Navigation("AssignedUsers");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Location", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Location", b =>
                 {
                     b.Navigation("Bookings");
 
@@ -1646,7 +1723,7 @@ namespace PCMS.API.Migrations
                     b.Navigation("Properties");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Person", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Person", b =>
                 {
                     b.Navigation("Bookings");
 
@@ -1659,12 +1736,12 @@ namespace PCMS.API.Migrations
                     b.Navigation("Releases");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Tag", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Tag", b =>
                 {
                     b.Navigation("CaseTags");
                 });
 
-            modelBuilder.Entity("PCMS.API.Models.Vehicle", b =>
+            modelBuilder.Entity("PCMS.API.BusinessLogic.Models.Vehicle", b =>
                 {
                     b.Navigation("CaseVehicles");
                 });

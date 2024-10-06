@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace PCMS.API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,34 +56,6 @@ namespace PCMS.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Locations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Persons",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    FullName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    ContactInfo = table.Column<string>(type: "TEXT", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Persons", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tags",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -297,41 +270,6 @@ namespace PCMS.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bookings",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    BookingDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    PersonId = table.Column<string>(type: "TEXT", nullable: false),
-                    ReleaseId = table.Column<string>(type: "TEXT", nullable: true),
-                    LocationId = table.Column<string>(type: "TEXT", nullable: false),
-                    Notes = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bookings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Bookings_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Locations_LocationId",
-                        column: x => x.LocationId,
-                        principalTable: "Locations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Persons_PersonId",
-                        column: x => x.PersonId,
-                        principalTable: "Persons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Cases",
                 columns: table => new
                 {
@@ -343,14 +281,15 @@ namespace PCMS.API.Migrations
                     Complexity = table.Column<int>(type: "INTEGER", nullable: false),
                     DateOpened = table.Column<DateTime>(type: "TEXT", nullable: false),
                     DateClosed = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Priority = table.Column<int>(type: "INTEGER", nullable: false),
                     Type = table.Column<string>(type: "TEXT", nullable: false),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     DeletedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    DeletedById = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    LastEditedById = table.Column<string>(type: "TEXT", nullable: true),
+                    LastModifiedById = table.Column<string>(type: "TEXT", nullable: true),
+                    DeletedById = table.Column<string>(type: "TEXT", nullable: true),
                     DepartmentId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -368,8 +307,8 @@ namespace PCMS.API.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Cases_AspNetUsers_LastEditedById",
-                        column: x => x.LastEditedById,
+                        name: "FK_Cases_AspNetUsers_LastModifiedById",
+                        column: x => x.LastModifiedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -377,6 +316,397 @@ namespace PCMS.API.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Persons",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    FullName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    ContactInfo = table.Column<string>(type: "TEXT", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DeletedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    DeletedById = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Persons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Persons_AspNetUsers_DeletedById",
+                        column: x => x.DeletedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    CreatedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    LastModifiedById = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tags_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Tags_AspNetUsers_LastModifiedById",
+                        column: x => x.LastModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ApplicationUserCases",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUserCases", x => new { x.UserId, x.CaseId });
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserCases_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserCases_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CaseActions",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    LastModifiedById = table.Column<string>(type: "TEXT", nullable: true),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CaseActions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CaseActions_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CaseActions_AspNetUsers_LastModifiedById",
+                        column: x => x.LastModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CaseActions_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CaseEdits",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PreviousTitle = table.Column<string>(type: "TEXT", nullable: false),
+                    PreviousDescription = table.Column<string>(type: "TEXT", nullable: false),
+                    PreviousStatus = table.Column<int>(type: "INTEGER", nullable: false),
+                    PreviousPriority = table.Column<int>(type: "INTEGER", nullable: false),
+                    PreviousType = table.Column<string>(type: "TEXT", nullable: false),
+                    PreviousComplexity = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CaseEdits", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CaseEdits_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CaseEdits_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CaseNotes",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DeletedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    DeletedById = table.Column<string>(type: "TEXT", nullable: true),
+                    LastModifiedById = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CaseNotes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CaseNotes_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CaseNotes_AspNetUsers_DeletedById",
+                        column: x => x.DeletedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CaseNotes_AspNetUsers_LastModifiedById",
+                        column: x => x.LastModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CaseNotes_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CaseVehicles",
+                columns: table => new
+                {
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    VehicleId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CaseVehicles", x => new { x.CaseId, x.VehicleId });
+                    table.ForeignKey(
+                        name: "FK_CaseVehicles_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CaseVehicles_Vehicles_VehicleId",
+                        column: x => x.VehicleId,
+                        principalTable: "Vehicles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CrimeSceneCases",
+                columns: table => new
+                {
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    CrimeSceneId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CrimeSceneCases", x => new { x.CaseId, x.CrimeSceneId });
+                    table.ForeignKey(
+                        name: "FK_CrimeSceneCases_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CrimeSceneCases_CrimeScenes_CrimeSceneId",
+                        column: x => x.CrimeSceneId,
+                        principalTable: "CrimeScenes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Evidences",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    FileUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    Type = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Location = table.Column<string>(type: "TEXT", nullable: false),
+                    CollectedByDetails = table.Column<string>(type: "TEXT", nullable: false),
+                    CollectionDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DeletedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    DeletedById = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    LastModifiedById = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Evidences", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Evidences_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Evidences_AspNetUsers_DeletedById",
+                        column: x => x.DeletedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Evidences_AspNetUsers_LastModifiedById",
+                        column: x => x.LastModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Evidences_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reports",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Details = table.Column<string>(type: "TEXT", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DeletedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    DeletedById = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    LastModifiedById = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reports_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reports_AspNetUsers_DeletedById",
+                        column: x => x.DeletedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Reports_AspNetUsers_LastModifiedById",
+                        column: x => x.LastModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Reports_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bookings",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    BookingDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedAtUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    PersonId = table.Column<string>(type: "TEXT", nullable: false),
+                    ReleaseId = table.Column<string>(type: "TEXT", nullable: true),
+                    LocationId = table.Column<string>(type: "TEXT", nullable: false),
+                    Notes = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
+                    LastModifiedById = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bookings_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bookings_AspNetUsers_LastModifiedById",
+                        column: x => x.LastModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Bookings_Locations_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "Locations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Persons_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CasePersons",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    PersonId = table.Column<string>(type: "TEXT", nullable: false),
+                    Role = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CasePersons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CasePersons_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CasePersons_Persons_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -401,6 +731,30 @@ namespace PCMS.API.Migrations
                         name: "FK_CrimeScenePersons_Persons_PersonId",
                         column: x => x.PersonId,
                         principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CaseTags",
+                columns: table => new
+                {
+                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
+                    TagId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CaseTags", x => new { x.TagId, x.CaseId });
+                    table.ForeignKey(
+                        name: "FK_CaseTags_Cases_CaseId",
+                        column: x => x.CaseId,
+                        principalTable: "Cases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CaseTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -475,292 +829,6 @@ namespace PCMS.API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "ApplicationUserCases",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    CaseId = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApplicationUserCases", x => new { x.UserId, x.CaseId });
-                    table.ForeignKey(
-                        name: "FK_ApplicationUserCases_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ApplicationUserCases_Cases_CaseId",
-                        column: x => x.CaseId,
-                        principalTable: "Cases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CaseActions",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    LastEditedById = table.Column<string>(type: "TEXT", nullable: true),
-                    CaseId = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CaseActions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CaseActions_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CaseActions_AspNetUsers_LastEditedById",
-                        column: x => x.LastEditedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CaseActions_Cases_CaseId",
-                        column: x => x.CaseId,
-                        principalTable: "Cases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CaseEdits",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
-                    PreviousTitle = table.Column<string>(type: "TEXT", nullable: false),
-                    PreviousDescription = table.Column<string>(type: "TEXT", nullable: false),
-                    PreviousStatus = table.Column<int>(type: "INTEGER", nullable: false),
-                    PreviousPriority = table.Column<int>(type: "INTEGER", nullable: false),
-                    PreviousType = table.Column<string>(type: "TEXT", nullable: false),
-                    PreviousComplexity = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CaseEdits", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CaseEdits_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CaseEdits_Cases_CaseId",
-                        column: x => x.CaseId,
-                        principalTable: "Cases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CaseNotes",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CaseNotes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CaseNotes_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CaseNotes_Cases_CaseId",
-                        column: x => x.CaseId,
-                        principalTable: "Cases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CasePersons",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
-                    PersonId = table.Column<string>(type: "TEXT", nullable: false),
-                    Role = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CasePersons", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CasePersons_Cases_CaseId",
-                        column: x => x.CaseId,
-                        principalTable: "Cases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CasePersons_Persons_PersonId",
-                        column: x => x.PersonId,
-                        principalTable: "Persons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CaseTags",
-                columns: table => new
-                {
-                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
-                    TagId = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CaseTags", x => new { x.TagId, x.CaseId });
-                    table.ForeignKey(
-                        name: "FK_CaseTags_Cases_CaseId",
-                        column: x => x.CaseId,
-                        principalTable: "Cases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CaseTags_Tags_TagId",
-                        column: x => x.TagId,
-                        principalTable: "Tags",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CaseVehicles",
-                columns: table => new
-                {
-                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
-                    VehicleId = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CaseVehicles", x => new { x.CaseId, x.VehicleId });
-                    table.ForeignKey(
-                        name: "FK_CaseVehicles_Cases_CaseId",
-                        column: x => x.CaseId,
-                        principalTable: "Cases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CaseVehicles_Vehicles_VehicleId",
-                        column: x => x.VehicleId,
-                        principalTable: "Vehicles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CrimeSceneCases",
-                columns: table => new
-                {
-                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
-                    CrimeSceneId = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CrimeSceneCases", x => new { x.CaseId, x.CrimeSceneId });
-                    table.ForeignKey(
-                        name: "FK_CrimeSceneCases_Cases_CaseId",
-                        column: x => x.CaseId,
-                        principalTable: "Cases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CrimeSceneCases_CrimeScenes_CrimeSceneId",
-                        column: x => x.CrimeSceneId,
-                        principalTable: "CrimeScenes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Evidences",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
-                    FileUrl = table.Column<string>(type: "TEXT", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    Location = table.Column<string>(type: "TEXT", nullable: false),
-                    CollectionDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    CollectedByDetails = table.Column<string>(type: "TEXT", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Evidences", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Evidences_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Evidences_Cases_CaseId",
-                        column: x => x.CaseId,
-                        principalTable: "Cases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Reports",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Details = table.Column<string>(type: "TEXT", nullable: false),
-                    CaseId = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
-                    LastEditedById = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reports", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Reports_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Reports_AspNetUsers_LastEditedById",
-                        column: x => x.LastEditedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Reports_Cases_CaseId",
-                        column: x => x.CaseId,
-                        principalTable: "Cases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_ApplicationUserCases_CaseId",
                 table: "ApplicationUserCases",
@@ -809,10 +877,20 @@ namespace PCMS.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bookings_CreatedById",
+                table: "Bookings",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_Id",
                 table: "Bookings",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_LastModifiedById",
+                table: "Bookings",
+                column: "LastModifiedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_LocationId",
@@ -823,11 +901,6 @@ namespace PCMS.API.Migrations
                 name: "IX_Bookings_PersonId",
                 table: "Bookings",
                 column: "PersonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_UserId",
-                table: "Bookings",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CaseActions_CaseId",
@@ -846,9 +919,9 @@ namespace PCMS.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CaseActions_LastEditedById",
+                name: "IX_CaseActions_LastModifiedById",
                 table: "CaseActions",
-                column: "LastEditedById");
+                column: "LastModifiedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CaseEdits_CaseId",
@@ -856,15 +929,15 @@ namespace PCMS.API.Migrations
                 column: "CaseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CaseEdits_CreatedById",
+                table: "CaseEdits",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CaseEdits_Id",
                 table: "CaseEdits",
                 column: "Id",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CaseEdits_UserId",
-                table: "CaseEdits",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CaseNotes_CaseId",
@@ -877,10 +950,26 @@ namespace PCMS.API.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CaseNotes_DeletedById",
+                table: "CaseNotes",
+                column: "DeletedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CaseNotes_Id",
                 table: "CaseNotes",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CaseNotes_IsDeleted",
+                table: "CaseNotes",
+                column: "IsDeleted",
+                filter: "IsDeleted = 0");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CaseNotes_LastModifiedById",
+                table: "CaseNotes",
+                column: "LastModifiedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CasePersons_CaseId",
@@ -932,9 +1021,9 @@ namespace PCMS.API.Migrations
                 filter: "IsDeleted = 0");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cases_LastEditedById",
+                name: "IX_Cases_LastModifiedById",
                 table: "Cases",
-                column: "LastEditedById");
+                column: "LastModifiedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CaseTags_CaseId",
@@ -1016,16 +1105,37 @@ namespace PCMS.API.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Evidences_DeletedById",
+                table: "Evidences",
+                column: "DeletedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Evidences_Id",
                 table: "Evidences",
                 column: "Id",
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Evidences_IsDeleted",
+                table: "Evidences",
+                column: "IsDeleted",
+                filter: "IsDeleted = 0");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Evidences_LastModifiedById",
+                table: "Evidences",
+                column: "LastModifiedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Locations_Id",
                 table: "Locations",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Persons_DeletedById",
+                table: "Persons",
+                column: "DeletedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Persons_FullName",
@@ -1037,6 +1147,12 @@ namespace PCMS.API.Migrations
                 table: "Persons",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Persons_IsDeleted",
+                table: "Persons",
+                column: "IsDeleted",
+                filter: "IsDeleted = 0");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Properties_Id",
@@ -1082,21 +1198,42 @@ namespace PCMS.API.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reports_DeletedById",
+                table: "Reports",
+                column: "DeletedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reports_Id",
                 table: "Reports",
                 column: "Id",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reports_LastEditedById",
+                name: "IX_Reports_IsDeleted",
                 table: "Reports",
-                column: "LastEditedById");
+                column: "IsDeleted",
+                filter: "IsDeleted = 0");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reports_LastModifiedById",
+                table: "Reports",
+                column: "LastModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_CreatedById",
+                table: "Tags",
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tags_Id",
                 table: "Tags",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_LastModifiedById",
+                table: "Tags",
+                column: "LastModifiedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vehicles_Id",

@@ -31,7 +31,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<PersonDto>> GetPerson(string id)
         {
-           var person = await _personService.GetPersonByIdAsync(id);
+            var person = await _personService.GetPersonByIdAsync(id);
 
             return Ok(person);
         }
@@ -90,7 +90,7 @@ namespace PCMS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> LinkPersonToCrimeScene(string id, string crimeSceneId, [FromBody] CreateCrimeScenePersonDto request)
         {
-            var linked = await _personService.AddPersonToCrimeSceneAsync(id,crimeSceneId, request.Role);
+            var linked = await _personService.AddPersonToCrimeSceneAsync(id, crimeSceneId, request.Role);
             if (!linked) return BadRequest("Person or crime scene dose not exist or person is already linked to case with the same role.");
 
             return Ok();
@@ -107,6 +107,26 @@ namespace PCMS.API.Controllers
             if (!deleted) return BadRequest("Person or crime scene dose not exist or the link dose not exist.");
 
             return NoContent();
+        }
+
+        [HttpDelete("{id}/cases/{caseId}/all")]
+        public async Task<ActionResult> UnLinkAllPersonCases()
+        {
+            return Ok();
+        }
+
+        [HttpDelete("{id}/crime-scenes/{crimeSceneId}/all")]
+        public async Task<ActionResult> UnLinkAllPersonCrimeScenes()
+        {
+            return Ok();
+        }
+
+        [HttpPost("search")]
+        public async Task<ActionResult> SearchPersons([FromBody] CreateSearchPersonsQueryDto request)
+        {
+            var persons = await _personService.SearchPersonsAsync(request);
+
+            return Ok(persons);
         }
 
     }

@@ -9,6 +9,11 @@ namespace PCMS.API.Filters
     {
         public override bool IsValid(object? value)
         {
+            if (value == null || (value is string str && string.IsNullOrWhiteSpace(str)))
+            {
+                return true;
+            }
+
             if (value is DateTime date)
             {
                 return date <= DateTime.Now;

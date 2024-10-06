@@ -25,7 +25,8 @@ namespace PCMS.API.BusinessLogic.Models
         [Required]
         public required DateTime DateOfBirth { get; set; }
 
-        public bool IsDeleted { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
 
         public DateTime? DeletedAtUtc { get; set; }
 

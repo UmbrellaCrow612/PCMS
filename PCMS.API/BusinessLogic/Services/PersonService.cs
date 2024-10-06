@@ -168,9 +168,27 @@ namespace PCMS.API.BusinessLogic.Services
             return _mapper.Map<PersonDto>(person);
         }
 
-        public Task<List<PersonDto>> SearchPersonsAsync()
+        public async Task<List<PersonDto>> SearchPersonsAsync(CreateSearchPersonsQueryDto request)
         {
-            throw new NotImplementedException();
+            var query = _context.Persons.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(request.FullName))
+            {
+                query = query.Where(x => x.FullName.Contains(request.FullName));
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.ContactInfo))
+            {
+                query = query.Where(x => x.ContactInfo.Contains(request.ContactInfo));
+            }
+
+            if (request.DateOfBirth.HasValue)
+            {
+                query = query.Where(x => x.DateOfBirth == request.DateOfBirth.Value);
+            }
+
+            var persons = await query.ToListAsync();
+            return _mapper.Map<List<PersonDto>>(persons);
         }
 
         public async Task<bool> UpdatePersonByIdAsync(string personId, UpdatePersonDto request)
