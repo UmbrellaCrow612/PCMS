@@ -7,6 +7,7 @@ using PCMS.API.DTOS.Read;
 using PCMS.API.DTOS.Update;
 using PCMS.API.Filters;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace PCMS.API.Controllers
 {
@@ -46,6 +47,26 @@ namespace PCMS.API.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpGet("/case-number/{caseNumber}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> GetCaseByCaseNumber(string caseNumber)
+        {
+            var _case = await _caseService.GetCaseByCaseNumberAsync(caseNumber);
+            if (_case is null) return NotFound("Case not found");
+
+            return Ok(_case);
+        }
+
+        [HttpGet("search")]
+        public async Task<ActionResult> SeachCases([FromQuery] CreateSearchCasesQueryDto request)
+        {
+            var cases = await _caseService.SearchForCasesAsync(request);
+
+            return Ok(cases);
         }
 
         [HttpPatch("{id}")]

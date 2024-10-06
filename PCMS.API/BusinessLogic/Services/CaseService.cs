@@ -116,9 +116,76 @@ namespace PCMS.API.BusinessLogic.Services
             return _mapper.Map<List<TagDto>>(tags);
         }
 
-        public Task<List<CaseDto>> SearchForCases(CreateCaseSearchDto request)
+        public async Task<List<CaseDto>> SearchForCasesAsync(CreateSearchCasesQueryDto request)
         {
-            throw new NotImplementedException();
+            var query = _context.Cases.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(request.Title))
+            {
+                query.Where(x => x.Title.Contains(request.Title));
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.Description))
+            {
+                query.Where(x => x.Description.Contains(request.Description));
+            }
+
+            if (request.Status.HasValue)
+            {
+                query.Where(x => x.Status == request.Status);
+            }
+
+            if (request.DateOpened.HasValue)
+            {
+                query.Where(x => x.DateOpened == request.DateOpened);
+            }
+
+            if (request.DateClosed.HasValue)
+            {
+                query.Where(x => x.DateClosed == request.DateClosed);
+            }
+
+            if (request.Priority.HasValue)
+            {
+                query.Where(x => x.Priority == request.Priority);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.Type))
+            {
+                query.Where(x => x.Type.Contains(request.Type));
+            }
+
+            if (request.Complexity.HasValue)
+            {
+                query.Where(x => x.Complexity == request.Complexity);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.CreatedById))
+            {
+                query.Where(x => x.CreatedById == request.CreatedById);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.DepartmentId))
+            {
+                query.Where(x => x.DepartmentId == request.DepartmentId);
+            }
+
+            var cases = await query.ToListAsync();
+
+            return _mapper.Map<List<CaseDto>>(cases);
+        }
+
+        public async Task<CaseDto?> GetCaseByCaseNumberAsync(string caseNumber)
+        {
+            var _case = await _context.Cases
+                .Include(c => c.Creator)
+                .Include(c => c.LastModifiedBy)
+                .Include(x => x.Department)
+                .FirstOrDefaultAsync(x => x.CaseNumber == caseNumber);
+
+            if(_case is null) return null;
+
+            return _mapper.Map<CaseDto>(_case);
         }
     }
 

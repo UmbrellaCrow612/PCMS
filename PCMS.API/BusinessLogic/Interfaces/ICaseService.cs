@@ -23,6 +23,13 @@ namespace PCMS.API.BusinessLogic.Interfaces
         Task<CaseDto?> GetCaseByIdAsync(string caseId);
 
         /// <summary>
+        /// Get a case by it's case number.
+        /// </summary>
+        /// <param name="caseNumber">The case number of the case.</param>
+        /// <returns>The case or null if it dose not exist.</returns>
+        Task<CaseDto?> GetCaseByCaseNumberAsync(string caseNumber);
+
+        /// <summary>
         /// Update a case by its ID
         /// </summary>
         /// <param name="caseId">The ID of the case</param>
@@ -72,6 +79,6 @@ namespace PCMS.API.BusinessLogic.Interfaces
         /// </summary>
         /// <param name="request">The data.</param>
         /// <returns>List of cases</returns>
-        Task<List<CaseDto>> SearchForCases(CreateCaseSearchDto request);
+        Task<List<CaseDto>> SearchForCasesAsync(CreateSearchCasesQueryDto request);
     }
 }

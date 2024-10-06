@@ -135,7 +135,7 @@ namespace PCMS.API.Controllers
         }
 
         [HttpPost("search")]
-        public async Task<ActionResult> SearchPersons([FromBody] CreateSearchPersonsQueryDto request)
+        public async Task<ActionResult> SearchPersons([FromQuery] CreateSearchPersonsQueryDto request)
         {
             var persons = await _personService.SearchPersonsAsync(request);
 

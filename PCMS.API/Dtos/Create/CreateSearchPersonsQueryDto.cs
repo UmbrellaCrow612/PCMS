@@ -8,10 +8,10 @@
     /// </remarks>
     public class CreateSearchPersonsQueryDto
     {
-        public string? FullName { get; set; }
+        public string? FullName { get; set; } = null;
 
-        public string? ContactInfo { get; set; }
+        public string? ContactInfo { get; set; } = null;
 
-        public DateTime? DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; } = null;
     }
 }
